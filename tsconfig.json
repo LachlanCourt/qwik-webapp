@@ -19,7 +19,9 @@
     "types": ["node", "vite/client"],
     "paths": {
       "~/*": ["./src/*"],
-      "db": ["./prisma/"]
+      "db": ["./prisma/"],
+      "authentication/*": ["./src/common/authentication/*"],
+      "common/constants": ["./src/common/constants"]
     }
   },
   "files": ["./.eslintrc.cjs"],

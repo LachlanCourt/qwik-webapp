@@ -1,17 +1,18 @@
 import type { RequestHandler } from '@builder.io/qwik-city';
+import { verifyToken } from 'authentication/verifyToken';
 
 interface ProductData {
-    skuId: string;
-    price: number;
+    
     description: string;
   }
   
-  export const onGet: RequestHandler<ProductData> = async ({ params }) => {
-    // put your DB access here, we are hard coding a response for simplicity.
+  export const onGet: RequestHandler<ProductData> = async ({ request, response }) => {
+    const payload = await verifyToken(request, response)
+    // This should be response.redirect but it was getting overridden to a 405. More investigation required
+    if (!payload) throw response.error(301)
+
     return {
-      skuId: params.skuId,
-      price: 123.45,
-      description: `Description for ${params.skuId} as the test resource`,
+      description: `You're authorised! Hooray!`,
     };
   };
   

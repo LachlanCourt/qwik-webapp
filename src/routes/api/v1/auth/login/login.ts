@@ -1,43 +1,42 @@
 import type { RequestHandler } from '@builder.io/qwik-city';
 import {db} from 'db'
-import * as jose from 'jose'
+import { lib} from 'crypto-js'
+import sha256 from 'crypto-js/sha256'
+import { createToken } from '~/common/authentication/createToken';
 
-
-interface ProductData {
-    skuId: string;
-    price: number;
-    description: string;
-  }
+interface ExistingUser {
+  jwt: string
+}
   
-  export const onGet: RequestHandler<ProductData> = async ({payload, response}) => {
-    // const data = await db.user.findMany()
-    // console.log(data)
+  export const onGet: RequestHandler<ExistingUser> = async ({request, response}) => {
+    const {email, password} = await request.json()
+    if (!email || !password) throw response.error(400)
 
+    const passwordHash = sha256(password).toString()
 
-    const jwtSecret = process.env.JWT_SECRET
-    if (!jwtSecret) throw response.error(500)
-      const jwt =
-        ''
-      
-      const { payload: jwtPayload, protectedHeader } = await jose.jwtVerify(jwt, new TextEncoder().encode(jwtSecret), {
-        issuer: 'lachourt:qwik-webapp',
-        audience: 'lachourt:quik-webapp:user',
-      })
-      
-      console.log(protectedHeader)
-      console.log(jwtPayload)
+    const user = await db.user.findFirst({where:{email}})
+    //@ts-expect-error
+    if (!user) throw response.error(400, "User not found")
+    if (passwordHash !== user.password) throw response.error(401)
+
+    // Clean up old sessions if the user is logging in again
+    await db.session.deleteMany({where: {userId :user.id}})
+    
+    const sessionKey = lib.WordArray.random(32).toString()
+    const session = await db.session.create({data: {userId: user.id, sessionKey}})
+    //TODO add session to middleware
+    
+    const jwt = await createToken({sessionKey, userId:user.id}, response)
 
     // put your DB access here, we are hard coding a response for simplicity.
     return {
-      skuId: '123',
-      price: 123.45,
-      description: `Description for the auth endpoint`,
+      jwt
     };
   };
   
-  export const onPost: RequestHandler<ProductData> = async ({ params }) => {  }
-  export const onPut: RequestHandler<ProductData> = async ({ params }) => {  }
-  export const onPatch: RequestHandler<ProductData> = async ({ params }) => {  }
-  export const onDelete: RequestHandler<ProductData> = async ({ params }) => {  }
+  // export const onPost: RequestHandler<ProductData> = async ({ params }) => {  }
+  // export const onPut: RequestHandler<ProductData> = async ({ params }) => {  }
+  // export const onPatch: RequestHandler<ProductData> = async ({ params }) => {  }
+  // export const onDelete: RequestHandler<ProductData> = async ({ params }) => {  }
 
 
