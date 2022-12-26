@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from '@builder.io/qwik';
+import { component$, createContext, useContext, useContextProvider, useStyles$ } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
 import { RouterHead } from './components/router-head/router-head';
 
@@ -15,6 +15,7 @@ export default component$(() => {
 
   return (
     <QwikCityProvider>
+
       <head>
         <meta charSet="utf-8" />
         <link rel="manifest" href="/manifest.json" />
@@ -24,6 +25,7 @@ export default component$(() => {
         <RouterOutlet />
         <ServiceWorkerRegister />
       </body>
+      
     </QwikCityProvider>
   );
 });

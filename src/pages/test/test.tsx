@@ -4,7 +4,7 @@ import { DocumentHead } from "@builder.io/qwik-city";
 const test = component$(() => {
 
 
-    return <div>hello</div>
+    return <div>Login required</div>
 })
 
 export default test

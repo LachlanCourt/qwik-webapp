@@ -1,4 +1,5 @@
 import type { RequestHandler } from '@builder.io/qwik-city';
+import {db} from 'db'
 
 interface ProductData {
     skuId: string;
@@ -7,6 +8,8 @@ interface ProductData {
   }
   
   export const onGet: RequestHandler<ProductData> = async () => {
+    const data = await db.user.findMany()
+    console.log(data)
     // put your DB access here, we are hard coding a response for simplicity.
     return {
       skuId: '123',
