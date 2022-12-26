@@ -8,8 +8,11 @@ interface ExistingUser {
   jwt: string
 }
   
-  export const onGet: RequestHandler<ExistingUser> = async ({request, response}) => {
-    const {email, password} = await request.json()
+  export const onPost: RequestHandler<ExistingUser> = async ({  request, response, cookie}) => {
+    const t = await request.formData();
+    const email:string= t.get('email')?.toString() || ''
+    const password = t.get('password')?.toString() || ''
+
     if (!email || !password) throw response.error(400)
 
     const passwordHash = sha256(password).toString()
@@ -27,11 +30,9 @@ interface ExistingUser {
     //TODO add session to middleware
     
     const jwt = await createToken({sessionKey, userId:user.id}, response)
+    cookie.set('token', jwt, { path:"/", httpOnly: true })
 
-    // put your DB access here, we are hard coding a response for simplicity.
-    return {
-      jwt
-    };
+    throw response.redirect('/', 302)
   };
   
   // export const onPost: RequestHandler<ProductData> = async ({ params }) => {  }
