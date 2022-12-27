@@ -6,15 +6,15 @@ import { AccountData } from "~/routes/accounts/[accountId]";
 
 export const Accounts = component$(({data}: {data : Array<AccountData>}) => {
     return (
-        <>
+        <div>All Accounts
             {data.length > 0 
-            ? data.map((account) => {
+            ? <ul>{data.map((account) => {
                 return (
-                    <a href={`/accounts/${account.accountId}`}>{account.accountId}: {account.name}</a>
+                    <li><a href={`/accounts/${account.accountId}`}>{account.accountId}: {account.name}</a></li>
                 )
-            }) 
+            })} </ul>
             : 'No Accounts'}
-        </>
+        </div>
     )})
 
 export const AccountsResource = component$(() => {
