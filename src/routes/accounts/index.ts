@@ -16,20 +16,21 @@ export const onGet: RequestHandler<Array<AccountData>> = async ({params, request
     if (!payload) throw response.redirect('/login', 302)
 
     const accounts = await db.account.findMany({where: {
-        moderators: {
-            some: {
-                 userId: Number(payload.userId)
+        OR: [
+            {
+                moderators: {
+                    some: {
+                        userId: Number(payload.userId)
+                    }
+                }},
+            {
+                adminId: Number(payload.userId)
             }
-        }
+        ]
     }})
-    console.log(accounts)
-
-    // db.account.where({id: params.accountId})
     
     return accounts.map((account) => ({accountId: account.id, name: account.name}))
-    //TODO Find account using payload.userId
-    // const accountId = 1
-    // throw response.redirect(`/accounts/${accountId}`, 302)
+
   };
   
   

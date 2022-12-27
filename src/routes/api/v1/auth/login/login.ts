@@ -9,9 +9,9 @@ interface ExistingUser {
 }
   
   export const onPost: RequestHandler<ExistingUser> = async ({  request, response, cookie}) => {
-    const t = await request.formData();
-    const email:string= t.get('email')?.toString() || ''
-    const password = t.get('password')?.toString() || ''
+    const formData = await request.formData();
+    const email = formData.get('email')?.toString() || ''
+    const password = formData.get('password')?.toString() || ''
 
     if (!email || !password) throw response.error(400)
 

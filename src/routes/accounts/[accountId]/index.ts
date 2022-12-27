@@ -14,9 +14,27 @@ export const onGet: RequestHandler<AccountData> = async ({params, request, respo
   if (!payload) throw response.redirect('/login', 302)
 
   console.log(params.accountId)
-  const account = await db.account.findFirst({where: {id: Number(params.accountId || 0)}})
+  const account = await db.account.findFirst({where: { AND: [{
+      id: Number(params.accountId || 0)}, 
+      {
+        OR: [
+          {
+            adminId: Number(payload.userId)
+          },
+          {
+            moderators: {
+              some: {
+                  userId: Number(payload.userId)
+              }
+          }
+          }
+        ]
+      }]}
+    
+    
+    
+    })
   if (!account) throw response.error(404)
-  // db.account.where({id: params.accountId})
   
   return {accountId: account.id, name: account.name}
   //TODO Find account using payload.userId
