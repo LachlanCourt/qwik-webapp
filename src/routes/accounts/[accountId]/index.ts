@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import {AccountResource } from '../../../pages/account/Account' 
+import {AccountResource } from '~/pages/account/AccountPage' 
 import { db } from "db";
 
 export interface AccountData {

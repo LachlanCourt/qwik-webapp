@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 
-const NewAccount = component$(() => {
+const NewAccountPage = component$(() => {
     return <><div>Create New Account</div>
     <form action="/api/v1/accounts/new" method="POST">
         <span htmlFor="account-name">Account Name</span>
@@ -14,5 +14,5 @@ const NewAccount = component$(() => {
     </>
 })
 
-export default NewAccount
+export default NewAccountPage
 

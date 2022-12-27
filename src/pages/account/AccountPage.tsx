@@ -4,7 +4,7 @@ import { AccountData } from "~/routes/accounts/[accountId]";
 
 
 
-export const Account = component$(({data}: {data : AccountData}) => {
+export const AccountPage = component$(({data}: {data : AccountData}) => {
     return (
         <div>{data.accountId}: {data.name}</div>
     )
@@ -20,7 +20,7 @@ export const AccountResource = component$(() => {
         onPending={() => <div>Loading...</div>}
         onRejected={() => <div>Error</div>}
         onResolved={(data) => (
-          <Account data={data} />
+          <AccountPage data={data} />
         )}
       />)
 })

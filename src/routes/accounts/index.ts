@@ -1,9 +1,8 @@
 import { component$ } from "@builder.io/qwik";
 import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import {AccountsResource } from '../../pages/account/Accounts' 
+import {AccountsResource } from '~/pages/account/AccountsPage' 
 import { db } from "db";
-import { prisma } from "@prisma/client";
 
 export interface AccountData {
     accountId: number
