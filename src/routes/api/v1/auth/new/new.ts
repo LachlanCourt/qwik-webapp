@@ -27,10 +27,7 @@ import { createToken } from 'authentication/createToken';
     const sessionKey = lib.WordArray.random(32).toString()
     await db.session.create({data: {userId: user.id, sessionKey}})
 
-    
-
     const jwt = await createToken({ sessionKey, userId: user.id }, response)
-    
 
     return {jwt}
   };

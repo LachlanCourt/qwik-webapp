@@ -8,20 +8,17 @@ export const verifyToken = async (request: RequestContext, response: ResponseCon
     const jwtSecret = process.env.JWT_SECRET
     if (!jwtSecret) throw response.error(500)
       
-      const { payload } = await jose.jwtVerify(jwt, new TextEncoder().encode(jwtSecret), {
+
+    let payload;
+    try {
+      ({ payload } = await jose.jwtVerify(jwt, new TextEncoder().encode(jwtSecret), {
         issuer: 'lachourt:qwik-webapp',
         audience: 'lachourt:quik-webapp:user',
-      })
+      }))
+    } catch {
+      return null
 
-      const exp = payload.exp || 0
-      const now = Math.floor(Date.now() / 1000)
-    
-      if (exp < now) {
-        const sessionKey: string = payload.sessionKey?.toString() || ''
-        const userId: number = Number(payload.userId) || 0
-        await db.session.delete({where: { sessionKey, userId }})
-        return null
-      }
+    }
 
       return payload;
 }

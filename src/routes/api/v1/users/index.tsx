@@ -9,7 +9,7 @@ export interface UsersData {
 
 export const onGet: RequestHandler<UsersData> = async ({ cookie, request, response }) => {
   const payload = await verifyToken(request, response, cookie)
-    if (!payload) return;
+    if (!payload) throw response.redirect('/login', 302);
     
     const users = await db.user.findMany()
     
