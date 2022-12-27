@@ -15,9 +15,8 @@ export const verifyToken = async (request: RequestContext, response: ResponseCon
         issuer: 'lachourt:qwik-webapp',
         audience: 'lachourt:quik-webapp:user',
       }))
-    } catch {
+    } catch (err) {
       return null
-
     }
 
       return payload;
