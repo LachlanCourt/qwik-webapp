@@ -5,14 +5,7 @@ import {CommandResource } from '~/pages/command/CommandPage'
 import { db } from "db";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommand } from "~/common/accessors/getCommand";
-
-export interface CommandData {
-    commandId: number
-    accountId: number
-    name: string
-}
-
-
+import { CommandData } from "~/models";
 
 
 export const onGet: RequestHandler<CommandData> = async ({params, request, response, cookie}) => {

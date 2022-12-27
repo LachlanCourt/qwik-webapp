@@ -3,11 +3,7 @@ import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import {AccountResource } from '~/pages/account/AccountPage' 
 import { db } from "db";
-
-export interface AccountData {
-    accountId: number
-    name: string
-}
+import { AccountData } from "~/models";
 
 export const onGet: RequestHandler<AccountData> = async ({params, request, response, cookie}) => {
   const payload = await verifyToken(request, response, cookie)

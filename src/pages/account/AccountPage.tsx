@@ -1,6 +1,6 @@
 import { component$, Resource } from "@builder.io/qwik";
 import { useEndpoint } from "@builder.io/qwik-city";
-import { AccountData } from "~/routes/accounts/[accountId]";
+import { AccountData } from "~/models";
 
 
 
