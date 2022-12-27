@@ -1,1 +1,1 @@
-export {default} from '../../pages/dashboard/Dashboard'
+export { default } from "../../pages/dashboard/Dashboard";

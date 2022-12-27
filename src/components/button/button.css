@@ -1,0 +1,16 @@
+.default-button-styles {
+  border-radius: 0.6rem;
+  padding: 0.6rem;
+}
+
+.default-button-styles:hover {
+  cursor: pointer;
+}
+
+.primary-button-styles {
+  background: #dd00dd;
+  color: #fff;
+}
+.primary-button-styles:hover {
+  background: #ee00ff;
+}

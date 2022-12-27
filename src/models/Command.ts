@@ -1,6 +1,5 @@
 export interface CommandData {
-    commandId: number
-    accountId: number
-    name: string
+  commandId: number;
+  accountId: number;
+  name: string;
 }
-
