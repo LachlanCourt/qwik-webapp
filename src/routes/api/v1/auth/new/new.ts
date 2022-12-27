@@ -1,6 +1,6 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { db } from "db";
-import { lib } from "crypto-js";
+import cryptojs from "crypto-js";
 import sha256 from "crypto-js/sha256";
 import { createToken } from "authentication/createToken";
 
@@ -23,7 +23,7 @@ export const onGet: RequestHandler<NewUser> = async ({ request, response }) => {
     data: { email, password: passwordHash },
   });
 
-  const sessionKey = lib.WordArray.random(32).toString();
+  const sessionKey = cryptojs.lib.WordArray.random(32).toString();
   await db.session.create({ data: { userId: user.id, sessionKey } });
 
   const jwt = await createToken({ sessionKey, userId: user.id }, response);

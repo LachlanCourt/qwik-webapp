@@ -1,9 +1,7 @@
-import { component$ } from "@builder.io/qwik";
-import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+import type { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import Dashboard from "../pages/dashboard/Dashboard";
 
-interface Response {}
+interface Response { }
 
 export const onGet: RequestHandler<Response> = async ({
   request,

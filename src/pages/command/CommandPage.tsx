@@ -1,5 +1,5 @@
 import { component$, Resource } from "@builder.io/qwik";
-import { Link, useEndpoint, useNavigate } from "@builder.io/qwik-city";
+import { useEndpoint, useNavigate } from "@builder.io/qwik-city";
 import { Button } from "~/components/button";
 import { CommandData } from "~/models";
 
@@ -8,12 +8,14 @@ export const CommandPage = component$(({ data }: { data: CommandData }) => {
   return (
     <>
       <Button
-        onClick$={() => {
-          nav.path = `/accounts/${data.accountId}/commands`;
-        }}
-      >
-        Back
-      </Button>
+        // HACK UNTIL QWIK STOPS PULLING PRISMA TO THE CLIENT
+        // onClick$={() => {
+        //   nav.path = `/accounts/${data.accountId}/commands`;
+        // }}
+        label="Back"
+        link={`/accounts/${data.accountId}/commands`}
+      />
+
 
       <div>
         {data.commandId}: {data.name}, account: {data.accountId}

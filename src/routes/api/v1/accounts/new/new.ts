@@ -2,10 +2,9 @@ import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { db } from "db";
 
-interface Response {}
+interface Response { }
 
 export const onPost: RequestHandler<Response> = async ({
-  params,
   request,
   response,
   cookie,

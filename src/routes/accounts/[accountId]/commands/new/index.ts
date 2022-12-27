@@ -1,7 +1,6 @@
 import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "authentication/verifyToken";
 import NewCommandPage from "~/pages/command/NewCommandPage";
-import { db } from "db";
 import { getAccount } from "~/common/accessors/getAccount";
 
 /**

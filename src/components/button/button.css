@@ -1,16 +1,22 @@
 .default-button-styles {
-  border-radius: 0.6rem;
-  padding: 0.6rem;
+    border-radius: 0.6rem;
+    padding: 0.6rem;
+    width: fit-content
 }
 
 .default-button-styles:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .primary-button-styles {
-  background: #dd00dd;
-  color: #fff;
+    background: linear-gradient(45deg, #bb00bb, #ee00ee);
+    color: #fff;
 }
+
 .primary-button-styles:hover {
-  background: #ee00ff;
+    background: linear-gradient(45deg, #aa00aa, #dd00dd);
+}
+
+.primary-button-styles:active {
+    background: linear-gradient(45deg, #990099, #cc00cc);
 }

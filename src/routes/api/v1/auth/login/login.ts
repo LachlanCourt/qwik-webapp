@@ -1,6 +1,6 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { db } from "db";
-import { lib } from "crypto-js";
+import cryptojs from "crypto-js";
 import sha256 from "crypto-js/sha256";
 import { createToken } from "~/common/authentication/createToken";
 
@@ -29,8 +29,8 @@ export const onPost: RequestHandler<ExistingUser> = async ({
   // Clean up old sessions if the user is logging in again
   await db.session.deleteMany({ where: { userId: user.id } });
 
-  const sessionKey = lib.WordArray.random(32).toString();
-  const session = await db.session.create({
+  const sessionKey = cryptojs.lib.WordArray.random(32).toString();
+  await db.session.create({
     data: { userId: user.id, sessionKey },
   });
   //TODO add session to middleware
