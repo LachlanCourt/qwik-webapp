@@ -1,6 +1,5 @@
 import { Cookie, RequestContext, ResponseContext } from "@builder.io/qwik-city"
 import * as jose from 'jose'
-import {db} from 'db'
 
 export const verifyToken = async (request: RequestContext, response: ResponseContext, cookie:Cookie) => {
     const jwt = cookie.get('token')?.value || request.headers.get('authorization')
@@ -17,7 +16,7 @@ export const verifyToken = async (request: RequestContext, response: ResponseCon
       }))
     } catch (err) {
       console.log(err)
-      return null
+      throw response.redirect('/login', 302)
     }
 
       return payload;
