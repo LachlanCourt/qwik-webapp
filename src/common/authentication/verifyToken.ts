@@ -3,8 +3,8 @@ import * as jose from 'jose'
 import {db} from 'db'
 
 export const verifyToken = async (request: RequestContext, response: ResponseContext, cookie:Cookie) => {
-    const jwt = cookie.get('token')?.value || ''
-    if (!jwt) throw response.error(401)
+    const jwt = cookie.get('token')?.value || request.headers.get('authorization')
+    if (!jwt) throw response.redirect('/login', 302)
     const jwtSecret = process.env.JWT_SECRET
     if (!jwtSecret) throw response.error(500)
       
@@ -16,6 +16,7 @@ export const verifyToken = async (request: RequestContext, response: ResponseCon
         audience: 'lachourt:quik-webapp:user',
       }))
     } catch (err) {
+      console.log(err)
       return null
     }
 
