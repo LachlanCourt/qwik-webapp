@@ -4,12 +4,12 @@ import { AccountData } from "~/routes/accounts/[accountId]";
 
 
 
-export const Account = ({data}: {data : AccountData}) => {
+export const Account = component$(({data}: {data : AccountData}) => {
     return (
-        <div>{data.accountId}{data.name}</div>
+        <div>{data.accountId}: {data.name}</div>
     )
 
-}
+})
 
 
 export const AccountResource = component$(() => {

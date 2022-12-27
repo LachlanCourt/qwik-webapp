@@ -10,20 +10,21 @@ export interface AccountData {
 }
 
 export const onGet: RequestHandler<AccountData> = async ({params, request, response, cookie}) => {
-    const payload = await verifyToken(request, response, cookie)
-    if (!payload) throw response.redirect('/login', 302)
+  const payload = await verifyToken(request, response, cookie)
+  if (!payload) throw response.redirect('/login', 302)
 
-    console.log(params.accountId)
-    const account = await db.account.findFirst({where: {id: Number(params.accountId || 0)}})
-    if (!account) throw response.error(400)
-    // db.account.where({id: params.accountId})
-    
-    return {accountId: account.id, name: account.name}
-    //TODO Find account using payload.userId
-    // const accountId = 1
-    // throw response.redirect(`/accounts/${accountId}`, 302)
-  };
+  console.log(params.accountId)
+  const account = await db.account.findFirst({where: {id: Number(params.accountId || 0)}})
+  if (!account) throw response.error(404)
+  // db.account.where({id: params.accountId})
   
+  return {accountId: account.id, name: account.name}
+  //TODO Find account using payload.userId
+  // const accountId = 1
+  // throw response.redirect(`/accounts/${accountId}`, 302)
+};
+
+
   
 export default AccountResource;
 
