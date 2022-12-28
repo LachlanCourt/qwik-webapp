@@ -1,14 +1,32 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, Resource } from "@builder.io/qwik";
+import { useEndpoint } from "@builder.io/qwik-city";
+import { NewUserData } from "~/models";
 
-export const NewUserPage = component$(() => {
+
+
+export const NewUserPage = component$(({ data }: { data: NewUserData }) => {
+    //TODO should we ask for email again?
     return (
         <>
-            <div>Enter the email address of the user and they will be emailed a sign up link</div>
-            <form action="/api/v1/users/addnew" method="POST">
-                <label for="email-field">Email</label>
-                <input name="email" id="email-field" />
-                <button type="submit">Send email</button>
+            <div>Welcome! We've already got your email address, just need a secure password to keep your data safe</div>
+            <form action={`/api/v1/users/new?token=${data.token}`} method="POST">
+                <label for="password-field">Password</label>
+                <input name="password" id="password-field" type="password" />
+                <button type="submit">Sign up</button>
             </form>
         </>
+    );
+});
+
+
+export const NewUserResource = component$(() => {
+    const resource = useEndpoint<NewUserData>();
+    return (
+        <Resource
+            value={resource}
+            onPending={() => <div>Loading...</div>}
+            onRejected={() => <div>Error</div>}
+            onResolved={(data) => <NewUserPage data={data} />}
+        />
     );
 });

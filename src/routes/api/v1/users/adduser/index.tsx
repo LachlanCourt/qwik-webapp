@@ -1,4 +1,4 @@
-import { RequestHandler, useLocation } from "@builder.io/qwik-city";
+import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { db } from 'db'
 import cryptojs from 'crypto-js'
@@ -14,7 +14,7 @@ export const onPost: RequestHandler<Response> = async ({ request, response, cook
     //TODO get the account id somehow
     const accountId = 1
     //TODO Should this verify to user too using the getAccount accessor?
-    const account = await db.account.findFirst({ where: { id: accountId } })
+    const account = await db.account.findFirst({ where: { id: accountId, adminId: payload.userId } })
     if (!account) throw response.error(404)
 
     const formData = await request.formData();
@@ -27,14 +27,14 @@ export const onPost: RequestHandler<Response> = async ({ request, response, cook
     await db.token.deleteMany({ where: { email, type: Tokens.ADD_NEW_USER } })
     await db.token.create({ data: { email, token, type: Tokens.ADD_NEW_USER, expiry, accountId } });
 
-    //TODO Get origin somehow
     const origin = url.origin
 
+    //TODO THis should probably be pulled out to a template
     const html = `
         <div>
             You have been added to the team for the account ${account.name}!
             Click the following link if you want to join!
-            <a href="${origin}/api/v1/users/addnew?token=${token}">Howdy</a>
+            <a href="${origin}/api/v1/users/adduser?token=${token}">Howdy</a>
         </div>`
 
 
@@ -52,12 +52,31 @@ export const onGet: RequestHandler<Response> = async ({ request, response, cooki
     if (!token) throw response.error(401)
     const tokenData = await db.token.findFirst({ where: { token } })
     if (!tokenData) throw response.error(401)
-    const { type, expiry } = tokenData
-    console.log(expiry.getTime())
-    console.log(Date.now())
+    const { type, expiry, email, accountId } = tokenData
     const expired = expiry.getTime() < Math.floor(Date.now() / 1000)
     if (expired) throw response.error(401)
 
-    if (type === Tokens.ADD_NEW_USER) throw response.redirect(`/users/new?token=${token}`)
-    if (type === Tokens.ADD_NEW_ACCOUNT) return // TODO Add New Account endpoint
+    const user = await db.user.findFirst({ where: { email } })
+    if (type === Tokens.ADD_NEW_USER) {
+        if (user) {
+            const { moderators } = await db.account.findFirst({ where: { id: Number(accountId) }, select: { moderators: true } }) || { moderators: [] }
+            // Do something better than strings here
+            if (!moderators.map((moderator) => `${moderator.accountId},${moderator.userId}`).includes(`${accountId},${user.id}`)) {
+                const accountUser = await db.accountUsers.create({ data: { userId: user.id, accountId: Number(accountId), assignedBy: '' } })
+                moderators.push(accountUser)
+            }
+            await db.account.update({ where: { id: Number(accountId) }, data: { moderators: { set: moderators.map((moderator) => ({ userId_accountId: { userId: moderator.userId, accountId: moderator.accountId } })) } } })
+            throw response.redirect('/accounts', 302)
+        } else {
+            throw response.redirect(`/users/new?token=${token}`, 302)
+        }
+    }
+    if (type === Tokens.ADD_NEW_ACCOUNT) {
+        if (user) {
+            // TODO Associate user with account here as ADMIN
+        } else {
+            // TODO Add New Account endpoint
+            return
+        }
+    }
 }

@@ -1,7 +1,7 @@
 import { RequestHandler } from '@builder.io/qwik-city'
 import { getAccount } from '~/common/accessors/getAccount'
 import { verifyToken } from '~/common/authentication/verifyToken'
-import { NewUserPage } from '~/pages/user/NewUserPage'
+import { AddUserPage } from '~/pages/user/AddUserPage'
 
 
 interface Response { }
@@ -11,7 +11,7 @@ export const onGet: RequestHandler<Response> = async ({ request, response, cooki
     if (!payload) throw response.redirect('/login', 302)
 
     const account = await getAccount(Number(params.accountId), payload.userId)
-    if (!account) throw response.error(404)
+    if (!account || account.adminId !== payload.userId) throw response.error(404)
 }
 
-export default NewUserPage;
+export default AddUserPage;
