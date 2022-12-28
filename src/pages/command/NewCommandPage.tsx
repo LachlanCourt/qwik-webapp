@@ -12,6 +12,8 @@ const NewAccountPage = component$(() => {
       >
         <label for="command-name">Command Name</label>
         <input name="name" id="command-name" />
+        <label for="command-response">Command Response</label>
+        <input name="response" id="command-response" />
         <button type="submit">Create</button>
       </form>
     </>

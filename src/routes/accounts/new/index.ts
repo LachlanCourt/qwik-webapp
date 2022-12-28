@@ -16,7 +16,7 @@ export const onGet: RequestHandler<Response> = async ({
     //TODO check for SUPER role
 
     // const accountId = Number(params.accountId);
-    // const account = await getAccount(accountId, Number(payload.userId));
+    // const account = await getAccount(accountId, payload.userId);
     // if (!account) throw response.redirect("/accounts", 302);
 };
 

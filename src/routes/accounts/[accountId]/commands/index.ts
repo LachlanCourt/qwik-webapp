@@ -16,7 +16,7 @@ export const onGet: RequestHandler<Array<CommandData>> = async ({
 
     const account = await getAccount(
         Number(params.accountId),
-        Number(payload.userId)
+        payload.userId
     );
     if (!account) throw response.error(404);
 
@@ -26,6 +26,7 @@ export const onGet: RequestHandler<Array<CommandData>> = async ({
         commandId: command.id,
         name: command.name,
         accountId: command.accountId,
+        response: command.response
     }));
 };
 

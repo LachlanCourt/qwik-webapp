@@ -18,12 +18,12 @@ export const onGet: RequestHandler<Array<AccountData>> = async ({
                 {
                     moderators: {
                         some: {
-                            userId: Number(payload.userId),
+                            userId: payload.userId,
                         },
                     },
                 },
                 {
-                    adminId: Number(payload.userId),
+                    adminId: payload.userId,
                 },
             ],
         },

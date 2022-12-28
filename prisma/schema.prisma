@@ -52,4 +52,5 @@ model Command {
   account   Account @relation(fields: [accountId], references: [id])
   accountId Int
   name      String
+  response  String
 }

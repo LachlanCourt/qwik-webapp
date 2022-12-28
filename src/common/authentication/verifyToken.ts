@@ -1,11 +1,12 @@
 import { Cookie, RequestContext, ResponseContext } from "@builder.io/qwik-city";
 import * as jose from "jose";
+import { SessionData } from "../constants";
 
 export const verifyToken = async (
   request: RequestContext,
   response: ResponseContext,
   cookie: Cookie
-) => {
+): Promise<SessionData> => {
   const jwt =
     cookie.get("token")?.value || request.headers.get("authorization");
   if (!jwt) throw response.redirect("/login", 302);
@@ -27,5 +28,5 @@ export const verifyToken = async (
     throw response.redirect("/login", 302);
   }
 
-  return payload;
+  return { userId: Number(payload), sessionKey: payload.sessionKey?.toString() || '' };
 };

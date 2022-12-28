@@ -15,11 +15,12 @@ export const onPost: RequestHandler<Response> = async ({ params, request, respon
   const formData = await request.formData();
 
   const name = formData.get('name')?.toString() || 'New Command'
+  const formResponse = formData.get('response')?.toString() || 'Command Response'
   const accountId = Number(params.accountId)
-  const account = await getAccount(accountId, Number(payload.userId))
+  const account = await getAccount(accountId, payload.userId)
   if (!account) throw response.error(401)
 
-  const command = await db.command.create({ data: { name, accountId } })
+  const command = await db.command.create({ data: { name, accountId, response: formResponse } })
 
   throw response.redirect(`/accounts/${accountId}/commands/${command.id}`, 302)
 

@@ -13,7 +13,7 @@ export const onGet: RequestHandler<AccountData> = async ({
   const payload = await verifyToken(request, response, cookie);
   if (!payload) throw response.redirect("/login", 302);
 
-  const account = await getAccount(Number(params.accountId), Number(payload.userId));
+  const account = await getAccount(Number(params.accountId), payload.userId);
   if (!account) throw response.error(404);
 
   return { accountId: account.id, name: account.name };
