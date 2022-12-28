@@ -54,3 +54,13 @@ model Command {
   name      String
   response  String
 }
+
+model Token {
+  email     String
+  token     String   @unique
+  type      String
+  expiry    DateTime
+  accountId Int?
+
+  @@id([email, type])
+}
