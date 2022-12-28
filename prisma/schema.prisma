@@ -33,6 +33,7 @@ model Account {
   admin      User           @relation(fields: [adminId], references: [id])
   adminId    Int
   moderators AccountUsers[]
+  commands   Command[]
 }
 
 model AccountUsers {
@@ -44,4 +45,12 @@ model AccountUsers {
   assignedBy String
 
   @@id([userId, accountId])
+}
+
+model Command {
+  id        Int     @id @default(autoincrement())
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+  name      String
+  response  String
 }
