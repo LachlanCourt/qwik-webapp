@@ -5,10 +5,7 @@ import { Tokens } from "~/common/constants";
 import { NewUserResource } from "~/pages/user/NewUserPage";
 import { NewUserData } from "~/models";
 
-export const onGet: RequestHandler<NewUserData> = async ({ request, response, cookie, url }) => {
-    const payload = await verifyToken(request, response, cookie);
-    if (!payload) throw response.redirect("/login", 302);
-
+export const onGet: RequestHandler<NewUserData> = async ({ response, url }) => {
     const token = url.searchParams.get('token')
     if (!token) throw response.error(401)
     const tokenData = await db.token.findFirst({ where: { token } })

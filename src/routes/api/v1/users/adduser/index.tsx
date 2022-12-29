@@ -7,13 +7,12 @@ import { mailer } from "~/common/mailers/mailer";
 
 interface Response { }
 
-export const onPost: RequestHandler<Response> = async ({ request, response, cookie, url }) => {
+export const onPost: RequestHandler<Response> = async ({ params, request, response, cookie, url }) => {
     const payload = await verifyToken(request, response, cookie);
     if (!payload) throw response.redirect("/login", 302);
 
-    //TODO get the account id somehow
-    const accountId = 1
-    //TODO Should this verify to user too using the getAccount accessor?
+    const accountId = Number(url.searchParams.get('accountId'))
+    if (!accountId) throw response.error(404)
     const account = await db.account.findFirst({ where: { id: accountId, adminId: payload.userId } })
     if (!account) throw response.error(404)
 
@@ -44,10 +43,7 @@ export const onPost: RequestHandler<Response> = async ({ request, response, cook
     throw response.redirect(`/accounts/${accountId}`, 302)
 }
 
-export const onGet: RequestHandler<Response> = async ({ request, response, cookie, url }) => {
-    const payload = await verifyToken(request, response, cookie);
-    if (!payload) throw response.redirect("/login", 302);
-
+export const onGet: RequestHandler<Response> = async ({ response, url }) => {
     const token = url.searchParams.get('token')
     if (!token) throw response.error(401)
     const tokenData = await db.token.findFirst({ where: { token } })
@@ -60,8 +56,7 @@ export const onGet: RequestHandler<Response> = async ({ request, response, cooki
     if (type === Tokens.ADD_NEW_USER) {
         if (user) {
             const { moderators } = await db.account.findFirst({ where: { id: Number(accountId) }, select: { moderators: true } }) || { moderators: [] }
-            // Do something better than strings here
-            if (!moderators.map((moderator) => `${moderator.accountId},${moderator.userId}`).includes(`${accountId},${user.id}`)) {
+            if (!moderators.find((moderator) => moderator.accountId === accountId && moderator.userId === user.id)) {
                 const accountUser = await db.accountUsers.create({ data: { userId: user.id, accountId: Number(accountId), assignedBy: '' } })
                 moderators.push(accountUser)
             }
