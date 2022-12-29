@@ -28,5 +28,5 @@ export const verifyToken = async (
     throw response.redirect("/login", 302);
   }
 
-  return { userId: Number(payload.userId), sessionKey: payload.sessionKey?.toString() || '' };
+  return { userId: Number(payload.userId), sessionKey: payload.sessionKey?.toString() || '', isGlobalAdmin: payload.isGlobalAdmin ? true : false };
 };

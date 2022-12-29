@@ -5,10 +5,8 @@ const NewAccountPage = component$(() => {
     <>
       <div>Create New Account</div>
       <form action="/api/v1/accounts/new" method="POST">
-        <label for="account-name">Account Name</label>
-        <input name="name" id="account-name" />
-        <label for="admin-id">Admin ID</label>
-        <input name="adminId" id="admin-id" />
+        <label for="email-field">User Email</label>
+        <input name="email" id="email-field" />
         <button type="submit">Create</button>
       </form>
     </>

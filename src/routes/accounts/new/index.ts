@@ -13,11 +13,8 @@ export const onGet: RequestHandler<Response> = async ({
     const payload = await verifyToken(request, response, cookie);
     if (!payload) throw response.redirect("/login", 302);
 
-    //TODO check for SUPER role
-
-    // const accountId = Number(params.accountId);
-    // const account = await getAccount(accountId, payload.userId);
-    // if (!account) throw response.redirect("/accounts", 302);
+    const { isGlobalAdmin } = payload
+    if (!isGlobalAdmin) throw response.error(404)
 };
 
 export default NewAccount;

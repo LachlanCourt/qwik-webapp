@@ -23,7 +23,7 @@ export const Commands = component$(({ data }: { data: Array<CommandData> }) => {
           </ul>
         </>
       ) : (
-        "No Accounts"
+        "No Commands"
       )}
     </div>
   );
