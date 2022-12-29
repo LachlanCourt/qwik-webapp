@@ -16,7 +16,7 @@ export const onPost: RequestHandler<Response> = async ({ request, response, cook
     const { type, expiry, email } = tokenData
     const expired = expiry.getTime() < Math.floor(Date.now() / 1000)
     if (expired) throw response.error(401)
-    if (type !== Tokens.ADD_NEW_USER) throw response.error(401)
+    if (type !== Tokens.ADD_NEW_USER && type !== Tokens.ADD_NEW_ACCOUNT) throw response.error(401)
 
     const formData = await request.formData();
     const password = formData.get("password")?.toString() || "";
@@ -29,7 +29,7 @@ export const onPost: RequestHandler<Response> = async ({ request, response, cook
     const sessionKey = cryptojs.lib.WordArray.random(32).toString();
     await db.session.create({ data: { userId: user.id, sessionKey } });
 
-    const jwt = await createToken({ sessionKey, userId: user.id }, response);
+    const jwt = await createToken({ sessionKey, userId: user.id, isGlobalAdmin: user.isGlobalAdmin }, response);
 
     cookie.set("token", jwt, { path: "/", httpOnly: true });
 

@@ -68,10 +68,9 @@ export const onGet: RequestHandler<Response> = async ({ response, url }) => {
     }
     if (type === Tokens.ADD_NEW_ACCOUNT) {
         if (user) {
-            // TODO Associate user with account here as ADMIN
+            throw response.redirect(`/api/v1/accounts/new?token=${token}`)
         } else {
-            // TODO Add New Account endpoint
-            return
+            throw response.redirect(`/users/new?token=${token}`, 302)
         }
     }
 }

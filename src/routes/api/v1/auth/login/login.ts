@@ -35,13 +35,8 @@ export const onPost: RequestHandler<ExistingUser> = async ({
   });
   //TODO add session to middleware
 
-  const jwt = await createToken({ sessionKey, userId: user.id }, response);
+  const jwt = await createToken({ sessionKey, userId: user.id, isGlobalAdmin: user.isGlobalAdmin }, response);
   cookie.set("token", jwt, { path: "/", httpOnly: true });
 
   throw response.redirect("/", 302);
 };
-
-// export const onPost: RequestHandler<ProductData> = async ({ params }) => {  }
-// export const onPut: RequestHandler<ProductData> = async ({ params }) => {  }
-// export const onPatch: RequestHandler<ProductData> = async ({ params }) => {  }
-// export const onDelete: RequestHandler<ProductData> = async ({ params }) => {  }

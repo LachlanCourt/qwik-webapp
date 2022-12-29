@@ -1,6 +1,7 @@
 export interface SessionData {
   sessionKey: string;
   userId: number;
+  isGlobalAdmin: boolean;
 }
 
 export enum Tokens {

@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id       Int            @id @default(autoincrement())
-  session  Session?
-  email    String         @unique
-  name     String?
-  password String
-  accounts AccountUsers[]
-  Account  Account[]
+  id            Int            @id @default(autoincrement())
+  session       Session?
+  email         String         @unique
+  name          String?
+  password      String
+  accounts      AccountUsers[]
+  Account       Account[]
+  isGlobalAdmin Boolean        @default(false)
 }
 
 model Session {
