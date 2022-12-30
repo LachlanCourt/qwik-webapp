@@ -41,6 +41,8 @@
   },
   "dependencies": {
     "@prisma/client": "^4.8.0",
+    "@vanilla-extract/css": "^1.9.2",
+    "@vanilla-extract/vite-plugin": "^3.7.0",
     "crypto-js": "^4.1.1",
     "jose": "^4.11.1"
   }
