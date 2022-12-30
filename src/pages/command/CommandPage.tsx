@@ -2,7 +2,7 @@ import { component$, Resource, $ } from "@builder.io/qwik";
 import { useEndpoint, useNavigate } from "@builder.io/qwik-city";
 import { Button } from "~/components/button";
 import { CommandData } from "~/models";
-import { CommandStyle } from "./commands.css";
+import { CommandStyle } from "./style.css";
 
 export const CommandPage = component$(({ data }: { data: CommandData }) => {
   const nav = useNavigate();

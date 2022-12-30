@@ -5,6 +5,24 @@ export const theme = createGlobalTheme(":root", {
         sm: "0.3rem",
         md: "0.6rem",
         lg: "1rem",
+        xl: '1.4rem',
+        xl2: '1.8rem',
+        xl3: '2.5rem',
+    },
+    boxShadow: {
+        sm: '1px 2px 2px 1px rgb(0 0 0 / 20%)',
+        md: '2px 3px 2px 1px rgb(0 0 0 / 20%)'
+    },
+    borderRadius: {
+        sm: "0.3rem",
+        md: "0.6rem",
+        lg: "1rem",
+        round: '99rem'
+    },
+    fontSize: {
+        sm: '1rem',
+        md: '1.2rem',
+        lg: '1.4rem',
     },
     colors: {
         black: "#000000",
