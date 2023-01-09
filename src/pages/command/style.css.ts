@@ -11,7 +11,8 @@ export const CommandStyle = style({
 export const CommandsContainer = style({
     background: theme.colors.grey['800'],
     boxShadow: theme.boxShadow.md,
-    borderRadius: theme.borderRadius.md
+    borderRadius: theme.borderRadius.md,
+    flexGrow: 1
 })
 
 export const CommandsHeader = style({
@@ -27,4 +28,22 @@ export const CommandsTitle = style({
     background: theme.colors.white,
     padding: `${theme.space.md} ${theme.space.xl}`,
     borderRadius: theme.borderRadius.md
+})
+
+export const CommandsList = style({
+    listStyleType: 'none',
+    paddingTop: theme.space.xl,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.space.lg
+})
+
+export const CommandsCommand = style({
+    // background: theme.colors.grey['700'],
+    background: `radial-gradient(${theme.colors.grey['800']}, ${theme.colors.grey['700']});`,
+    borderRadius: theme.borderRadius.sm,
+    boxShadow: theme.boxShadow.md,
+    marginLeft: theme.space.xl,
+    marginRight: theme.space.xl,
+    padding: `${theme.space.xl} ${theme.space.lg}`
 })
