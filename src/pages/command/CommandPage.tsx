@@ -2,7 +2,7 @@ import { component$, Resource, $ } from "@builder.io/qwik";
 import { useEndpoint, useNavigate } from "@builder.io/qwik-city";
 import { Button } from "~/components/button";
 import { CommandData } from "~/models";
-import { CommandStyle } from "./style.css";
+import { CommandContainer, CommandStyle } from "./style.css";
 
 export const CommandPage = component$(({ data }: { data: CommandData }) => {
   const nav = useNavigate();
@@ -10,7 +10,7 @@ export const CommandPage = component$(({ data }: { data: CommandData }) => {
 
 
   return (
-    <>
+    <div class={`${CommandContainer}`}>
       <Button
         // HACK UNTIL QWIK STOPS PULLING PRISMA TO THE CLIENT
         // onClick$={() => {
@@ -24,7 +24,7 @@ export const CommandPage = component$(({ data }: { data: CommandData }) => {
       <div class={`${CommandStyle}`}>
         {data.commandId}: {data.name}, account: {data.accountId}
       </div>
-    </>
+    </div>
   );
 });
 

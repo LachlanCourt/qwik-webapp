@@ -2,11 +2,23 @@ import { style } from "@vanilla-extract/css";
 import { theme } from "~/common/styles/theme.css";
 
 export const CommandStyle = style({
-    background: theme.colors.grey['100'],
-    borderRadius: '0.6rem',
-    padding: '0.6rem',
-    marginTop: '0.6rem'
+    background: `radial-gradient(${theme.colors.grey['700']}, ${theme.colors.grey['600']});`,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.space.md,
+    marginTop: theme.space.md,
+    color: theme.colors.white
 })
+
+export const CommandContainer = style({
+    background: `radial-gradient(${theme.colors.grey['800']}, ${theme.colors.grey['700']});`,
+    boxShadow: theme.boxShadow.md,
+    borderRadius: theme.borderRadius.md,
+    flexGrow: 1,
+    padding: theme.space.lg
+})
+
+
+
 
 export const CommandsContainer = style({
     background: theme.colors.grey['800'],
