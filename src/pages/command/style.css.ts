@@ -38,12 +38,24 @@ export const CommandsList = style({
     gap: theme.space.lg
 })
 
-export const CommandsCommand = style({
-    // background: theme.colors.grey['700'],
+export const CommandsListItem = style({
     background: `radial-gradient(${theme.colors.grey['800']}, ${theme.colors.grey['700']});`,
     borderRadius: theme.borderRadius.sm,
     boxShadow: theme.boxShadow.md,
     marginLeft: theme.space.xl,
     marginRight: theme.space.xl,
-    padding: `${theme.space.xl} ${theme.space.lg}`
+    padding: 0,
+    ":hover": {
+        background: `radial-gradient(${theme.colors.grey['700']}, ${theme.colors.grey['600']});`,
+    },
+    ":active": {
+        background: theme.colors.grey['700']
+    }
+})
+
+export const CommandsTile = style({
+    padding: `${theme.space.xl} ${theme.space.lg}`,
+    color: theme.colors.grey['100'],
+    fontWeight: 'bold',
+    textDecoration: 'none'
 })

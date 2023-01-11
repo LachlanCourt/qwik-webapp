@@ -69,6 +69,7 @@ li::marker {
 a,
 a:visited {
   color: var(--qwik-dark-blue);
+  text-decoration: none;
 }
 
 a:hover {
