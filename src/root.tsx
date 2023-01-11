@@ -10,6 +10,8 @@ import {
 import { RouterHead } from "./components/router-head/router-head";
 
 import globalStyles from "./global.css?inline";
+import './common/styles/theme.css.ts';
+
 
 export default component$(() => {
   /**
