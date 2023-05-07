@@ -5,10 +5,10 @@ import { SessionData } from "../constants";
 export const verifyToken = async (
   request: RequestContext,
   response: ResponseContext,
-  cookie: Cookie
+  cookie?: Cookie
 ): Promise<SessionData> => {
   const jwt =
-    cookie.get("token")?.value || request.headers.get("authorization");
+    cookie?.get("token")?.value || request.headers.get("authorization");
   if (!jwt) throw response.redirect("/login", 302);
   const jwtSecret = process.env.JWT_SECRET;
   if (!jwtSecret) throw response.error(500);
