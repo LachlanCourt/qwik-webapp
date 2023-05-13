@@ -3,11 +3,10 @@ import * as jose from "jose";
 import { SessionData } from "../constants";
 
 export const verifyToken = async (
-  request: RequestEvent,
-  cookie: Cookie
+  request: RequestEvent
 ): Promise<SessionData> => {
   const jwt =
-    cookie.get("token")?.value || request.headers.get("authorization");
+    request.cookie.get("token")?.value || request.headers.get("authorization");
   if (!jwt) throw request.redirect(302, "/login");
   const jwtSecret = process.env.JWT_SECRET;
   if (!jwtSecret) throw request.error(500, "Could not load server secret");

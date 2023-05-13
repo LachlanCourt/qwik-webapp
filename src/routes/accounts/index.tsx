@@ -4,35 +4,35 @@ import { AccountsResource } from "~/pages/account/AccountsPage";
 import { db } from "db";
 import { AccountData } from "~/models";
 
-export const onGet: RequestHandler<Array<AccountData>> = async ({
-    request,
-    response,
-    cookie,
-}) => {
-    const payload = await verifyToken(request, response, cookie);
-    if (!payload) throw response.redirect("/login", 302);
+export const onGet: RequestHandler = async (requestEvent) => {
+  const { json, redirect } = requestEvent;
+  const payload = await verifyToken(requestEvent);
+  if (!payload) throw redirect(302, "/login");
 
-    const accounts = await db.account.findMany({
-        where: {
-            OR: [
-                {
-                    moderators: {
-                        some: {
-                            userId: payload.userId,
-                        },
-                    },
-                },
-                {
-                    adminId: payload.userId,
-                },
-            ],
+  const accounts = await db.account.findMany({
+    where: {
+      OR: [
+        {
+          moderators: {
+            some: {
+              userId: payload.userId,
+            },
+          },
         },
-    });
+        {
+          adminId: payload.userId,
+        },
+      ],
+    },
+  });
 
-    return accounts.map((account) => ({
-        accountId: account.id,
-        name: account.name,
-    }));
+  json(
+    200,
+    accounts.map((account) => ({
+      accountId: account.id,
+      name: account.name,
+    })) as Array<AccountData>
+  );
 };
 
 export default AccountsResource;

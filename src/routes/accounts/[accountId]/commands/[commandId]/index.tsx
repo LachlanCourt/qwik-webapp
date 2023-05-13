@@ -5,30 +5,23 @@ import { getAccount } from "~/common/accessors/getAccount";
 import { getCommand } from "~/common/accessors/getCommand";
 import { CommandData } from "~/models";
 
-export const onGet: RequestHandler<CommandData> = async ({
-  params,
-  request,
-  response,
-  cookie,
-}) => {
-  const payload = await verifyToken(request, response, cookie);
-  if (!payload) throw response.redirect("/login", 302);
+export const onGet: RequestHandler = async (requestEvent) => {
+  const { params, redirect, error, json } = requestEvent;
+  const payload = await verifyToken(requestEvent);
+  if (!payload) throw redirect(302, "/login");
 
-  const account = await getAccount(
-    Number(params.accountId),
-    payload.userId
-  );
-  if (!account) throw response.error(404);
+  const account = await getAccount(Number(params.accountId), payload.userId);
+  if (!account) throw error(404, "Account Not Found");
 
   const command = await getCommand(Number(params.commandId));
-  if (!command) throw response.error(404);
+  if (!command) throw error(404, "Command Not Found");
 
-  return {
+  json(200, {
     commandId: command.id,
     accountId: command.accountId,
     name: command.name,
-    response: command.response
-  };
+    response: command.response,
+  } as CommandData);
 };
 
 export default CommandResource;
