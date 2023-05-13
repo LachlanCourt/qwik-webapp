@@ -209,20 +209,21 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@builder.io/qwik-city@0.0.128":
-  version "0.0.128"
-  resolved "https://registry.yarnpkg.com/@builder.io/qwik-city/-/qwik-city-0.0.128.tgz#66f8e375d3e1213242a2d1c0e7f2f72ca1f78202"
-  integrity sha512-IgE2nZuoyRGRpsQ9HwbWV8IaaP9rWZGgi1hSzXJLCW2GrVfB49aNph3lQYDeoBOdvUSIucfGbUXFLn7215JOFA==
+"@builder.io/qwik-city@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@builder.io/qwik-city/-/qwik-city-1.0.0.tgz#9fec6b4edeb87b4000c095c086967cd6b1002099"
+  integrity sha512-nHlDsvYHRWpSmRgg3bb93shn0p1OeMLvBYyIINitGDPxRSK1RyddtJXFAE24MlEEwzetF82xSte3SiC55oPUaQ==
   dependencies:
-    "@mdx-js/mdx" "2.1.5"
-    "@types/mdx" "2.0.3"
+    "@mdx-js/mdx" "2.3.0"
+    "@types/mdx" "2.0.5"
     source-map "0.7.4"
-    vfile "5.3.6"
+    vfile "5.3.7"
+    zod "^3.21.4"
 
-"@builder.io/qwik@0.16.2":
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/@builder.io/qwik/-/qwik-0.16.2.tgz#e29d2c001043ed40260eae309948c8d91bae091c"
-  integrity sha512-yq+WXx54PVDJkTse7C7zYcTVIn2g5qHD2buH/iy7nux+fVLd2Qpui7UK1nuioK2Kpf75JfEAH9ZSWIHQl32FKQ==
+"@builder.io/qwik@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@builder.io/qwik/-/qwik-1.0.0.tgz#0dfa16f11be9df7d1cf5ac91adab04bb915066d0"
+  integrity sha512-U1eTIKTBUiW2dbPMCaTzS7K1bMCI9ovtfsvdduwnVThGXRSrX+v2X4U/UmHHPzfOjC55X5wYLc17cw5EwFBVVA==
 
 "@cush/relative@^1.0.0":
   version "1.0.0"
@@ -418,10 +419,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mdx-js/mdx@2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-2.1.5.tgz#577937349fd555154382c2f805f5f52834a64903"
-  integrity sha512-zEG0lt+Bl/r5U6e0TOS7qDbsXICtemfAPquxWFsMbdzrvlWaqMGemLl+sjVpqlyaaiCiGVQBSGdCk0t1qXjkQg==
+"@mdx-js/mdx@2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-2.3.0.tgz#d65d8c3c28f3f46bb0e7cb3bf7613b39980671a9"
+  integrity sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==
   dependencies:
     "@types/estree-jsx" "^1.0.0"
     "@types/mdx" "^2.0.0"
@@ -540,7 +541,12 @@
   dependencies:
     "@types/unist" "*"
 
-"@types/mdx@2.0.3", "@types/mdx@^2.0.0":
+"@types/mdx@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mdx/-/mdx-2.0.5.tgz#9a85a8f70c7c4d9e695a21d5ae5c93645eda64b1"
+  integrity sha512-76CqzuD6Q7LC+AtbPqrvD9AqsN0k8bsYo2bM2J8pmNldP1aIPAbzUQ7QbobyXL4eLr1wK5x8FZFe8eF/ubRuBg==
+
+"@types/mdx@^2.0.0":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/mdx/-/mdx-2.0.3.tgz#43fd32414f17fcbeced3578109a6edd877a2d96e"
   integrity sha512-IgHxcT3RC8LzFLhKwP3gbMPeaK7BM9eBH46OdapPA7yvuIUJ8H6zHZV53J8hGZcTSnt95jANt+rTBNUUc22ACQ==
@@ -3345,7 +3351,17 @@ vfile-message@^3.0.0:
     "@types/unist" "^2.0.0"
     unist-util-stringify-position "^3.0.0"
 
-vfile@5.3.6, vfile@^5.0.0:
+vfile@5.3.7:
+  version "5.3.7"
+  resolved "https://registry.yarnpkg.com/vfile/-/vfile-5.3.7.tgz#de0677e6683e3380fafc46544cfe603118826ab7"
+  integrity sha512-r7qlzkgErKjobAmyNIkkSpizsFPYiUPuJb5pNW1RB4JcYVZhs4lIbVqk8XPk033CV/1z8ss5pkax8SuhGpcG8g==
+  dependencies:
+    "@types/unist" "^2.0.0"
+    is-buffer "^2.0.0"
+    unist-util-stringify-position "^3.0.0"
+    vfile-message "^3.0.0"
+
+vfile@^5.0.0:
   version "5.3.6"
   resolved "https://registry.yarnpkg.com/vfile/-/vfile-5.3.6.tgz#61b2e70690cc835a5d0d0fd135beae74e5a39546"
   integrity sha512-ADBsmerdGBs2WYckrLBEmuETSPyTD4TuLxTrw0DvjirxW1ra4ZwkbzG8ndsv3Q57smvHxo677MHaQrY9yxH8cA==
@@ -3440,6 +3456,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.21.4:
+  version "3.21.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
+  integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==
 
 zwitch@^2.0.0:
   version "2.0.4"
