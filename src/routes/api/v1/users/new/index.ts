@@ -1,5 +1,4 @@
 import { RequestHandler } from "@builder.io/qwik-city";
-import { verifyToken } from "~/common/authentication/verifyToken";
 import cryptojs from "crypto-js";
 import sha256 from "crypto-js/sha256";
 import { db } from "db";

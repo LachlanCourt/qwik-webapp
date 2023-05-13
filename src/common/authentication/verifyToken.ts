@@ -1,4 +1,4 @@
-import { Cookie, RequestEvent } from "@builder.io/qwik-city";
+import { RequestEvent } from "@builder.io/qwik-city";
 import * as jose from "jose";
 import { SessionData } from "../constants";
 
