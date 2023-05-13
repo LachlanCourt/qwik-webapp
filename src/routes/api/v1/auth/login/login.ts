@@ -8,23 +8,21 @@ interface ExistingUser {
   jwt: string;
 }
 
-export const onPost: RequestHandler<ExistingUser> = async ({
-  request,
-  response,
-  cookie,
-}) => {
+export const onPost: RequestHandler<ExistingUser> = async (requestEvent) => {
+  const { request, cookie, error, redirect } = requestEvent;
   const formData = await request.formData();
   const email = formData.get("email")?.toString() || "";
   const password = formData.get("password")?.toString() || "";
 
-  if (!email || !password) throw response.error(400);
+  if (!email || !password)
+    throw error(400, "Email and Password are required fields");
 
   const passwordHash = sha256(password).toString();
 
   const user = await db.user.findFirst({ where: { email } });
-  //@ts-expect-error
-  if (!user) throw response.error(400, "User not found");
-  if (passwordHash !== user.password) throw response.error(401);
+
+  if (!user || passwordHash !== user.password)
+    throw error(401, "Email or Password is incorrect");
 
   // Clean up old sessions if the user is logging in again
   await db.session.deleteMany({ where: { userId: user.id } });
@@ -35,8 +33,11 @@ export const onPost: RequestHandler<ExistingUser> = async ({
   });
   //TODO add session to middleware
 
-  const jwt = await createToken({ sessionKey, userId: user.id, isGlobalAdmin: user.isGlobalAdmin }, response);
+  const jwt = await createToken(
+    { sessionKey, userId: user.id, isGlobalAdmin: user.isGlobalAdmin },
+    requestEvent
+  );
   cookie.set("token", jwt, { path: "/", httpOnly: true });
 
-  throw response.redirect("/", 302);
+  throw redirect(302, "/");
 };

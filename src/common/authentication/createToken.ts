@@ -4,10 +4,10 @@ import * as jose from "jose";
 
 export const createToken = async (
   sessionData: SessionData,
-  response: RequestEvent
+  request: RequestEvent
 ): Promise<string> => {
   const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) throw response.error(500, "Could not load server secret");
+  if (!jwtSecret) throw request.error(500, "Could not load server secret");
 
   return await new jose.SignJWT({ ...sessionData })
     .setProtectedHeader({ alg: "HS256" })
