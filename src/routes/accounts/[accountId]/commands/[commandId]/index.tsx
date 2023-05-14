@@ -1,12 +1,13 @@
-import { RequestHandler } from "@builder.io/qwik-city";
+import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import { CommandResource } from "~/pages/command/CommandPage";
+import { CommandPage } from "~/pages/command/CommandPage";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommand } from "~/common/accessors/getCommand";
 import { CommandData } from "~/models";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler = async (requestEvent) => {
-  const { params, redirect, error, json } = requestEvent;
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { params, redirect, error } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
@@ -16,12 +17,22 @@ export const onGet: RequestHandler = async (requestEvent) => {
   const command = await getCommand(Number(params.commandId));
   if (!command) throw error(404, "Command Not Found");
 
-  json(200, {
+  return {
     commandId: command.id,
     accountId: command.accountId,
     name: command.name,
     response: command.response,
-  } as CommandData);
-};
+  } as CommandData;
+});
 
-export default CommandResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <CommandPage data={data} />}
+    />
+  );
+});

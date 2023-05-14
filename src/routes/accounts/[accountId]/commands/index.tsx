@@ -1,13 +1,14 @@
-import { RequestHandler } from "@builder.io/qwik-city";
+import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import { CommandsResource } from "~/pages/command/CommandsPage";
+import { Commands } from "~/pages/command/CommandsPage";
 import { CommandData } from "~/models";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommands } from "~/common/accessors/getCommands";
 import { Command } from "@prisma/client";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler = async (requestEvent) => {
-  const { params, request, cookie, redirect, error, json } = requestEvent;
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { params, redirect, error } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
@@ -16,15 +17,22 @@ export const onGet: RequestHandler = async (requestEvent) => {
 
   const commands = await getCommands(account.id);
 
-  json(
-    200,
-    commands.map((command) => ({
-      commandId: command.id,
-      name: command.name,
-      accountId: command.accountId,
-      response: command.response,
-    })) as Array<CommandData>
-  );
-};
+  return commands.map((command) => ({
+    commandId: command.id,
+    name: command.name,
+    accountId: command.accountId,
+    response: command.response,
+  })) as Array<CommandData>;
+});
 
-export default CommandsResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <Commands data={data} />}
+    />
+  );
+});
