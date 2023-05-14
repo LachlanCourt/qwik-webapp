@@ -1,11 +1,12 @@
-import { RequestHandler } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import { AccountsResource } from "~/pages/account/AccountsPage";
+import { Accounts } from "~/pages/account/AccountsPage";
 import { db } from "db";
 import { AccountData } from "~/models";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler = async (requestEvent) => {
-  const { json, redirect } = requestEvent;
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { redirect } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
@@ -26,13 +27,20 @@ export const onGet: RequestHandler = async (requestEvent) => {
     },
   });
 
-  json(
-    200,
-    accounts.map((account) => ({
-      accountId: account.id,
-      name: account.name,
-    })) as Array<AccountData>
-  );
-};
+  return accounts.map((account) => ({
+    accountId: account.id,
+    name: account.name,
+  })) as Array<AccountData>;
+});
 
-export default AccountsResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <Accounts data={data} />}
+    />
+  );
+});
