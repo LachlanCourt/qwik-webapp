@@ -1,9 +1,9 @@
-import { RequestEvent } from "@builder.io/qwik-city";
+import { RequestEvent, RequestEventLoader } from "@builder.io/qwik-city";
 import * as jose from "jose";
 import { SessionData } from "../constants";
 
 export const verifyToken = async (
-  request: RequestEvent
+  request: RequestEvent | RequestEventLoader
 ): Promise<SessionData> => {
   const jwt =
     request.cookie.get("token")?.value || request.headers.get("authorization");
