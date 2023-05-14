@@ -1,17 +1,15 @@
-import { Cookie, RequestContext, ResponseContext } from "@builder.io/qwik-city";
+import { RequestEvent, RequestEventLoader } from "@builder.io/qwik-city";
 import * as jose from "jose";
 import { SessionData } from "../constants";
 
 export const verifyToken = async (
-  request: RequestContext,
-  response: ResponseContext,
-  cookie: Cookie
+  request: RequestEvent | RequestEventLoader
 ): Promise<SessionData> => {
   const jwt =
-    cookie.get("token")?.value || request.headers.get("authorization");
-  if (!jwt) throw response.redirect("/login", 302);
+    request.cookie.get("token")?.value || request.headers.get("authorization");
+  if (!jwt) throw request.redirect(302, "/login");
   const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) throw response.error(500);
+  if (!jwtSecret) throw request.error(500, "Could not load server secret");
 
   let payload;
   try {
@@ -25,8 +23,12 @@ export const verifyToken = async (
     ));
   } catch (err) {
     console.log(err);
-    throw response.redirect("/login", 302);
+    throw request.redirect(302, "/login");
   }
 
-  return { userId: Number(payload.userId), sessionKey: payload.sessionKey?.toString() || '', isGlobalAdmin: payload.isGlobalAdmin ? true : false };
+  return {
+    userId: Number(payload.userId),
+    sessionKey: payload.sessionKey?.toString() || "",
+    isGlobalAdmin: payload.isGlobalAdmin ? true : false,
+  };
 };

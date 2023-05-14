@@ -1,13 +1,11 @@
-import { component$, Resource, $ } from "@builder.io/qwik";
-import { useEndpoint, useNavigate } from "@builder.io/qwik-city";
+import { component$ } from "@builder.io/qwik";
+import { useNavigate } from "@builder.io/qwik-city";
 import { Button } from "~/components/button";
 import { CommandData } from "~/models";
 import { CommandContainer, CommandStyle } from "./style.css";
 
 export const CommandPage = component$(({ data }: { data: CommandData }) => {
   const nav = useNavigate();
-
-
 
   return (
     <div class={`${CommandContainer}`}>
@@ -20,22 +18,9 @@ export const CommandPage = component$(({ data }: { data: CommandData }) => {
         link={`/accounts/${data.accountId}/commands`}
       />
 
-
       <div class={`${CommandStyle}`}>
         {data.commandId}: {data.name}, account: {data.accountId}
       </div>
     </div>
-  );
-});
-
-export const CommandResource = component$(() => {
-  const resource = useEndpoint<CommandData>();
-  return (
-    <Resource
-      value={resource}
-      onPending={() => <div>Loading...</div>}
-      onRejected={() => <div>Error</div>}
-      onResolved={(data) => <CommandPage data={data} />}
-    />
   );
 });

@@ -1,23 +1,35 @@
-import { RequestHandler } from "@builder.io/qwik-city";
-import { verifyToken } from "~/common/authentication/verifyToken";
-import { db } from 'db'
+import { routeLoader$ } from "@builder.io/qwik-city";
+import { db } from "db";
 import { Tokens } from "~/common/constants";
-import { NewUserResource } from "~/pages/user/NewUserPage";
+import { NewUserPage } from "~/pages/user/NewUserPage";
 import { NewUserData } from "~/models";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler<NewUserData> = async ({ response, url }) => {
-    const token = url.searchParams.get('token')
-    if (!token) throw response.error(401)
-    const tokenData = await db.token.findFirst({ where: { token } })
-    if (!tokenData) throw response.error(401)
-    const { type, expiry } = tokenData
-    const expired = expiry.getTime() < Math.floor(Date.now() / 1000)
-    if (expired) throw response.error(401)
-    if (type !== Tokens.ADD_NEW_USER && type !== Tokens.ADD_NEW_ACCOUNT) throw response.error(401)
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { url, error } = requestEvent;
+  const token = url.searchParams.get("token");
+  if (!token) throw error(401, "Invalid Token. Error Code 1");
+  const tokenData = await db.token.findFirst({ where: { token } });
+  if (!tokenData) throw error(401, "Invalid Token. Error Code 2");
+  const { type, expiry } = tokenData;
+  const expired = expiry.getTime() < Math.floor(Date.now() / 1000);
+  if (expired) throw error(401, "Invalid Token. Error Code 3");
+  if (type !== Tokens.ADD_NEW_USER && type !== Tokens.ADD_NEW_ACCOUNT)
+    throw error(401, "Invalid Token. Error Code 4");
 
-    // Happy :)
+  // Happy :)
 
-    return { token }
-}
+  return { token } as NewUserData;
+});
 
-export default NewUserResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <NewUserPage data={data} />}
+    />
+  );
+});

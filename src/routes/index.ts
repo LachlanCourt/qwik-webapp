@@ -1,14 +1,10 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 
-interface Response { }
-
-export const onGet: RequestHandler<Response> = async ({
-  request,
-  response,
-  cookie,
-}) => {
-  const payload = await verifyToken(request, response, cookie);
-  if (!payload) throw response.redirect("/login", 302);
-  throw response.redirect(`/accounts`, 302);
+export const onGet: RequestHandler = async (requestEvent) => {
+  const { redirect } = requestEvent;
+  const payload = await verifyToken(requestEvent);
+  console.log("hi");
+  if (!payload) throw redirect(302, "/login");
+  throw redirect(302, `/accounts`);
 };

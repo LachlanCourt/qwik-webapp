@@ -1,33 +1,38 @@
-import { RequestHandler } from "@builder.io/qwik-city";
+import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import { CommandsResource } from "~/pages/command/CommandsPage";
+import { Commands } from "~/pages/command/CommandsPage";
 import { CommandData } from "~/models";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommands } from "~/common/accessors/getCommands";
+import { Command } from "@prisma/client";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler<Array<CommandData>> = async ({
-    params,
-    request,
-    response,
-    cookie,
-}) => {
-    const payload = await verifyToken(request, response, cookie);
-    if (!payload) throw response.redirect("/login", 302);
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { params, redirect, error } = requestEvent;
+  const payload = await verifyToken(requestEvent);
+  if (!payload) throw redirect(302, "/login");
 
-    const account = await getAccount(
-        Number(params.accountId),
-        payload.userId
-    );
-    if (!account) throw response.error(404);
+  const account = await getAccount(Number(params.accountId), payload.userId);
+  if (!account) throw error(404, "Account Not Found");
 
-    const commands = await getCommands(account.id);
+  const commands = await getCommands(account.id);
 
-    return commands.map((command) => ({
-        commandId: command.id,
-        name: command.name,
-        accountId: command.accountId,
-        response: command.response
-    }));
-};
+  return commands.map((command) => ({
+    commandId: command.id,
+    name: command.name,
+    accountId: command.accountId,
+    response: command.response,
+  })) as Array<CommandData>;
+});
 
-export default CommandsResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <Commands data={data} />}
+    />
+  );
+});
