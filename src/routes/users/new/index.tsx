@@ -1,12 +1,12 @@
-import { RequestHandler } from "@builder.io/qwik-city";
-import { verifyToken } from "~/common/authentication/verifyToken";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { db } from "db";
 import { Tokens } from "~/common/constants";
-import { NewUserResource } from "~/pages/user/NewUserPage";
+import { NewUserPage } from "~/pages/user/NewUserPage";
 import { NewUserData } from "~/models";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler = async (requestEvent) => {
-  const { url, error, json } = requestEvent;
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { url, error } = requestEvent;
   const token = url.searchParams.get("token");
   if (!token) throw error(401, "Invalid Token. Error Code 1");
   const tokenData = await db.token.findFirst({ where: { token } });
@@ -19,7 +19,17 @@ export const onGet: RequestHandler = async (requestEvent) => {
 
   // Happy :)
 
-  json(200, { token } as NewUserData);
-};
+  return { token } as NewUserData;
+});
 
-export default NewUserResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <NewUserPage data={data} />}
+    />
+  );
+});

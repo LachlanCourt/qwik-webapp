@@ -1,11 +1,12 @@
-import { RequestHandler } from "@builder.io/qwik-city";
+import { Resource, component$ } from "@builder.io/qwik";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { getAccount } from "~/common/accessors/getAccount";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { AddUserData } from "~/models/AddUserData";
-import { AddUserResource } from "~/pages/user/AddUserPage";
+import { AddUserPage } from "~/pages/user/AddUserPage";
 
-export const onGet: RequestHandler = async (requestEvent) => {
-  const { params, redirect, error, json } = requestEvent;
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { params, redirect, error } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
@@ -13,7 +14,17 @@ export const onGet: RequestHandler = async (requestEvent) => {
   if (!account || account.adminId !== payload.userId)
     throw error(404, "Account not found");
 
-  json(200, { accountId: account.id } as AddUserData);
-};
+  return { accountId: account.id } as AddUserData;
+});
 
-export default AddUserResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <AddUserPage {...data} />}
+    />
+  );
+});
