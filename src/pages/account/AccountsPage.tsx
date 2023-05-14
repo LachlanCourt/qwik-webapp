@@ -1,5 +1,4 @@
 import { component$, Resource } from "@builder.io/qwik";
-import { useEndpoint } from "@builder.io/qwik-city";
 import { AccountData } from "~/models";
 
 export const Accounts = component$(({ data }: { data: Array<AccountData> }) => {
@@ -22,17 +21,5 @@ export const Accounts = component$(({ data }: { data: Array<AccountData> }) => {
         "No Accounts"
       )}
     </div>
-  );
-});
-
-export const AccountsResource = component$(() => {
-  const resource = useEndpoint<Array<AccountData>>();
-  return (
-    <Resource
-      value={resource}
-      onPending={() => <div>Loading...</div>}
-      onRejected={() => <div>Error</div>}
-      onResolved={(data) => <Accounts data={data} />}
-    />
   );
 });

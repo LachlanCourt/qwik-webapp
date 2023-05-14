@@ -1,38 +1,46 @@
-import { RequestHandler } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import { AccountsResource } from "~/pages/account/AccountsPage";
+import { Accounts } from "~/pages/account/AccountsPage";
 import { db } from "db";
 import { AccountData } from "~/models";
+import { Resource, component$ } from "@builder.io/qwik";
 
-export const onGet: RequestHandler<Array<AccountData>> = async ({
-    request,
-    response,
-    cookie,
-}) => {
-    const payload = await verifyToken(request, response, cookie);
-    if (!payload) throw response.redirect("/login", 302);
+export const useEndpoint = routeLoader$(async (requestEvent) => {
+  const { redirect } = requestEvent;
+  const payload = await verifyToken(requestEvent);
+  if (!payload) throw redirect(302, "/login");
 
-    const accounts = await db.account.findMany({
-        where: {
-            OR: [
-                {
-                    moderators: {
-                        some: {
-                            userId: payload.userId,
-                        },
-                    },
-                },
-                {
-                    adminId: payload.userId,
-                },
-            ],
+  const accounts = await db.account.findMany({
+    where: {
+      OR: [
+        {
+          moderators: {
+            some: {
+              userId: payload.userId,
+            },
+          },
         },
-    });
+        {
+          adminId: payload.userId,
+        },
+      ],
+    },
+  });
 
-    return accounts.map((account) => ({
-        accountId: account.id,
-        name: account.name,
-    }));
-};
+  return accounts.map((account) => ({
+    accountId: account.id,
+    name: account.name,
+  })) as Array<AccountData>;
+});
 
-export default AccountsResource;
+export default component$(() => {
+  const resource = useEndpoint();
+  return (
+    <Resource
+      value={resource}
+      onPending={() => <div>Loading...</div>}
+      onRejected={() => <div>Error</div>}
+      onResolved={(data) => <Accounts data={data} />}
+    />
+  );
+});
