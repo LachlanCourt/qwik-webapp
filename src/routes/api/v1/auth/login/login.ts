@@ -22,7 +22,7 @@ export const onPost: RequestHandler<ExistingUser> = async (requestEvent) => {
   const user = await db.user.findFirst({ where: { email } });
 
   if (!user || passwordHash !== user.password)
-    throw error(401, "Email or Password is incorrect");
+    throw error(404, "User Not Found. Check Email and Password are correct");
 
   // Clean up old sessions if the user is logging in again
   await db.session.deleteMany({ where: { userId: user.id } });
