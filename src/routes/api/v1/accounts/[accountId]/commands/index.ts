@@ -9,6 +9,7 @@ import { getCommands } from "~/common/accessors/getCommands";
 export const onGet: RequestHandler = async (requestEvent) => {
   const { error, params, json } = requestEvent;
   console.log("endpoint hit");
+
   const payload = await verifyToken(requestEvent);
   if (!payload) throw error(401, "Invalid Token. Error Code 1");
 

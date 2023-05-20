@@ -3,13 +3,15 @@ import * as jose from "jose";
 import { SessionData } from "../constants";
 
 export const verifyToken = async (
-  request: RequestEvent | RequestEventLoader
+  requestEvent: RequestEvent | RequestEventLoader
 ): Promise<SessionData> => {
+  const { request, redirect, error, cookie } = requestEvent;
   const jwt =
-    request.cookie.get("token")?.value || request.headers.get("authorization");
-  if (!jwt) throw request.redirect(302, "/login");
+    cookie.get("token")?.value || request.headers.get("Authorization");
+
+  if (!jwt) throw redirect(302, "/login");
   const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) throw request.error(500, "Could not load server secret");
+  if (!jwtSecret) throw error(500, "Could not load server secret");
 
   let payload;
   try {
@@ -23,7 +25,7 @@ export const verifyToken = async (
     ));
   } catch (err) {
     console.log(err);
-    throw request.redirect(302, "/login");
+    throw redirect(302, "/login");
   }
 
   return {
