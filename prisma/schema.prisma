@@ -67,7 +67,8 @@ model Token {
 }
 
 model ApiUser {
-    id        Int     @id @default(autoincrement())
-    username  String  @unique
-    password  String
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  password      String
+  discriminator String
 }
