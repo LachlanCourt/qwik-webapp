@@ -6,16 +6,16 @@ export const useCreateAPIToken = (
 ) => {
   const location = useLocation();
 
-  const createToken = $(async () => {
+  const createToken = $(async (discriminator: string) => {
     const result: { username?: string; password?: string } = await fetch(
       `${location.url.origin}/api/v1/admin/apitokens/new`,
       {
         method: "POST",
+        body: JSON.stringify({ discriminator }),
       }
     ).then((data) => (data.status == 200 ? data.json() : {}));
-    if (tokenData.value) {
-      tokenData.value = result;
-    }
+
+    tokenData.value = result;
   });
 
   return createToken;

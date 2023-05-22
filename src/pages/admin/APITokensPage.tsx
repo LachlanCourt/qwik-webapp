@@ -15,7 +15,7 @@ export const APITokens = component$(
 
         {renderedData.value.map((apiUser, index) => {
           return (
-            <>
+            <div key={index}>
               <div>
                 {apiUser.id} {apiUser.discriminator}
               </div>
@@ -26,7 +26,7 @@ export const APITokens = component$(
               >
                 Delete
               </button>
-            </>
+            </div>
           );
         })}
       </>
