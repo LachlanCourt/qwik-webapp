@@ -33,13 +33,15 @@ export const onGet: RequestHandler = async (requestEvent) => {
     };
     if (accountData) accountData.commands.push(newCommand);
     else {
-      commandData.push({
-        name:
-          accounts.find((account) => account.id === command.accountId)?.name ||
-          "",
-        accountId: command.accountId,
-        commands: [newCommand],
-      });
+      const account = accounts.find(
+        (account) => account.id === command.accountId
+      );
+      account &&
+        commandData.push({
+          name: account.name,
+          accountId: command.accountId,
+          commands: [newCommand],
+        });
     }
   });
 
