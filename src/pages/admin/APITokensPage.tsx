@@ -17,7 +17,7 @@ export const APITokens = component$(
           return (
             <div key={index}>
               <div>
-                {apiUser.id} {apiUser.discriminator}
+                {apiUser.id} {apiUser.discriminator} {apiUser.webhookUrl}
               </div>
               <button
                 onClick$={() => {

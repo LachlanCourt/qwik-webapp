@@ -11,9 +11,11 @@ export const onPost: RequestHandler = async (requestEvent) => {
   if (!payload.isGlobalAdmin) throw error(403, "Missing Permissions");
 
   let discriminator: string = "";
+  let webhookUrl: string = "";
   try {
     const data = await request.json();
     discriminator = data.discriminator;
+    webhookUrl = data.webhookUrl;
   } catch {}
   if (!discriminator) throw error(400, "Discriminator is required");
 
@@ -28,6 +30,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
       username: hashedUsername,
       password: hashedPassword,
       discriminator,
+      webhookUrl,
     },
   });
 

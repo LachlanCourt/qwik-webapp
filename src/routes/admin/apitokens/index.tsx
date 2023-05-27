@@ -16,6 +16,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   return apiUsers.map((apiUser) => ({
     discriminator: apiUser.discriminator,
     id: apiUser.id,
+    webhookUrl: apiUser.webhookUrl,
   })) as Array<APIUserReadonlyData>;
 });
 

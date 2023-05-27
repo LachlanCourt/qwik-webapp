@@ -71,4 +71,5 @@ model ApiUser {
   username      String @unique
   password      String
   discriminator String
+  webhookUrl    String @default("")
 }

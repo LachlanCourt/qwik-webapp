@@ -11,6 +11,12 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
+  if (
+    Number.isNaN(Number(params.accountId)) ||
+    Number.isNaN(Number(params.commandId))
+  )
+    throw error(404, "Page Not Found");
+
   const account = await getAccount(Number(params.accountId), payload.userId);
   if (!account) throw error(404, "Account Not Found");
 

@@ -1,7 +1,6 @@
 import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { db } from "db";
-import sha256 from "crypto-js/sha256";
 import { APIUserReadonlyData } from "~/models/APIUserReadonlyData";
 
 export const onDelete: RequestHandler = async (requestEvent) => {

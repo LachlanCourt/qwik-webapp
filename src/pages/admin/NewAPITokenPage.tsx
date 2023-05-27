@@ -4,13 +4,14 @@ import { Button } from "~/components/button";
 
 const NewAPITokenPage = component$(() => {
   const tokenData = useSignal<{ username?: string; password?: string }>({});
-  const inputValue = useSignal("");
+  const discriminatorValue = useSignal("");
+  const webhookValue = useSignal("");
   const errorMessage = useSignal("");
   const createToken = useCreateAPIToken(tokenData);
 
   const handleSumbit = $(() => {
-    if (inputValue.value) {
-      createToken(inputValue.value);
+    if (discriminatorValue.value) {
+      createToken(discriminatorValue.value, webhookValue.value);
     } else {
       errorMessage.value = "Discriminator is required";
     }
@@ -20,18 +21,35 @@ const NewAPITokenPage = component$(() => {
     e.key === "Enter" && handleSumbit();
   });
 
-  const handleInput = $((e: Event, target: HTMLInputElement) => {
-    inputValue.value = target.value;
+  const handleDiscriminatorInput = $((e: Event, target: HTMLInputElement) => {
+    discriminatorValue.value = target.value;
     if (target.value) errorMessage.value = "";
+  });
+  const handleWebhookInput = $((e: Event, target: HTMLInputElement) => {
+    webhookValue.value = target.value;
   });
 
   return (
     <>
       <Button label="Back" link="/admin/apitokens" />
       Discriminator:
-      <input value={inputValue.value} onInput$={handleInput} />
+      <input
+        value={discriminatorValue.value}
+        onInput$={handleDiscriminatorInput}
+        disabled={!!tokenData.value.username}
+      />
       {errorMessage}
-      <button onClick$={handleSumbit} window:onKeyDown$={handleEnterKeyDown}>
+      Webhook URL:
+      <input
+        value={webhookValue.value}
+        onInput$={handleWebhookInput}
+        disabled={!!tokenData.value.username}
+      />
+      <button
+        onClick$={handleSumbit}
+        window:onKeyDown$={handleEnterKeyDown}
+        disabled={!!tokenData.value.username}
+      >
         Generate
       </button>
       <div>

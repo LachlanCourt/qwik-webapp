@@ -2,6 +2,10 @@ import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { db } from "db";
 import { getAccount } from "~/common/accessors/getAccount";
+import {
+  CommandWebhookTypes,
+  use$CommandWebhookHandler,
+} from "~/common/webhooks/use$CommandWebhookHandler";
 
 interface Response {}
 
@@ -24,6 +28,9 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const command = await db.command.create({
     data: { name, accountId, response: formResponse },
   });
+
+  const sendWebhookUpdate = use$CommandWebhookHandler();
+  await sendWebhookUpdate(command, CommandWebhookTypes.CREATE);
 
   throw redirect(302, `/accounts/${accountId}/commands/${command.id}`);
 };

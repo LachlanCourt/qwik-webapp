@@ -1,27 +1,24 @@
-import { RequestEvent, RequestHandler } from "@builder.io/qwik-city";
+import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import cryptojs from "crypto-js";
 import { db } from "db";
-import { Tokens } from "~/common/constants";
-import { getAccount } from "~/common/accessors/getAccount";
-import { getCommands } from "~/common/accessors/getCommands";
-import { Command } from "@prisma/client";
 
 export const onGet: RequestHandler = async (requestEvent) => {
-  const { error, params, json, url, request } = requestEvent;
+  const { error, json } = requestEvent;
 
   const payload = await verifyToken(requestEvent);
   if (!payload) throw error(401, "Invalid Token. Error Code 1");
 
-  // const register = url.searchParams.get("register");
+  if (!payload.isGlobalAdmin) throw error(403, "Missing Permissions");
 
   const commands = await db.command.findMany();
+  const accounts = await db.account.findMany();
+
   const commandData: Array<{
     name: string;
     accountId: number;
     commands: Array<{ name: string; response: string; type: string }>;
   }> = [];
-  const accounts = await db.account.findMany();
+
   commands.forEach((command) => {
     const accountData = commandData.find(
       (c) => c.accountId === command.accountId
