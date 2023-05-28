@@ -3,6 +3,7 @@ import { verifyToken } from "authentication/verifyToken";
 import EditCommandPage from "~/pages/command/EditCommandPage";
 import { getAccount } from "~/common/accessors/getAccount";
 import { Resource, component$ } from "@builder.io/qwik";
+import { getCommand } from "~/common/accessors/getCommand";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
   const { params, request, cookie, redirect } = requestEvent;
@@ -12,11 +13,13 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const account = await getAccount(Number(params.accountId), payload.userId);
   if (!account) throw redirect(302, "/accounts");
 
-  return undefined;
+  const command = await getCommand(Number(params.commandId));
+  return command || undefined;
 });
 
 export default component$(() => {
   const resource = useEndpoint();
+
   return (
     <Resource
       value={resource}

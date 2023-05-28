@@ -12,7 +12,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
 
   const account = await getAccount(Number(params.accountId), payload.userId);
   if (!account || account.adminId !== payload.userId)
-    throw error(404, "Account not found");
+    throw error(404, "Account Not found");
 
   return { accountId: account.id } as AddUserData;
 });

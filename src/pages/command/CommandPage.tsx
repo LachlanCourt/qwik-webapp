@@ -1,10 +1,11 @@
 import { component$ } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import { Button } from "~/components/button";
-import { CommandData } from "~/models";
-import { CommandContainer, CommandStyle } from "./style.css";
 
-export const CommandPage = component$(({ data }: { data: CommandData }) => {
+import { CommandContainer, CommandStyle } from "./style.css";
+import { Command } from "@prisma/client";
+
+export const CommandPage = component$(({ data }: { data: Command }) => {
   const nav = useNavigate();
 
   return (
@@ -19,8 +20,12 @@ export const CommandPage = component$(({ data }: { data: CommandData }) => {
       />
 
       <div class={`${CommandStyle}`}>
-        {data.commandId}: {data.name}, account: {data.accountId}
+        {data.id}: {data.name}, account: {data.accountId}
       </div>
+      <Button
+        link={`/accounts/${data.accountId}/commands/${data.id}/edit`}
+        label="Edit"
+      />
     </div>
   );
 });

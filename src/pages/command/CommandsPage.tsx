@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import { CommandData } from "~/models";
 import {
@@ -9,19 +9,24 @@ import {
   CommandsListItem,
   CommandsTile,
 } from "./style.css";
+import { useDeleteCommand } from "./hooks/useDeleteCommand";
+import { Button } from "~/components/button";
 
 export const Commands = component$(({ data }: { data: Array<CommandData> }) => {
   const nav = useNavigate();
+  const renderedData = useSignal(data);
+  const deleteCommand = useDeleteCommand(renderedData);
   return (
     <div class={`${CommandsContainer}`}>
       <div class={`${CommandsHeader}`}>
         <div class={`${CommandsTitle}`}>
           {data.length > 0 ? "All Commands" : "No Commands"}
         </div>
+        <Button label="New" link="new" />
       </div>
-      {data.length > 0 && (
+      {renderedData.value.length > 0 && (
         <ul class={`${CommandsList}`}>
-          {data.map((command) => {
+          {renderedData.value.map((command) => {
             return (
               <li class={`${CommandsListItem}`}>
                 <a
@@ -29,6 +34,12 @@ export const Commands = component$(({ data }: { data: Array<CommandData> }) => {
                 >
                   <div class={`${CommandsTile}`}>
                     {command.commandId}: {command.name}
+                    <button
+                      preventdefault:click
+                      onClick$={() => deleteCommand(command.commandId)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </a>
 

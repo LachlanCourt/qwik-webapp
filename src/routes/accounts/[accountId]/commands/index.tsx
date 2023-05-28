@@ -4,7 +4,6 @@ import { Commands } from "~/pages/command/CommandsPage";
 import { CommandData } from "~/models";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommands } from "~/common/accessors/getCommands";
-import { Command } from "@prisma/client";
 import { Resource, component$ } from "@builder.io/qwik";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
