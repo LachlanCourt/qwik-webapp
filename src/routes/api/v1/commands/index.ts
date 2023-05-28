@@ -17,7 +17,11 @@ export const onGet: RequestHandler = async (requestEvent) => {
     name: string;
     accountId: number;
     commands: Array<{ name: string; response: string; type: string }>;
-  }> = [];
+  }> = accounts.map((account) => ({
+    name: account.name,
+    accountId: account.id,
+    commands: [],
+  }));
 
   commands.forEach((command) => {
     const accountData = commandData.find(
@@ -29,17 +33,6 @@ export const onGet: RequestHandler = async (requestEvent) => {
       type: "simple_response",
     };
     if (accountData) accountData.commands.push(newCommand);
-    else {
-      const account = accounts.find(
-        (account) => account.id === command.accountId
-      );
-      account &&
-        commandData.push({
-          name: account.name,
-          accountId: command.accountId,
-          commands: [newCommand],
-        });
-    }
   });
 
   json(200, commandData);
