@@ -3,8 +3,9 @@ import { verifyToken } from "~/common/authentication/verifyToken";
 import { CommandPage } from "~/pages/command/CommandPage";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommand } from "~/common/accessors/getCommand";
-import { CommandData } from "~/models";
+
 import { Resource, component$ } from "@builder.io/qwik";
+import { Command } from "@prisma/client";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
   const { params, redirect, error } = requestEvent;
@@ -24,11 +25,11 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   if (!command) throw error(404, "Command Not Found");
 
   return {
-    commandId: command.id,
+    id: command.id,
     accountId: command.accountId,
     name: command.name,
     response: command.response,
-  } as CommandData;
+  } as Command;
 });
 
 export default component$(() => {

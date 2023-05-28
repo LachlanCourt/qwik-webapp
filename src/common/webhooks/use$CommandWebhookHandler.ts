@@ -18,7 +18,7 @@ interface WebhookCommandType extends Command {
 }
 
 export const use$CommandWebhookHandler = () => {
-  const send = async (command: Command, type: CommandWebhookTypes) => {
+  const send = async (commands: Array<Command>, type: CommandWebhookTypes) => {
     const registeredWebhooks = (await db.apiUser.findMany())
       .filter((apiUser) => !!apiUser.webhookUrl)
       .map((apiUser) => apiUser.webhookUrl);
@@ -30,7 +30,7 @@ export const use$CommandWebhookHandler = () => {
     ) {
       postData.push({
         commandAction: WebhookCommandActions.DELETE,
-        ...command,
+        ...commands[0],
         type: "simple_response",
       });
     }
@@ -40,7 +40,7 @@ export const use$CommandWebhookHandler = () => {
     ) {
       postData.push({
         commandAction: WebhookCommandActions.CREATE,
-        ...command,
+        ...(commands[1] ? commands[1] : commands[0]),
         type: "simple_response",
       });
     }

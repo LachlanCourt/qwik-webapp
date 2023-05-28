@@ -30,7 +30,7 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   });
 
   const sendWebhookUpdate = use$CommandWebhookHandler();
-  await sendWebhookUpdate(command, CommandWebhookTypes.CREATE);
+  await sendWebhookUpdate([command], CommandWebhookTypes.CREATE);
 
   throw redirect(302, `/accounts/${accountId}/commands/${command.id}`);
 };
