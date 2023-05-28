@@ -19,9 +19,9 @@ interface WebhookCommandType extends Command {
 
 export const use$CommandWebhookHandler = () => {
   const send = async (commands: Array<Command>, type: CommandWebhookTypes) => {
-    const registeredWebhooks = (await db.apiUser.findMany())
-      .filter((apiUser) => !!apiUser.webhookUrl)
-      .map((apiUser) => apiUser.webhookUrl);
+    const registeredWebhooks = (await db.apiUser.findMany()).filter(
+      (apiUser) => !!apiUser.webhookUrl
+    );
 
     const postData: Array<WebhookCommandType> = [];
     if (
@@ -45,11 +45,15 @@ export const use$CommandWebhookHandler = () => {
       });
     }
 
-    registeredWebhooks.forEach(async (url) => {
+    registeredWebhooks.forEach(async (apiUser) => {
       try {
-        await fetch(url, { method: "POST", body: JSON.stringify(postData) });
+        await fetch(apiUser.webhookUrl, {
+          method: "POST",
+          body: JSON.stringify(postData),
+          headers: { Authorization: apiUser.webhookServerId },
+        });
       } catch (e) {
-        console.error(`Fetch failed to URL ${url}`);
+        console.error(`Fetch failed to URL ${apiUser.webhookUrl}`);
         console.error(e);
       }
     });

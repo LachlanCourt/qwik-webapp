@@ -24,6 +24,13 @@ export const onPost: RequestHandler = async (requestEvent) => {
     throw error(404, "User Not Found. Check Username and Password are correct");
 
   const sessionKey = cryptojs.lib.WordArray.random(32).toString();
+  const serverId = cryptojs.lib.WordArray.random(32).toString();
+
+  await db.apiUser.update({
+    where: { id: apiUser.id },
+    data: { webhookServerId: sha256(serverId).toString() },
+  });
+
   //TODO fix this
   // await db.session.deleteMany({ where: { id: -1 } })
   // await db.session.create({
@@ -35,5 +42,6 @@ export const onPost: RequestHandler = async (requestEvent) => {
       { userId: -1, sessionKey, isGlobalAdmin: true },
       requestEvent
     ),
+    serverId,
   } as Response);
 };
