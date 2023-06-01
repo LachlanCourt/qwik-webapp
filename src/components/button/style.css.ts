@@ -23,16 +23,40 @@
 import { style } from "@vanilla-extract/css";
 import { theme } from "~/common/styles/theme.css";
 
-export const ButtonStyle = style({
+export const BaseButtonStyle = style({
   fontSize: "1.2rem",
   outline: "none",
   border: "none",
-  background: "#AAAAFF",
   borderRadius: "0.3rem",
   padding: "0.3rem",
-  color: "#333399",
   cursor: "pointer",
+  textDecoration: "none",
+  fontWeight: "normal",
+  fontFamily:
+    "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+});
+
+export const PrimaryButtonStyle = style({
+  ":visited": {
+    color: "darkslategray",
+  },
+  color: "darkslategray",
+  background: "#AAAAFF",
+  border: "1px solid #9999EE",
   ":hover": {
     background: "#9999EE",
+  },
+});
+
+export const SecondaryButtonStyle = style({
+  ":visited": {
+    color: "darkslategray",
+  },
+  color: "darkslategray",
+  background: "lightgrey",
+  border: "1px solid slategray",
+  ":hover": {
+    color: "lightgrey",
+    background: "slategray",
   },
 });

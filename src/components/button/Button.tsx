@@ -1,17 +1,13 @@
+import { component$, PropFunction, Slot } from "@builder.io/qwik";
 import {
-  component$,
-  JSXChildren,
-  PropFunction,
-  QwikIntrinsicElements,
-  Slot,
-  useStylesScoped$,
-  QwikJSX,
-} from "@builder.io/qwik";
-import { ButtonStyle } from "./style.css";
+  BaseButtonStyle,
+  PrimaryButtonStyle,
+  SecondaryButtonStyle,
+} from "./style.css";
 
 export enum ButtonVariant {
-  primary = "primary",
-  secondary = "secondary",
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
 }
 
 interface ButtonProps {
@@ -23,17 +19,23 @@ interface ButtonProps {
 
 export const Button = component$(
   ({
-    variant = ButtonVariant.primary,
+    variant = ButtonVariant.PRIMARY,
     onClick$,
     link,
     ...props
   }: ButtonProps) => {
+    const variantMap = {
+      [ButtonVariant.PRIMARY]: PrimaryButtonStyle,
+      [ButtonVariant.SECONDARY]: SecondaryButtonStyle,
+    };
+
+    const className = `${BaseButtonStyle} ${variantMap[variant]}`;
     return link ? (
-      <a class={ButtonStyle} href={link} {...props}>
+      <a class={className} href={link} {...props}>
         <Slot />
       </a>
     ) : (
-      <button class={ButtonStyle} onClick$={onClick$} {...props}>
+      <button class={className} onClick$={onClick$} {...props}>
         <Slot />
       </button>
     );
