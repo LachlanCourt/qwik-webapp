@@ -7,9 +7,8 @@ import {
   use$CommandWebhookHandler,
 } from "~/common/webhooks/use$CommandWebhookHandler";
 import { getCommands } from "~/common/accessors/getCommands";
-import { CommandData } from "~/models";
+import { CommandPageData } from "~/models";
 import { getCommand } from "~/common/accessors/getCommand";
-import { Command } from "@prisma/client";
 
 export const onDelete: RequestHandler = async (requestEvent) => {
   const { params, redirect, error, json } = requestEvent;
@@ -22,7 +21,7 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   )
     throw error(404, "Not Found");
 
-  const account = await getAccount(Number(params.accountId), payload.userId);
+  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
   if (!account) throw error(404, "Account Not Found");
 
   const command = await db.command.delete({
@@ -37,11 +36,11 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   json(
     200,
     commands.map((command) => ({
-      commandId: command.id,
+      id: command.id,
       name: command.name,
       accountId: command.accountId,
       response: command.response,
-    })) as Array<CommandData>
+    })) as Array<CommandPageData>
   );
 };
 
@@ -57,7 +56,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
   )
     throw error(404, "Not Found");
 
-  const account = await getAccount(Number(params.accountId), payload.userId);
+  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
   if (!account) throw error(404, "Account not found");
   const command = await getCommand(Number(params.commandId));
   if (!command) throw error(404, "Command not found");
@@ -78,5 +77,5 @@ export const onPost: RequestHandler = async (requestEvent) => {
     CommandWebhookTypes.UPDATE
   );
 
-  throw redirect(302, `/accounts/${account.id}/commands/${command.id}`);
+  throw redirect(302, `/accounts/${account.id}/commands`);
 };

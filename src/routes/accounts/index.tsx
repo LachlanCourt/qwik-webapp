@@ -2,7 +2,7 @@ import { routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { Accounts } from "~/pages/account/AccountsPage";
 import { db } from "db";
-import { AccountData } from "~/models";
+import { AccountPageData } from "~/models";
 import { Resource, component$ } from "@builder.io/qwik";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
@@ -10,7 +10,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
-  const accounts = await db.account.findMany({
+  const accounts = await db.account.findMany(payload.isGlobalAdmin ? undefined : {
     where: {
       OR: [
         {
@@ -30,7 +30,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   return accounts.map((account) => ({
     accountId: account.id,
     name: account.name,
-  })) as Array<AccountData>;
+  })) as Array<AccountPageData>;
 });
 
 export default component$(() => {

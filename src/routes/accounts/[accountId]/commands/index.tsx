@@ -1,7 +1,7 @@
-import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { Commands } from "~/pages/command/CommandsPage";
-import { CommandData } from "~/models";
+import { CommandPageData } from "~/models";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommands } from "~/common/accessors/getCommands";
 import { Resource, component$ } from "@builder.io/qwik";
@@ -11,17 +11,14 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
-  const account = await getAccount(Number(params.accountId), payload.userId);
+  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
   if (!account) throw error(404, "Account Not Found");
 
   const commands = await getCommands(account.id);
 
-  return commands.map((command) => ({
-    commandId: command.id,
-    name: command.name,
-    accountId: command.accountId,
-    response: command.response,
-  })) as Array<CommandData>;
+  return commands.map(({ id, name, accountId, response }) => ({
+    id, name, accountId, response
+  })) as Array<CommandPageData>;
 });
 
 export default component$(() => {

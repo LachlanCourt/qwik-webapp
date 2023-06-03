@@ -1,6 +1,6 @@
 import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
-import { CommandPage } from "~/pages/command/CommandPage";
+import { EditCommandPage } from "~/pages/command/EditCommandPage";
 import { getAccount } from "~/common/accessors/getAccount";
 import { getCommand } from "~/common/accessors/getCommand";
 
@@ -18,7 +18,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   )
     throw error(404, "Page Not Found");
 
-  const account = await getAccount(Number(params.accountId), payload.userId);
+  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
   if (!account) throw error(404, "Account Not Found");
 
   const command = await getCommand(Number(params.commandId));
@@ -39,7 +39,7 @@ export default component$(() => {
       value={resource}
       onPending={() => <div>Loading...</div>}
       onRejected={() => <div>Error</div>}
-      onResolved={(data) => <CommandPage data={data} />}
+      onResolved={(data) => <EditCommandPage data={data} />}
     />
   );
 });

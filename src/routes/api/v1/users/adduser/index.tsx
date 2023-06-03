@@ -12,9 +12,13 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
   const accountId = Number(url.searchParams.get("accountId"));
   if (!accountId) throw error(400, "Account ID is required");
+
   const account = await db.account.findFirst({
-    where: { id: accountId, adminId: payload.userId },
-  });
+    where: {
+      AND: [{ id: accountId }, (!payload.isGlobalAdmin ? { adminId: payload.userId } : {})]
+    }
+  })
+
   if (!account) throw error(404, "Account Not Found");
 
   const formData = await request.formData();

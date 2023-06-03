@@ -1,36 +1,39 @@
+import { component$, PropFunction, Slot } from "@builder.io/qwik";
 import {
-    component$,
-    JSXChildren,
-    PropFunction,
-    useStylesScoped$,
-} from "@builder.io/qwik";
-import styles from "./button.css?inline";
+  ButtonBaseStyle,
+  ButtonStyleVariants
+} from "~/theme/components.css";
 
 export enum ButtonVariant {
-    primary = "primary",
-    secondary = "secondary",
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
 }
 
 interface ButtonProps {
-    label?: JSXChildren;
-    variant?: ButtonVariant;
-    // onClick$?: PropFunction<() => void>;
-    link: string
+  variant?: ButtonVariant;
+  onClick$?: PropFunction<() => void>;
+  link?: string;
+  [key: string]: any;
 }
 
 export const Button = component$(
-    ({ label, variant = ButtonVariant.primary/*, onClick$,*/, link }: ButtonProps) => {
-        useStylesScoped$(styles);
-        return (
-            // <button
-            <div class={`default-button-styles ${variant}-button-styles`}>
-                <a href={link} style={"color: #FFF; text-decoration: none"}
+  ({
+    variant = ButtonVariant.PRIMARY,
+    onClick$,
+    link,
+    ...props
+  }: ButtonProps) => {
 
-                // onClick$={onClick$}
-                >
-                    {label}
-                    {/* </button> */}
-                </a></div>
-        );
-    }
+
+    const className = `${ButtonBaseStyle} ${ButtonStyleVariants[variant]}`;
+    return link ? (
+      <a class={className} href={link} {...props}>
+        <Slot />
+      </a>
+    ) : (
+      <button class={className} onClick$={onClick$} {...props}>
+        <Slot />
+      </button>
+    );
+  }
 );

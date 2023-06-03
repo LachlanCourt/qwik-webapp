@@ -5,7 +5,7 @@ import { db } from "db";
 import { Tokens } from "~/common/constants";
 import { createToken } from "~/common/authentication/createToken";
 
-interface Response {}
+interface Response { }
 
 export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const { request, cookie, url, error, redirect } = requestEvent;
@@ -22,11 +22,12 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
 
   const formData = await request.formData();
   const password = formData.get("password")?.toString() || "";
+  const name = formData.get("name")?.toString() || "";
 
   const salt = cryptojs.lib.WordArray.random(32).toString();
   const passwordHash = sha256(`${salt}${password}`).toString();
   const user = await db.user.create({
-    data: { email, password: `${salt}$${passwordHash}` },
+    data: { email, password: `${salt}$${passwordHash}`, name },
   });
 
   const sessionKey = cryptojs.lib.WordArray.random(32).toString();

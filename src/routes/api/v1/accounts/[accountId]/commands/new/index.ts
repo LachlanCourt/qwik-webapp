@@ -7,7 +7,7 @@ import {
   use$CommandWebhookHandler,
 } from "~/common/webhooks/use$CommandWebhookHandler";
 
-interface Response {}
+interface Response { }
 
 /**
  * Form data
@@ -22,7 +22,7 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const formResponse =
     formData.get("response")?.toString() || "Command Response";
   const accountId = Number(params.accountId);
-  const account = await getAccount(accountId, payload.userId);
+  const account = await getAccount(accountId, payload.userId, payload.isGlobalAdmin);
   if (!account) throw error(404, "Account Not Found");
 
   const command = await db.command.create({
@@ -32,5 +32,5 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const sendWebhookUpdate = use$CommandWebhookHandler();
   await sendWebhookUpdate([command], CommandWebhookTypes.CREATE);
 
-  throw redirect(302, `/accounts/${accountId}/commands/${command.id}`);
+  throw redirect(302, `/accounts/${accountId}/commands`);
 };

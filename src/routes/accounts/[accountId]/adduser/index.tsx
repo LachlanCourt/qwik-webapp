@@ -10,8 +10,8 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
-  const account = await getAccount(Number(params.accountId), payload.userId);
-  if (!account || account.adminId !== payload.userId)
+  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
+  if (!account || (!payload.isGlobalAdmin && account.adminId !== payload.userId))
     throw error(404, "Account Not found");
 
   return { accountId: account.id } as AddUserData;

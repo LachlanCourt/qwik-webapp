@@ -1,8 +1,8 @@
 {
-  "name": "my-qwik-basic-starter",
-  "description": "App with Routing built-in (recommended)",
+  "name": "webapp",
+  "description": "Web interface for twitch chatbot",
   "engines": {
-    "node": ">=15.0.0"
+    "node": ">=18.0.0"
   },
   "private": true,
   "scripts": {
@@ -30,7 +30,6 @@
     "@typescript-eslint/parser": "5.46.1",
     "eslint": "8.30.0",
     "eslint-plugin-qwik": "0.16.1",
-    "node-fetch": "3.3.0",
     "prettier": "2.8.1",
     "preview-email": "^3.0.7",
     "prisma": "^4.14.0",

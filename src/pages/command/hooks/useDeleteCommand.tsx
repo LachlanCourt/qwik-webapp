@@ -1,8 +1,8 @@
 import { $, Signal } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
-import { CommandData } from "~/models";
+import { CommandPageData } from "~/models";
 
-export const useDeleteCommand = (renderedData: Signal<Array<CommandData>>) => {
+export const useDeleteCommand = (renderedData?: Signal<Array<CommandPageData>>) => {
   const location = useLocation();
 
   const deleteCommand = $(async (commandId: number) => {
@@ -12,7 +12,7 @@ export const useDeleteCommand = (renderedData: Signal<Array<CommandData>>) => {
         method: "DELETE",
       }
     ).then((data) => (data.status == 200 ? data.json() : []));
-    renderedData.value = result;
+    if (renderedData) renderedData.value = result;
   });
 
   return deleteCommand;
