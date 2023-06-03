@@ -1,14 +1,13 @@
-import { style } from "@vanilla-extract/css";
-import { theme } from "~/common/styles/theme.css";
+import { StyleRule } from "@vanilla-extract/css";
 
-export const CenterContainer = style({
+export const centerContainer: StyleRule = {
   display: "flex",
   flexGrow: 1,
   alignItems: "center",
   justifyContent: "center",
-});
+};
 
-export const CenterWrapper = style({
+export const centerWrapper: StyleRule = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -16,4 +15,4 @@ export const CenterWrapper = style({
   background: "#DDDDFF",
   borderRadius: "0.3rem",
   boxShadow: "2px 3px 2px 1px rgb(0 0 0 / 20%)",
-});
+};

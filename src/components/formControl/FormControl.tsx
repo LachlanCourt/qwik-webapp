@@ -1,5 +1,5 @@
 import { QwikJSX, Slot, component$ } from "@builder.io/qwik";
-import { FormControlStyle } from "./style.css";
+import { FormControlStyle } from "~/theme/components.css";
 
 export const FormControl = component$(
   (props: QwikJSX.IntrinsicElements["div"]) => {

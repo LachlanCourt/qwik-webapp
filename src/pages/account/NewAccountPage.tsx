@@ -3,7 +3,7 @@ import { Button, ButtonVariant } from "~/components/button/Button";
 import { Center } from "~/components/center/Center";
 import { Form } from "~/components/form/Form";
 import { FormControl } from "~/components/formControl/FormControl";
-import { Heading } from "~/components/heading/Header";
+import { Heading } from "~/components/heading/Heading";
 import { Input } from "~/components/input/Input";
 
 const NewAccountPage = component$(() => {

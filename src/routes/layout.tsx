@@ -1,6 +1,6 @@
 import { component$, Slot } from "@builder.io/qwik";
 import { RequestHandler } from "@builder.io/qwik-city";
-import Header from "../components/header/header";
+// import Header from "../components/header/header";
 
 interface Response {
   someData: string;
@@ -17,7 +17,7 @@ export default component$(() => {
   return (
     <>
       <main>
-        <Header />
+        {/* <Header /> */}
         <section>
           <Slot />
         </section>

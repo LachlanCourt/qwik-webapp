@@ -1,9 +1,8 @@
 import { component$, PropFunction, Slot } from "@builder.io/qwik";
 import {
-  BaseButtonStyle,
-  PrimaryButtonStyle,
-  SecondaryButtonStyle,
-} from "./style.css";
+  ButtonBaseStyle,
+  ButtonStyleVariants
+} from "~/theme/components.css";
 
 export enum ButtonVariant {
   PRIMARY = "primary",
@@ -24,12 +23,9 @@ export const Button = component$(
     link,
     ...props
   }: ButtonProps) => {
-    const variantMap = {
-      [ButtonVariant.PRIMARY]: PrimaryButtonStyle,
-      [ButtonVariant.SECONDARY]: SecondaryButtonStyle,
-    };
 
-    const className = `${BaseButtonStyle} ${variantMap[variant]}`;
+
+    const className = `${ButtonBaseStyle} ${ButtonStyleVariants[variant]}`;
     return link ? (
       <a class={className} href={link} {...props}>
         <Slot />

@@ -4,7 +4,7 @@ import { Form } from "~/components/form/Form";
 import { FormControl } from "~/components/formControl/FormControl";
 import { Input } from "~/components/input/Input";
 import { Center } from "~/components/center/Center";
-import { Heading } from "~/components/heading/Header";
+import { Heading } from "~/components/heading/Heading";
 
 const Login = component$(() => {
   return (
