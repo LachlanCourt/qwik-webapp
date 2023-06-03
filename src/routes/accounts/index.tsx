@@ -2,7 +2,7 @@ import { routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { Accounts } from "~/pages/account/AccountsPage";
 import { db } from "db";
-import { AccountData } from "~/models";
+import { AccountPageData } from "~/models";
 import { Resource, component$ } from "@builder.io/qwik";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
@@ -30,7 +30,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   return accounts.map((account) => ({
     accountId: account.id,
     name: account.name,
-  })) as Array<AccountData>;
+  })) as Array<AccountPageData>;
 });
 
 export default component$(() => {

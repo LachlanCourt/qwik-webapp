@@ -1,12 +1,12 @@
 import { component$, Resource } from "@builder.io/qwik";
 import { Layout } from "~/components/layout/Layout";
 import { Heading } from "~/components/heading/Heading";
-import { AccountData } from "~/models";
+import { AccountPageData } from "~/models";
 import { Button } from "~/components/button";
 import { theme } from "~/common/styles/theme.css";
 import { styles } from './styles.css'
 
-export const Accounts = component$(({ data }: { data: Array<AccountData> }) => {
+export const Accounts = component$(({ data }: { data: Array<AccountPageData> }) => {
   return (
     <Layout center={false}>
       <Heading>All Accounts</Heading>

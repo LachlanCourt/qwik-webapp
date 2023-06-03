@@ -1,10 +1,39 @@
 import { component$, Resource } from "@builder.io/qwik";
-import { AccountData } from "~/models";
+import { Button } from "~/components/button";
+import { Heading } from "~/components/heading/Heading";
+import { Layout } from "~/components/layout/Layout";
+import { AccountPageData } from "~/models";
+import { theme } from "~/common/styles/theme.css";
 
-export const AccountPage = component$(({ data }: { data: AccountData }) => {
+export const AccountPage = component$(({ data }: { data: AccountPageData }) => {
+  console.log(data.moderators)
   return (
-    <div>
-      {data.accountId}: {data.name}
-    </div>
+    <Layout center={false}>
+      <Heading>{data.name}</Heading>
+      <div style={{ paddingBottom: '2rem', display: 'flex', gap: '0.6rem' }}>
+        <Button link={'commands'}>Commands</Button>
+        {data.isAdmin && <>
+          <Button link={'edit'}>Edit</Button>
+          <Button link={'adduser'}>Add User</Button>
+        </>}
+      </div>
+      <div style={{ color: 'darkslategray' }}>
+        {data.moderators.length > 0 ? <>
+          Moderators:
+          <ul style={{
+            listStyle: 'none',
+            width: '40%',
+            display: 'flex',
+            justifyContent: 'center',
+            border: '1px solid darkslategray',
+            borderRadius: '0.3rem',
+            background: 'aliceblue',
+            paddingInlineStart: 'unset',
+            boxShadow: theme.boxShadow.md
+          }}>
+            {data.moderators.map((moderator) => <li style={{ padding: '0.6rem' }}>
+              {moderator.email}</li>)}
+          </ul></> : 'No Moderators yet. Click Add User to add a moderator!'}</div>
+    </Layout>
   );
 });
