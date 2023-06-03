@@ -1,6 +1,9 @@
 import { component$, useSignal, $, QwikKeyboardEvent } from "@builder.io/qwik";
 import { useCreateAPIToken } from "./hooks/useCreateAPIToken";
 import { Button } from "~/components/button";
+import { Layout } from "~/components/layout/Layout";
+import { Input } from "~/components/input/Input";
+import { FormControl } from "~/components/formControl/FormControl";
 
 const NewAPITokenPage = component$(() => {
   const tokenData = useSignal<{ username?: string; password?: string }>({});
@@ -30,35 +33,42 @@ const NewAPITokenPage = component$(() => {
   });
 
   return (
-    <>
-      <Button label="Back" link="/admin/apitokens" />
-      Discriminator:
-      <input
-        value={discriminatorValue.value}
-        onInput$={handleDiscriminatorInput}
-        disabled={!!tokenData.value.username}
-      />
-      {errorMessage}
-      Webhook URL:
-      <input
-        value={webhookValue.value}
-        onInput$={handleWebhookInput}
-        disabled={!!tokenData.value.username}
-      />
-      <button
-        onClick$={handleSumbit}
-        window:onKeyDown$={handleEnterKeyDown}
-        disabled={!!tokenData.value.username}
-      >
-        Generate
-      </button>
+    <Layout>
+      <Button link="/admin/apitokens">Back</Button>
+      <FormControl>
+        <label>Discriminator:</label>
+        <Input
+          value={discriminatorValue.value}
+          onInput$={handleDiscriminatorInput}
+          disabled={!!tokenData.value.username}
+        />
+        {errorMessage}
+      </FormControl>
+      <FormControl>
+
+        Webhook URL:
+        <Input
+          value={webhookValue.value}
+          onInput$={handleWebhookInput}
+          disabled={!!tokenData.value.username}
+        />      </FormControl>
+
+      <FormControl>
+
+        <Button
+          onClick$={handleSumbit}
+          window:onKeyDown$={handleEnterKeyDown}
+          disabled={!!tokenData.value.username}
+        >
+          Generate
+        </Button>      </FormControl>
       <div>
         API Key: {tokenData.value?.username || "Click button to generate"}
       </div>
       <div>
         API Pass: {tokenData.value?.password || "Click button to generate"}
       </div>
-    </>
+    </Layout>
   );
 });
 

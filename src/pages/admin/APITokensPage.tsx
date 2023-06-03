@@ -1,5 +1,6 @@
 import { component$, $, useSignal } from "@builder.io/qwik";
 import { Button } from "~/components/button";
+import { Layout } from "~/components/layout/Layout";
 import { APIUserReadonlyData } from "~/models/APIUserReadonlyData";
 import { useDeleteAPIToken } from "./hooks/useDeleteAPIToken";
 
@@ -9,9 +10,9 @@ export const APITokens = component$(
     const deleteToken = useDeleteAPIToken(renderedData);
 
     return (
-      <>
-        <Button link="/admin" label="Back" />
-        <Button link="new" label="Generate New Token" />
+      <Layout center={false}>
+        <Button link="/admin">Back</Button>
+        <Button link="new">Generate New Token</Button>
 
         {renderedData.value.map((apiUser, index) => {
           return (
@@ -29,7 +30,7 @@ export const APITokens = component$(
             </div>
           );
         })}
-      </>
+      </Layout>
     );
   }
 );
