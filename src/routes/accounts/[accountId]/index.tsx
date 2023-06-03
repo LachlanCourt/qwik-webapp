@@ -14,7 +14,7 @@ const useEndpoint = routeLoader$(async (requestEvent) => {
   const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
   if (!account) throw error(404, "Account Not Found");
 
-  const moderators = (await db.user.findMany({ where: { accounts: { some: { accountId: account.id } } } })).map(({ id, name, email }) => ({ id, name, email }))
+  const moderators = (await db.user.findMany({ where: { accounts: { some: { accountId: account.id } } } })).map(({ id, name }) => ({ id, name }))
 
   return { accountId: account.id, name: account.name, moderators, isAdmin: payload.isGlobalAdmin || payload.userId === account.adminId } as AccountPageData;
 });

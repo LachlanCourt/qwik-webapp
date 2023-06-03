@@ -9,7 +9,7 @@ export const AccountPage = component$(({ data }: { data: AccountPageData }) => {
   console.log(data.moderators)
   return (
     <Layout center={false}>
-      <Heading>{data.name}</Heading>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}><div><Button link={'../'}>Back</Button></div><Heading>{data.name} </Heading><div /></div>
       <div style={{ paddingBottom: '2rem', display: 'flex', gap: '0.6rem' }}>
         <Button link={'commands'}>Commands</Button>
         {data.isAdmin && <>
@@ -32,7 +32,7 @@ export const AccountPage = component$(({ data }: { data: AccountPageData }) => {
             boxShadow: theme.boxShadow.md
           }}>
             {data.moderators.map((moderator) => <li style={{ padding: '0.6rem' }}>
-              {moderator.email}</li>)}
+              {moderator.name}</li>)}
           </ul></> : 'No Moderators yet. Click Add User to add a moderator!'}</div>
     </Layout>
   );
