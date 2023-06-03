@@ -17,23 +17,24 @@ export const AccountPage = component$(({ data }: { data: AccountPageData }) => {
           <Button link={'adduser'}>Add User</Button>
         </>}
       </div>
-      <div style={{ color: 'darkslategray' }}>
-        {data.moderators.length > 0 ? <>
-          Moderators:
-          <ul style={{
-            listStyle: 'none',
-            width: '40%',
-            display: 'flex',
-            justifyContent: 'center',
-            border: '1px solid darkslategray',
-            borderRadius: '0.3rem',
-            background: 'aliceblue',
-            paddingInlineStart: 'unset',
-            boxShadow: theme.boxShadow.md
-          }}>
-            {data.moderators.map((moderator) => <li style={{ padding: '0.6rem' }}>
-              {moderator.name}</li>)}
-          </ul></> : 'No Moderators yet. Click Add User to add a moderator!'}</div>
+
+      {data.moderators.length > 0 ? <>
+        <span style={{ color: 'darkslategray' }}>Moderators:</span>
+        <ul style={{
+          listStyle: 'none',
+          width: '40%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          border: '1px solid darkslategray',
+          borderRadius: '0.3rem',
+          background: 'aliceblue',
+          paddingInlineStart: 'unset',
+          boxShadow: theme.boxShadow.md
+        }}>
+          {data.moderators.map((moderator) => <li style={{ padding: '0.6rem' }}>
+            {moderator.name}</li>)}
+        </ul></> : <span>No Moderators yet. Click Add User to add a moderator!</span>}
     </Layout>
   );
 });

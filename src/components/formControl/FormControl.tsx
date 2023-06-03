@@ -1,10 +1,15 @@
 import { QwikJSX, Slot, component$ } from "@builder.io/qwik";
-import { FormControlStyle } from "~/theme/components.css";
+import { FormControlHorizontalStyle, FormControlVerticalStyle } from "~/theme/components.css";
+
+interface FormControlProps {
+  isVertical?: boolean
+}
 
 export const FormControl = component$(
-  (props: QwikJSX.IntrinsicElements["div"]) => {
+  (props: QwikJSX.IntrinsicElements["div"] & FormControlProps) => {
+    const { isVertical = false } = props;
     return (
-      <div class={FormControlStyle} {...props}>
+      <div class={isVertical ? FormControlVerticalStyle : FormControlHorizontalStyle} {...props}>
         <Slot />
       </div>
     );

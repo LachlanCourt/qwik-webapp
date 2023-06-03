@@ -19,8 +19,9 @@ export const TopWrapper = style(topWrapper);
 import { formStyle } from "./form";
 export const FormStyle = style(formStyle);
 
-import { formControlStyle } from "./formcontrol";
-export const FormControlStyle = style(formControlStyle);
+import { formControlHorizontalStyle, formControlVerticalStyle } from "./formcontrol";
+export const FormControlHorizontalStyle = style(formControlHorizontalStyle);
+export const FormControlVerticalStyle = style(formControlVerticalStyle);
 
 import { headingStyle } from "./heading";
 export const HeadingStyle = style(headingStyle);
