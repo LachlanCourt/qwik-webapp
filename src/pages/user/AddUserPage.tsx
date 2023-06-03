@@ -19,7 +19,7 @@ export const AddUserPage = component$(({ accountId }: AddUserData) => {
         <FormControl isVertical>
           <label for="email-field">Enter the email address of the user and they will be emailed a sign up
             link</label>
-          <Input name="email" id="email-field" style={{ width: '100%' }} />
+          <Input name="email" id="email-field" type='email' style={{ width: '100%' }} />
         </FormControl>
         <div style={{
           display: 'flex',

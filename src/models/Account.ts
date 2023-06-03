@@ -6,3 +6,8 @@ export interface AccountPageData {
   moderators: Array<User>
   isAdmin: boolean
 }
+
+export interface EditAccountData {
+  id: number;
+  name: string
+}

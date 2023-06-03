@@ -13,7 +13,7 @@ const NewAccountPage = component$(() => {
       <Form action="/api/v1/accounts/new" method="POST">
         <FormControl>
           <label for="email-field">User Email</label>
-          <Input name="email" id="email-field" />
+          <Input name="email" id="email-field" type='email' />
         </FormControl>
         <div
           style={{
