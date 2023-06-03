@@ -10,7 +10,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
-  const accounts = await db.account.findMany({
+  const accounts = await db.account.findMany(payload.isGlobalAdmin ? undefined : {
     where: {
       OR: [
         {

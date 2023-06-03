@@ -10,9 +10,11 @@ const _ButtonPrimaryStyle = style(buttonPrimaryStyle);
 const _ButtonSecondaryStyle = style(buttonSecondaryStyle);
 export const ButtonStyleVariants = { [ButtonVariant.PRIMARY]: _ButtonPrimaryStyle, [ButtonVariant.SECONDARY]: _ButtonSecondaryStyle }
 
-import { centerContainer, centerWrapper } from "./center";
+import { centerContainer, centerWrapper, topContainer, topWrapper } from "./layout";
 export const CenterContainer = style(centerContainer);
 export const CenterWrapper = style(centerWrapper);
+export const TopContainer = style(topContainer);
+export const TopWrapper = style(topWrapper);
 
 import { formStyle } from "./form";
 export const FormStyle = style(formStyle);

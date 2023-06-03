@@ -3,12 +3,12 @@ import { Button } from "~/components/button";
 import { Form } from "~/components/form/Form";
 import { FormControl } from "~/components/formControl/FormControl";
 import { Input } from "~/components/input/Input";
-import { Center } from "~/components/center/Center";
+import { Layout } from "~/components/layout/Layout";
 import { Heading } from "~/components/heading/Heading";
 
 const Login = component$(() => {
   return (
-    <Center>
+    <Layout>
       <Heading>Login</Heading>
       <Form action="/api/v1/auth/login" method="POST">
         <FormControl>
@@ -31,7 +31,7 @@ const Login = component$(() => {
           <Button type="submit">Sign in</Button>
         </div>
       </Form>
-    </Center>
+    </Layout>
   );
 });
 

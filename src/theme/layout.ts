@@ -16,3 +16,15 @@ export const centerWrapper: StyleRule = {
   borderRadius: "0.3rem",
   boxShadow: "2px 3px 2px 1px rgb(0 0 0 / 20%)",
 };
+
+export const topContainer: StyleRule = {
+  ...centerContainer,
+  alignItems: 'stretch'
+}
+
+export const topWrapper: StyleRule = {
+  ...centerWrapper,
+  width: '100%'
+}
+
+
