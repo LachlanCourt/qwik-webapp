@@ -37,7 +37,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
         </div>`;
 
   const mailProvider = mailer({
-    to: "lachourt.dev",
+    to: email,
     html,
     subject: "Add Account",
     text: "HTML ONLY FOR NOW",

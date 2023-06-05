@@ -15,9 +15,12 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
   const account = await db.account.findFirst({
     where: {
-      AND: [{ id: accountId }, (!payload.isGlobalAdmin ? { adminId: payload.userId } : {})]
-    }
-  })
+      AND: [
+        { id: accountId },
+        !payload.isGlobalAdmin ? { adminId: payload.userId } : {},
+      ],
+    },
+  });
 
   if (!account) throw error(404, "Account Not Found");
 
@@ -44,7 +47,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
         </div>`;
 
   const mailProvider = mailer({
-    to: "lachourt.dev",
+    to: email,
     html,
     subject: "Add User",
     text: "HTML ONLY FOR NOW",

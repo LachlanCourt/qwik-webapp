@@ -1,43 +1,22 @@
-import { JSXChildren } from '@builder.io/qwik'
-// let previewEmail: Function;
-// if (process.env.NODE_ENV !== "production") {
-//     previewEmail = require("preview-email")
-// }
+import { JSXChildren } from "@builder.io/qwik";
+import { mailer as sendEmail } from "./mailer-production";
+import { mailer as previewEmail } from "./mailer-dev";
 
-const getPreviewEmail = async () => {
-    if (process.env.NODE_ENV !== "production") {
-        const dependency = await import('preview-email');
-        return dependency;
-    }
-    return null;
+export interface MailerProps {
+  to: string;
+  subject: string;
+  html: string;
+  text?: string;
 }
 
-interface MailerProps {
-    to: string;
-    from?: string;
-    subject: string;
-    html: JSXChildren;
-    text: string;
-}
-
-export const mailer = ({ to, from = "lachourt.dev", subject, html, text }: MailerProps) => {
-    const msg = {
-        to,
-        subject,
-        html,
-        text
-    }
-
-    return {
-        async send() {
-            if (process.env.NODE_ENV === "production") {
-                //TODO Add sendgrid integration
-                // mailer(msg)
-            } else {
-                // Preview email in the browser when in development
-                const previewEmail = await getPreviewEmail()
-                await previewEmail.default(msg)
-            }
-        },
-    }
-}
+export const mailer = (msg: MailerProps) => {
+  return {
+    async send() {
+      if (process.env.NODE_ENV === "production") {
+        sendEmail(msg);
+      } else {
+        previewEmail(msg);
+      }
+    },
+  };
+};
