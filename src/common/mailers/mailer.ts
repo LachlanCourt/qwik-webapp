@@ -1,4 +1,3 @@
-import { JSXChildren } from "@builder.io/qwik";
 import { mailer as sendEmail } from "./mailer-production";
 import { mailer as previewEmail } from "./mailer-dev";
 
@@ -12,7 +11,7 @@ export interface MailerProps {
 export const mailer = (msg: MailerProps) => {
   return {
     async send() {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.NODE_ENV === "production" || true) {
         sendEmail(msg);
       } else {
         previewEmail(msg);

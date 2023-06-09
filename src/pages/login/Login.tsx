@@ -23,7 +23,7 @@ const Login = component$(() => {
           style={{
             display: "flex",
             justifyContent: "center",
-            paddingTop: "2rem",
+            paddingTop: "1rem",
             color: "darkslategray",
             fontWeight: "bold",
           }}
@@ -31,6 +31,9 @@ const Login = component$(() => {
           <Button type="submit">Sign in</Button>
         </div>
       </Form>
+      <a style={{ paddingTop: "0.6rem" }} href="/users/forgot">
+        Forgot Password
+      </a>
     </Layout>
   );
 });
