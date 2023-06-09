@@ -4,6 +4,7 @@ import { db } from "db";
 import cryptojs from "crypto-js";
 import { Tokens } from "~/common/constants";
 import { mailer } from "~/common/mailers/mailer";
+import { Button } from "~/components/button";
 
 export const onPost: RequestHandler = async (requestEvent) => {
   const { request, url, redirect, error } = requestEvent;
@@ -43,14 +44,18 @@ export const onPost: RequestHandler = async (requestEvent) => {
         <div>
             You have been added to the team for the account ${account.name}!
             Click the following link if you want to join!
-            <a href="${origin}/api/v1/users/adduser?token=${token}">Howdy</a>
+            
+            <a href="${origin}/api/v1/users/adduser?token=${token}">Join the team</a>
         </div>`;
+  const text = `You have been added to the team for the account ${account.name}!
+  Copy the following link into your browser if you want to join!
+  http://${origin}/api/v1/users/adduser?token=${token}`;
 
   const mailProvider = mailer({
     to: email,
     html,
     subject: "Add User",
-    text: "HTML ONLY FOR NOW",
+    text,
   });
   await mailProvider.send();
 
