@@ -33,14 +33,18 @@ export const onPost: RequestHandler = async (requestEvent) => {
         <div>
             You have been added as an admin for a new account!
             Click the following link if you want to join!
-            <a href="${origin}/api/v1/users/adduser?token=${token}">Howdy</a>
+            <a href="${origin}/api/v1/users/adduser?token=${token}">Create Account</a>
         </div>`;
 
+  const text = `You have been added as an admin for a new account!
+  Copy the following link into your browser if you want to join!
+  http://${origin}/api/v1/users/adduser?token=${token}`;
+
   const mailProvider = mailer({
-    to: "lachourt.dev",
+    to: email,
     html,
     subject: "Add Account",
-    text: "HTML ONLY FOR NOW",
+    text,
   });
   await mailProvider.send();
 
