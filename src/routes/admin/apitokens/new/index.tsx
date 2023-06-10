@@ -2,7 +2,7 @@ import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import NewAPITokenPage from "~/pages/admin/NewAPITokenPage";
 
-export const onGet: RequestHandler<Response> = async (requestEvent) => {
+export const onGet: RequestHandler = async (requestEvent) => {
   const { redirect, error } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
