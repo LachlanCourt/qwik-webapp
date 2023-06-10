@@ -1,8 +1,5 @@
 import { component$, PropFunction, Slot } from "@builder.io/qwik";
-import {
-  ButtonBaseStyle,
-  ButtonStyleVariants
-} from "~/theme/components.css";
+import { ButtonBaseStyle, ButtonStyleVariants } from "~/theme/components.css";
 
 export enum ButtonVariant {
   PRIMARY = "primary",
@@ -23,17 +20,23 @@ export const Button = component$(
     link,
     ...props
   }: ButtonProps) => {
-
-
     const className = `${ButtonBaseStyle} ${ButtonStyleVariants[variant]}`;
-    return link ? (
-      <a class={className} href={link} {...props}>
-        <Slot />
-      </a>
-    ) : (
-      <button class={className} onClick$={onClick$} {...props}>
-        <Slot />
-      </button>
+    return (
+      <>
+        {link ? (
+          <a class={className} href={link} {...props}>
+            <Slot />
+          </a>
+        ) : (
+          <button
+            class={className}
+            onClick$={() => onClick$ && onClick$()}
+            {...props}
+          >
+            <Slot />
+          </button>
+        )}
+      </>
     );
   }
 );

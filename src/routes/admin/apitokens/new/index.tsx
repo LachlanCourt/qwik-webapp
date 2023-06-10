@@ -1,4 +1,4 @@
-import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
+import { RequestHandler } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import NewAPITokenPage from "~/pages/admin/NewAPITokenPage";
 

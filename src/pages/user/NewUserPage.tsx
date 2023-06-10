@@ -1,4 +1,4 @@
-import { component$, Resource } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { Button } from "~/components/button";
 import { Form } from "~/components/form/Form";
 import { FormControl } from "~/components/formControl/FormControl";

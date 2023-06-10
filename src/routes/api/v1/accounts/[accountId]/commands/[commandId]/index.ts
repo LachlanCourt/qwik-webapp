@@ -21,7 +21,11 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   )
     throw error(404, "Not Found");
 
-  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
+  const account = await getAccount(
+    Number(params.accountId),
+    payload.userId,
+    payload.isGlobalAdmin
+  );
   if (!account) throw error(404, "Account Not Found");
 
   const command = await db.command.delete({
@@ -46,7 +50,7 @@ export const onDelete: RequestHandler = async (requestEvent) => {
 
 // Edit
 export const onPost: RequestHandler = async (requestEvent) => {
-  const { params, redirect, error, json, request } = requestEvent;
+  const { params, redirect, error, request } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
@@ -56,7 +60,11 @@ export const onPost: RequestHandler = async (requestEvent) => {
   )
     throw error(404, "Not Found");
 
-  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
+  const account = await getAccount(
+    Number(params.accountId),
+    payload.userId,
+    payload.isGlobalAdmin
+  );
   if (!account) throw error(404, "Account not found");
   const command = await getCommand(Number(params.commandId));
   if (!command) throw error(404, "Command not found");

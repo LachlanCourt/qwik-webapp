@@ -1,4 +1,4 @@
-import { component$, $, useSignal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { Button } from "~/components/button";
 import { Layout } from "~/components/layout/Layout";
 import { APIUserReadonlyData } from "~/models/APIUserReadonlyData";

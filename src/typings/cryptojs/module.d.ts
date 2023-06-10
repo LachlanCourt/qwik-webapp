@@ -1,5 +1,5 @@
 declare module "crypto-js" {
-  export var lib: any
+  export const lib: any;
 }
 
 declare module "crypto-js/sha256" {

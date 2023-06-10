@@ -6,7 +6,7 @@ import { ResetPasswordPageData } from "~/models/User";
 import { ResetPasswordPage } from "~/pages/user/ResetPasswordPage";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
-  const { url, error, redirect } = requestEvent;
+  const { url, error } = requestEvent;
   const token = url.searchParams.get("token");
   if (!token) throw error(401, "Invalid Token. Error Code 1");
   const tokenData = await db.token.findFirst({ where: { token } });

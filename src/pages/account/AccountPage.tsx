@@ -1,4 +1,4 @@
-import { component$, Resource } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { Button } from "~/components/button";
 import { Heading } from "~/components/heading/Heading";
 import { Layout } from "~/components/layout/Layout";

@@ -1,4 +1,4 @@
-import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { db } from "db";
 import { Resource, component$ } from "@builder.io/qwik";

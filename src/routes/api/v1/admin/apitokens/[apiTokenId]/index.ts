@@ -4,7 +4,7 @@ import { db } from "db";
 import { APIUserReadonlyData } from "~/models/APIUserReadonlyData";
 
 export const onDelete: RequestHandler = async (requestEvent) => {
-  const { error, params, request } = requestEvent;
+  const { error, params } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw error(401, "Invalid Token. Error Code 1");
   if (!payload.isGlobalAdmin) throw error(403, "Missing Permissions");
