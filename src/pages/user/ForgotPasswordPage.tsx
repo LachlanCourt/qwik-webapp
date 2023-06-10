@@ -40,7 +40,7 @@ export const ForgotPasswordPage = component$(() => {
           paddingBottom: "1rem",
         }}
       >
-        <Button link={"../"} variant={ButtonVariant.SECONDARY}>
+        <Button link={"/login"} variant={ButtonVariant.SECONDARY}>
           Cancel
         </Button>
         <Button onClick$={() => submitResetRequest(emailInput.value)}>
