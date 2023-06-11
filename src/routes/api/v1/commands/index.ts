@@ -5,7 +5,7 @@ import { db } from "db";
 export const onGet: RequestHandler = async (requestEvent) => {
   const { error, json } = requestEvent;
 
-  const payload = await verifyToken(requestEvent);
+  const payload = await verifyToken(requestEvent, false);
   if (!payload) throw error(401, "Invalid Token. Error Code 1");
 
   if (!payload.isGlobalAdmin) throw error(403, "Missing Permissions");

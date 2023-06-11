@@ -11,8 +11,22 @@
 fetch-dev-db:
 	docker pull postgres && docker tag postgres dev-db:latest
 start-dev-db:
-	docker run --name dev-db -e POSTGRES_PASSWORD=password -d dev-db
+	docker run --name dev-db -e POSTGRES_PASSWORD=password --hostname docker -d dev-db
 remove-dev-db:
 	docker container stop dev-db && docker container rm dev-db
+# disconnect-network:
+# 	docker network disconnect qwik-network dev-db && docker network disconnect qwik-network qwik-app
+create-network:
+	docker network create qwik-network
+connect-db-to-network:
+	docker network connect qwik-network dev-db
+connect-app-to-network:
+	docker network connect qwik-network qwik-app
+build-docker:
+	docker build -t qwik:latest .
 build:
-	docker build -t qwik:build .
+	make build-docker
+start-app:
+	docker run -p 3000:3000 --name qwik-app -e DATABASE_URL=postgresql://postgres:password@172.19.0.2:5432 -it --entrypoint sh qwik:latest ./start.sh
+run:#make start-dev-db && 
+	((sleep 1 && make connect-app-to-network) &) && make start-app
