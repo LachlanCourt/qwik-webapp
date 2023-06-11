@@ -33,10 +33,8 @@ COPY --from=base ./code/dist ./dist
 COPY --from=base ./code/server ./server
 COPY --from=base ./code/prisma ./prisma
 
-COPY --from=base ./code/deployment-artifacts/start.sh ./start.sh
+COPY --from=base ./code/deployment-artifacts ./
 RUN chmod +x start.sh
-# COPY --from=base ./code/package.json ./package.json
-# COPY --from=base ./code/yarn.lock ./yarn.lock
 
 COPY --from=module-installation ./code/node_modules ./node_modules
 
