@@ -38,5 +38,3 @@ RUN chmod +x start.sh
 
 COPY --from=module-installation ./code/node_modules ./node_modules
 
-## TEMP ##
-COPY --from=base ./code/prod.env .env
