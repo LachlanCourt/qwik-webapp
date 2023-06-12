@@ -7,13 +7,13 @@ import {
   use$CommandWebhookHandler,
 } from "~/common/webhooks/use$CommandWebhookHandler";
 
-interface Response { }
+interface Response {}
 
 /**
  * Form data
  */
 export const onPost: RequestHandler<Response> = async (requestEvent) => {
-  const { params, request, cookie, redirect, error } = requestEvent;
+  const { params, request, redirect, error } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
   const formData = await request.formData();
@@ -22,7 +22,11 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const formResponse =
     formData.get("response")?.toString() || "Command Response";
   const accountId = Number(params.accountId);
-  const account = await getAccount(accountId, payload.userId, payload.isGlobalAdmin);
+  const account = await getAccount(
+    accountId,
+    payload.userId,
+    payload.isGlobalAdmin
+  );
   if (!account) throw error(404, "Account Not Found");
 
   const command = await db.command.create({

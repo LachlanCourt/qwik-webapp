@@ -16,7 +16,9 @@ export const onPost: RequestHandler = async (requestEvent) => {
     const data = await request.json();
     discriminator = data.discriminator;
     webhookUrl = data.webhookUrl;
-  } catch {}
+  } catch {
+    console.error("Error decoding json input");
+  }
   if (!discriminator) throw error(400, "Discriminator is required");
 
   const username = cryptojs.lib.WordArray.random(32).toString();

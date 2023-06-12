@@ -4,7 +4,6 @@ import { db } from "db";
 import cryptojs from "crypto-js";
 import { Tokens } from "~/common/constants";
 import { mailer } from "~/common/mailers/mailer";
-import { Button } from "~/components/button";
 
 export const onPost: RequestHandler = async (requestEvent) => {
   const { request, url, redirect, error } = requestEvent;

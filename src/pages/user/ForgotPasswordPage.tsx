@@ -1,6 +1,5 @@
 import { component$, useSignal, $ } from "@builder.io/qwik";
 import { Button, ButtonVariant } from "~/components/button/Button";
-import { Form } from "~/components/form/Form";
 import { FormControl } from "~/components/formControl/FormControl";
 import { Heading } from "~/components/heading/Heading";
 import { Input } from "~/components/input/Input";
@@ -40,7 +39,7 @@ export const ForgotPasswordPage = component$(() => {
           paddingBottom: "1rem",
         }}
       >
-        <Button link={"../"} variant={ButtonVariant.SECONDARY}>
+        <Button link={"/login"} variant={ButtonVariant.SECONDARY}>
           Cancel
         </Button>
         <Button onClick$={() => submitResetRequest(emailInput.value)}>

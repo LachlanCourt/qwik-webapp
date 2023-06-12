@@ -4,11 +4,7 @@ import cryptojs from "crypto-js";
 import sha256 from "crypto-js/sha256";
 import { createToken } from "~/common/authentication/createToken";
 
-interface ExistingUser {
-  jwt: string;
-}
-
-export const onPost: RequestHandler<ExistingUser> = async (requestEvent) => {
+export const onPost: RequestHandler = async (requestEvent) => {
   const { request, cookie, error, redirect } = requestEvent;
   const formData = await request.formData();
   const email = formData.get("email")?.toString() || "";

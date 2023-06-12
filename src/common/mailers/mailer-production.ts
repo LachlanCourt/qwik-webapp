@@ -1,8 +1,8 @@
-import * as sgMail from "@sendgrid/mail";
+import sgMail from "@sendgrid/mail";
 import { MailerProps } from "./mailer";
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
 export const mailer = (content: MailerProps) => {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
   const fromAddress = process.env.SENDGRID_FROM_ADDRESS;
   if (!fromAddress) {
     console.error("Missing From Address");

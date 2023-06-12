@@ -2,12 +2,8 @@ import { component$, Slot } from "@builder.io/qwik";
 import { RequestHandler } from "@builder.io/qwik-city";
 // import Header from "../components/header/header";
 
-interface Response {
-  someData: string;
-}
-
-export const onRequest: RequestHandler = (requestEvent) => {
-  const { request, cookie, json } = requestEvent;
+export const onRequest: RequestHandler = () => {
+  // const { request, cookie, json } = requestEvent;
   // console.log('Hit')
   // json(200, { someData: "hello" } as Response);
 };

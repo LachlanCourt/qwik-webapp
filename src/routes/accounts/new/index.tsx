@@ -5,7 +5,7 @@ import NewAccount from "~/pages/account/NewAccountPage";
 /**
  * Secure this endpoint for if the user is a super admin. Redirect to accounts if they do not
  */
-export const onGet: RequestHandler<Response> = async (requestEvent) => {
+export const onGet: RequestHandler = async (requestEvent) => {
   const { redirect, error } = requestEvent;
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");

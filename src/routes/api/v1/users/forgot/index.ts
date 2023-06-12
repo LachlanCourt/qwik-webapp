@@ -1,12 +1,11 @@
 import { RequestHandler } from "@builder.io/qwik-city";
-import { verifyToken } from "~/common/authentication/verifyToken";
 import { db } from "db";
 import cryptojs from "crypto-js";
 import { Tokens } from "~/common/constants";
 import { mailer } from "~/common/mailers/mailer";
 
 export const onPost: RequestHandler = async (requestEvent) => {
-  const { request, url, redirect, error } = requestEvent;
+  const { request, url } = requestEvent;
 
   const formData = await request.formData();
   const email = formData.get("email")?.toString() || "";

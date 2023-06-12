@@ -1,5 +1,4 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { useNavigate } from "@builder.io/qwik-city";
 import { CommandPageData } from "~/models";
 
 import { useDeleteCommand } from "./hooks/useDeleteCommand";
@@ -11,7 +10,6 @@ import { styles } from "./styles.css";
 
 export const Commands = component$(
   ({ data }: { data: Array<CommandPageData> }) => {
-    const nav = useNavigate();
     const renderedData = useSignal(data);
     const deleteCommand = useDeleteCommand(renderedData);
 

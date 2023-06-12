@@ -11,7 +11,7 @@ export interface MailerProps {
 export const mailer = (msg: MailerProps) => {
   return {
     async send() {
-      if (process.env.NODE_ENV === "production" || true) {
+      if (process.env.NODE_ENV === "production") {
         sendEmail(msg);
       } else {
         previewEmail(msg);
