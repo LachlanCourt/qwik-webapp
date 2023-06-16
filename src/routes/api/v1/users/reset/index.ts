@@ -34,6 +34,8 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
     data: { password: `${salt}$${passwordHash}` },
   });
 
+  await db.token.delete({ where: { token } });
+
   const sessionKey = cryptojs.lib.WordArray.random(32).toString();
   await db.session.deleteMany({ where: { userId: user.id } });
   await db.session.create({ data: { userId: user.id, sessionKey } });

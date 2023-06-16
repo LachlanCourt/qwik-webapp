@@ -5,7 +5,7 @@ import { Tokens } from "~/common/constants";
 import { mailer } from "~/common/mailers/mailer";
 
 export const onPost: RequestHandler = async (requestEvent) => {
-  const { request, url } = requestEvent;
+  const { request, url, json } = requestEvent;
 
   const formData = await request.formData();
   const email = formData.get("email")?.toString() || "";
@@ -59,4 +59,5 @@ export const onPost: RequestHandler = async (requestEvent) => {
     text,
   });
   await mailProvider.send();
+  json(200, null);
 };
