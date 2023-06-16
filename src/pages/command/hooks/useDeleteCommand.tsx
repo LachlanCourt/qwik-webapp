@@ -1,5 +1,5 @@
 import { $, Signal } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation } from "~/common/hooks/useLocation";
 import { CommandPageData } from "~/models";
 
 export const useDeleteCommand = (

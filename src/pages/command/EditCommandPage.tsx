@@ -1,5 +1,5 @@
 import { $, component$, useVisibleTask$ } from "@builder.io/qwik";
-import { useLocation, useNavigate } from "@builder.io/qwik-city";
+import { useNavigate } from "@builder.io/qwik-city";
 import { Command } from "@prisma/client";
 import { Button } from "~/components/button";
 import { ButtonVariant } from "~/components/button/Button";
@@ -9,6 +9,7 @@ import { Heading } from "~/components/heading/Heading";
 import { Input } from "~/components/input/Input";
 import { Layout } from "~/components/layout/Layout";
 import { useDeleteCommand } from "./hooks/useDeleteCommand";
+import { useLocation } from "~/common/hooks/useLocation";
 
 export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   const location = useLocation();
