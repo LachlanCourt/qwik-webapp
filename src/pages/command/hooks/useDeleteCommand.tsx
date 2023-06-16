@@ -9,7 +9,7 @@ export const useDeleteCommand = (
 
   const deleteCommand = $(async (commandId: number) => {
     const result = await fetch(
-      `${location.url.origin}/api/v1/accounts/${location.params.accountId}/commands/${commandId}`,
+      `${location.formPostUrl}/api/v1/accounts/${location.params.accountId}/commands/${commandId}`,
       {
         method: "DELETE",
       }
