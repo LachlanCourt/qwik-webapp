@@ -23,6 +23,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
       });
     };
     await securityDelay();
+    json(200, null);
     return;
   }
   const token = cryptojs.lib.WordArray.random(32).toString();
