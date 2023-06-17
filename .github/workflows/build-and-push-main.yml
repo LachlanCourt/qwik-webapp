@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-      - test
+  pull_request:
+    branches:
+      - tidy_form_submission_logic
 
 jobs:
   build-and-push:
