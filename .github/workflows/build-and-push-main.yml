@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - tidy_form_submission_logic
+      - main
 
 jobs:
   build-and-push:
