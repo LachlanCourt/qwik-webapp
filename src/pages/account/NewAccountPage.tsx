@@ -10,10 +10,10 @@ const NewAccountPage = component$(() => {
   return (
     <Layout>
       <Heading>Create New Account</Heading>
-      <Form action="/api/v1/accounts/new" method="POST">
+      <Form action="/api/v1/accounts/new/" method="POST">
         <FormControl>
           <label for="email-field">User Email</label>
-          <Input name="email" id="email-field" type='email' />
+          <Input name="email" id="email-field" type="email" />
         </FormControl>
         <div
           style={{
