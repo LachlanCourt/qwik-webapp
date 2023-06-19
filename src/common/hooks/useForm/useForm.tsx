@@ -53,8 +53,6 @@ interface FormControlContextType {
   id: string;
 }
 
-const isClientError = (status: number) => `${status}`.startsWith("4");
-
 export const FormControlContext =
   createContextId<FormControlContextType>("FormControlContext");
 
@@ -67,7 +65,7 @@ export const useForm = <ResponseType,>(
   intialValue: FormType,
   postUrl: string,
   validation?: object,
-  method: HTTPMethod = HTTPMethod.POST
+  method: "GET" | "POST" | "DELETE" = HTTPMethod.POST
 ): FormAttributes<ResponseType> => {
   const location = useLocation();
   const nav = useNavigate();
@@ -96,7 +94,7 @@ export const useForm = <ResponseType,>(
 
     if (!response.redirected && response.status == 200)
       returnData.value = await response.json();
-    if (isClientError(response.status))
+    if (`${response.status}`.startsWith("4"))
       submitErrors.value = await response.text();
   });
 

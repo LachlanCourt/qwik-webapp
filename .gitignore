@@ -42,3 +42,4 @@ prod.env
 *.db
 *.db-journal
 database
+tmp
