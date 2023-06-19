@@ -1,4 +1,4 @@
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { verifyToken } from "~/common/authentication/verifyToken";
 import { Accounts } from "~/pages/account/AccountsPage";
 import { db } from "db";
@@ -10,22 +10,26 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
-  const accounts = await db.account.findMany(payload.isGlobalAdmin ? undefined : {
-    where: {
-      OR: [
-        {
-          moderators: {
-            some: {
-              userId: payload.userId,
-            },
+  const accounts = await db.account.findMany(
+    payload.isGlobalAdmin
+      ? undefined
+      : {
+          where: {
+            OR: [
+              {
+                moderators: {
+                  some: {
+                    userId: payload.userId,
+                  },
+                },
+              },
+              {
+                adminId: payload.userId,
+              },
+            ],
           },
-        },
-        {
-          adminId: payload.userId,
-        },
-      ],
-    },
-  });
+        }
+  );
 
   return accounts.map((account) => ({
     accountId: account.id,
