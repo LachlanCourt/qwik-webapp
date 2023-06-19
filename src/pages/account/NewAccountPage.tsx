@@ -1,20 +1,23 @@
 import { component$ } from "@builder.io/qwik";
 import { Button, ButtonVariant } from "~/components/button/Button";
 import { Layout } from "~/components/layout/Layout";
-import { Form } from "~/components/form/Form";
-import { FormControl } from "~/components/formControl/FormControl";
 import { Heading } from "~/components/heading/Heading";
 import { Input } from "~/components/input/Input";
+import { useForm } from "~/common/hooks/useForm/useForm";
 
 const NewAccountPage = component$(() => {
+  const initialValues = { email: "" };
+  const { handleSubmit, Control, Form } = useForm(
+    initialValues,
+    "api/v1/accounts/new/"
+  );
   return (
     <Layout>
       <Heading>Create New Account</Heading>
-      <Form action="/api/v1/accounts/new/" method="POST">
-        <FormControl>
-          <label for="email-field">User Email</label>
-          <Input name="email" id="email-field" type="email" />
-        </FormControl>
+      <Form>
+        <Control name="email" label="User Email">
+          <Input type="email" />
+        </Control>
         <div
           style={{
             display: "flex",
@@ -28,7 +31,7 @@ const NewAccountPage = component$(() => {
           <Button link="../" variant={ButtonVariant.SECONDARY}>
             Cancel
           </Button>
-          <Button type="submit">Create</Button>
+          <Button onClick$={handleSubmit}>Create</Button>
         </div>
       </Form>
     </Layout>

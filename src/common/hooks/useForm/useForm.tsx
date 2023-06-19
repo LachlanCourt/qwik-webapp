@@ -42,6 +42,7 @@ interface FormControlContextType {
   value: any;
   handleChange: QRL<() => void>;
   name: string;
+  id: string;
 }
 
 const isClientError = (status: number) => `${status}`.startsWith("4");
@@ -121,6 +122,7 @@ export const useForm = <ResponseType,>(
         value,
         handleChange,
         name: fieldName,
+        id: fieldName,
       };
       useContextProvider(FormControlContext, contextData);
       return (

@@ -7,15 +7,10 @@ import { useForm } from "~/common/hooks/useForm/useForm";
 
 const Login = component$(() => {
   const initialValues = { email: "", password: "" };
-  const {
-    returnData,
-    validationErrors,
-    submitErrors,
-    formValues,
-    handleSubmit,
-    Control,
-    Form,
-  } = useForm(initialValues, "api/v1/auth/login");
+  const { handleSubmit, Control, Form } = useForm(
+    initialValues,
+    "api/v1/auth/login"
+  );
 
   return (
     <Layout>
