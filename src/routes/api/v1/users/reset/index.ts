@@ -4,6 +4,7 @@ import sha256 from "crypto-js/sha256";
 import { db } from "db";
 import { Tokens } from "~/common/constants";
 import { createToken } from "~/common/authentication/createToken";
+import { ApiErrorHandler } from "~/common/handlers/ApiErrorHandler";
 
 interface Response {}
 
@@ -25,7 +26,8 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const password = formData.get("password")?.toString() || "";
   const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
 
-  if (password !== passwordConfirm) throw error(400, "Passwords do not match");
+  if (password !== passwordConfirm)
+    throw ApiErrorHandler.respond(400, "Passwords do not match", requestEvent);
 
   const salt = cryptojs.lib.WordArray.random(32).toString();
   const passwordHash = sha256(`${salt}${password}`).toString();

@@ -12,6 +12,11 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
   const user = await db.user.findFirst({ where: { email } });
 
+  const successMessage = {
+    message:
+      "If your account exists, an email has been sent to the specified address",
+  };
+
   if (!user) {
     const securityDelay = async () => {
       return new Promise((resolve) => {
@@ -23,7 +28,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
       });
     };
     await securityDelay();
-    json(200, null);
+    json(200, successMessage);
     return;
   }
   const token = cryptojs.lib.WordArray.random(32).toString();
@@ -60,5 +65,5 @@ export const onPost: RequestHandler = async (requestEvent) => {
     text,
   });
   await mailProvider.send();
-  json(200, null);
+  json(200, successMessage);
 };
