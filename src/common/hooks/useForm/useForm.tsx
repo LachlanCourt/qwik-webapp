@@ -8,6 +8,8 @@ import {
   Slot,
   useContextProvider,
   createContextId,
+  QwikKeyboardEvent,
+  useContext,
 } from "@builder.io/qwik";
 import { useLocation } from "../useLocation";
 import { FormControl as StyledControl } from "./formControl/FormControl";
@@ -17,6 +19,9 @@ import { HTTPMethod } from "~/common/constants";
 
 interface FormType {
   [key: string]: any;
+}
+interface FormProps {
+  isDisabled?: boolean;
 }
 interface ControlProps {
   name: string;
@@ -31,14 +36,17 @@ interface FormAttributes<ResponseType> {
   validationErrors: Signal<{ [key: string]: string }>;
   submitErrors: Signal<string | null>;
   formValues: Signal<FormType>;
-  handleSubmit: QRL<() => void>;
+  submitHandlers: {
+    "window:onKeyDown$": QRL<(e: QwikKeyboardEvent<HTMLButtonElement>) => void>;
+    onClick$: QRL<() => void>;
+  };
   Control: Component<ControlProps>;
-  Form: Component<{}>;
+  Form: Component<FormProps>;
 }
 interface FormControlContextType {
-  isDisabled: boolean;
-  isRequired: boolean;
-  isInvalid: boolean;
+  disabled: boolean;
+  required: boolean;
+  invalid: boolean;
   value: any;
   handleChange: QRL<() => void>;
   name: string;
@@ -50,7 +58,9 @@ const isClientError = (status: number) => `${status}`.startsWith("4");
 export const FormControlContext =
   createContextId<FormControlContextType>("FormControlContext");
 
-interface FormContextType {}
+interface FormContextType {
+  isDisabled?: boolean;
+}
 export const FormContext = createContextId<FormContextType>("FormContext");
 
 export const useForm = <ResponseType,>(
@@ -90,7 +100,12 @@ export const useForm = <ResponseType,>(
       submitErrors.value = await response.text();
   });
 
-  const Form = component$(() => {
+  const handleEnterKeyDown = $((e: QwikKeyboardEvent<HTMLButtonElement>) => {
+    e.key === "Enter" && handleSubmit();
+  });
+
+  const Form = component$(({ isDisabled }: FormProps) => {
+    useContextProvider(FormContext, { isDisabled });
     return (
       <StyledForm>
         <Slot />
@@ -114,11 +129,12 @@ export const useForm = <ResponseType,>(
         submitErrors.value = "";
         formValues.value = { ...formValues.value, [name]: target.value };
       });
+      const formContextData = useContext(FormContext);
       const fieldName = `${name}-field`;
       const contextData = {
-        isDisabled,
-        isRequired,
-        isInvalid,
+        disabled: isDisabled || formContextData.isDisabled,
+        required: isRequired,
+        invalid: isInvalid,
         value,
         handleChange,
         name: fieldName,
@@ -140,7 +156,10 @@ export const useForm = <ResponseType,>(
     validationErrors,
     submitErrors,
     formValues,
-    handleSubmit,
+    submitHandlers: {
+      "window:onKeyDown$": handleEnterKeyDown,
+      onClick$: handleSubmit,
+    },
     Control,
     Form,
   };

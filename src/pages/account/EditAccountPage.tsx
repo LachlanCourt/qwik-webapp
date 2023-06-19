@@ -9,7 +9,7 @@ import { useForm } from "~/common/hooks/useForm/useForm";
 
 const EditAccountPage = component$(({ data }: { data: EditAccountData }) => {
   const initialValues = { name: data.name };
-  const { handleSubmit, Control, Form } = useForm(
+  const { submitHandlers, Control, Form } = useForm(
     initialValues,
     `api/v1/accounts/${data.id}`
   );
@@ -37,7 +37,7 @@ const EditAccountPage = component$(({ data }: { data: EditAccountData }) => {
           <Button link="../" variant={ButtonVariant.SECONDARY}>
             Cancel
           </Button>
-          <Button onClick$={handleSubmit}>Save</Button>
+          <Button {...submitHandlers}>Save</Button>
         </div>
       </Form>
     </Layout>

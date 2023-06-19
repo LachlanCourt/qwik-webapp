@@ -7,7 +7,7 @@ import { useForm } from "~/common/hooks/useForm/useForm";
 
 const NewAccountPage = component$(() => {
   const initialValues = { email: "" };
-  const { handleSubmit, Control, Form } = useForm(
+  const { submitHandlers, Control, Form } = useForm(
     initialValues,
     "api/v1/accounts/new/"
   );
@@ -31,7 +31,7 @@ const NewAccountPage = component$(() => {
           <Button link="../" variant={ButtonVariant.SECONDARY}>
             Cancel
           </Button>
-          <Button onClick$={handleSubmit}>Create</Button>
+          <Button {...submitHandlers}>Create</Button>
         </div>
       </Form>
     </Layout>

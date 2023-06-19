@@ -7,7 +7,7 @@ import { useForm } from "~/common/hooks/useForm/useForm";
 
 const Login = component$(() => {
   const initialValues = { email: "", password: "" };
-  const { handleSubmit, Control, Form } = useForm(
+  const { submitHandlers, Control, Form } = useForm(
     initialValues,
     "api/v1/auth/login"
   );
@@ -32,7 +32,7 @@ const Login = component$(() => {
             fontWeight: "bold",
           }}
         >
-          <Button onClick$={handleSubmit}>Sign in</Button>
+          <Button {...submitHandlers}>Sign in</Button>
         </div>
       </Form>
       <a style={{ paddingTop: "0.6rem" }} href="/users/forgot">
