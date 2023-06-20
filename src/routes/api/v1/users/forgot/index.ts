@@ -5,12 +5,17 @@ import { Tokens } from "~/common/constants";
 import { mailer } from "~/common/mailers/mailer";
 
 export const onPost: RequestHandler = async (requestEvent) => {
-  const { request, url } = requestEvent;
+  const { request, url, json } = requestEvent;
 
   const formData = await request.formData();
   const email = formData.get("email")?.toString() || "";
 
   const user = await db.user.findFirst({ where: { email } });
+
+  const successMessage = {
+    message:
+      "If your account exists, an email has been sent to the specified address",
+  };
 
   if (!user) {
     const securityDelay = async () => {
@@ -23,6 +28,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
       });
     };
     await securityDelay();
+    json(200, successMessage);
     return;
   }
   const token = cryptojs.lib.WordArray.random(32).toString();
@@ -59,4 +65,5 @@ export const onPost: RequestHandler = async (requestEvent) => {
     text,
   });
   await mailProvider.send();
+  json(200, successMessage);
 };

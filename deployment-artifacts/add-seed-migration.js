@@ -40,7 +40,7 @@ const date = new Date();
 const padValue = (value) => value.toString().padStart(2, "0");
 
 const migrationName = `${date.getFullYear()}${padValue(
-  date.getMonth()
+  date.getMonth() + 1
 )}${padValue(date.getDate())}${padValue(date.getHours())}${padValue(
   date.getMinutes()
 )}${padValue(date.getSeconds())}_seed_user`;

@@ -13,9 +13,9 @@ export const onPost: RequestHandler = async (requestEvent) => {
   let discriminator: string = "";
   let webhookUrl: string = "";
   try {
-    const data = await request.json();
-    discriminator = data.discriminator;
-    webhookUrl = data.webhookUrl;
+    const data = await request.formData();
+    discriminator = data.get("discriminator")?.toString() || "";
+    webhookUrl = data.get("webhookUrl")?.toString() || "";
   } catch {
     console.error("Error decoding json input");
   }

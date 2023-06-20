@@ -70,5 +70,7 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
     data: { name: "New Account", adminId: user.id },
   });
 
-  throw redirect(302, `/accounts/${account.id}/edit`);
+  await db.token.deleteMany({ where: { email, type: Tokens.ADD_NEW_ACCOUNT } });
+
+  throw redirect(302, `/accounts/${account.id}/edit/`);
 };
