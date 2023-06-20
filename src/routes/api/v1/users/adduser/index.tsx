@@ -29,7 +29,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
   const token = cryptojs.lib.WordArray.random(32).toString();
   // 24 hours
-  const expiry = new Date(Math.floor(Date.now() / 1000) + 1440);
+  const expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
   await db.token.deleteMany({ where: { email, type: Tokens.ADD_NEW_USER } });
   await db.token.create({
@@ -72,6 +72,7 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
   if (expired) throw error(401, "Invalid Token. Error Code 3");
 
   const user = await db.user.findFirst({ where: { email } });
+
   if (type === Tokens.ADD_NEW_USER) {
     if (user) {
       const { moderators } = (await db.account.findFirst({
@@ -93,6 +94,9 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
         });
         moderators.push(accountUser);
       }
+      await db.token.deleteMany({
+        where: { email, type: Tokens.ADD_NEW_USER },
+      });
       await db.account.update({
         where: { id: Number(accountId) },
         data: {
@@ -113,7 +117,7 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
   }
   if (type === Tokens.ADD_NEW_ACCOUNT) {
     if (user) {
-      throw redirect(302, `/api/v1/accounts/new?token=${token}`);
+      throw redirect(302, `/api/v1/accounts/new/?token=${token}`);
     } else {
       throw redirect(302, `/users/new?token=${token}`);
     }

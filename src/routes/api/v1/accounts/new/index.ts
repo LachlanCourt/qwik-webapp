@@ -19,7 +19,8 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
   const token = cryptojs.lib.WordArray.random(32).toString();
   // 24 hours
-  const expiry = new Date(Math.floor(Date.now() / 1000) + 1440);
+  const expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
+  console.log(expiry);
 
   await db.token.deleteMany({ where: { email, type: Tokens.ADD_NEW_ACCOUNT } });
   await db.token.create({
@@ -70,5 +71,7 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
     data: { name: "New Account", adminId: user.id },
   });
 
-  throw redirect(302, `/accounts/${account.id}/edit`);
+  await db.token.deleteMany({ where: { email, type: Tokens.ADD_NEW_ACCOUNT } });
+
+  throw redirect(302, `/accounts/${account.id}/edit/`);
 };

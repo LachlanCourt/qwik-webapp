@@ -28,6 +28,7 @@ COPY --from=base ./code/node_modules/prisma ./node_modules/prisma
 
 FROM node:18-alpine3.17 as final 
 
+RUN apk add curl
 
 COPY --from=base ./code/dist ./dist
 COPY --from=base ./code/server ./server

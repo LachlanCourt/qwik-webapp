@@ -1,0 +1,11 @@
+*
+!adapters
+!deployment-artifacts
+!prisma
+!public
+!src
+!.eslintrc.cjs
+!package.json
+!tsconfig.json
+!vite.config.ts
+!yarn.lock

@@ -41,3 +41,5 @@ lerna-debug.log*
 prod.env
 *.db
 *.db-journal
+database
+tmp

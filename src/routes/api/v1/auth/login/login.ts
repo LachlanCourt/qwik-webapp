@@ -3,15 +3,20 @@ import { db } from "db";
 import cryptojs from "crypto-js";
 import sha256 from "crypto-js/sha256";
 import { createToken } from "~/common/authentication/createToken";
+import { ApiErrorHandler } from "~/common/handlers/ApiErrorHandler";
 
 export const onPost: RequestHandler = async (requestEvent) => {
-  const { request, cookie, error, redirect } = requestEvent;
+  const { request, cookie, redirect } = requestEvent;
   const formData = await request.formData();
   const email = formData.get("email")?.toString() || "";
   const password = formData.get("password")?.toString() || "";
 
   if (!email || !password)
-    throw error(400, "Email and Password are required fields");
+    throw ApiErrorHandler.respond(
+      400,
+      "Email and Password are required fields",
+      requestEvent
+    );
 
   const user = await db.user.findFirst({ where: { email } });
 
@@ -21,7 +26,11 @@ export const onPost: RequestHandler = async (requestEvent) => {
   const passwordHash = userPassword.slice(userPassword.indexOf("$") + 1);
 
   if (!user || passwordHashTest !== passwordHash)
-    throw error(404, "User Not Found. Check Email and Password are correct");
+    throw ApiErrorHandler.respond(
+      404,
+      "User Not Found. Check Email and Password are correct",
+      requestEvent
+    );
 
   // Clean up old sessions if the user is logging in again
   await db.session.deleteMany({ where: { userId: user.id } });
@@ -38,5 +47,5 @@ export const onPost: RequestHandler = async (requestEvent) => {
   );
   cookie.set("token", jwt, { path: "/", httpOnly: true });
 
-  throw redirect(302, "/");
+  throw redirect(302, "/accounts/");
 };

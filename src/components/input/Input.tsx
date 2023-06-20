@@ -1,7 +1,16 @@
-import { QwikJSX, component$ } from "@builder.io/qwik";
+import { QwikJSX, component$, useContext } from "@builder.io/qwik";
+import { FormControlContext } from "~/common/hooks/useForm/useForm";
 
 import { InputStyle } from "~/theme/components.css";
 
 export const Input = component$((props: QwikJSX.IntrinsicElements["input"]) => {
-  return <input class={InputStyle} {...props} />;
+  const { handleChange, ...contextData } = useContext(FormControlContext);
+  return (
+    <input
+      class={InputStyle}
+      onInput$={handleChange}
+      {...contextData}
+      {...props}
+    />
+  );
 });

@@ -1,5 +1,5 @@
 import { $, Signal } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation } from "~/common/hooks/useLocation";
 import { CommandPageData } from "~/models";
 
 export const useDeleteCommand = (
@@ -9,7 +9,7 @@ export const useDeleteCommand = (
 
   const deleteCommand = $(async (commandId: number) => {
     const result = await fetch(
-      `${location.url.origin}/api/v1/accounts/${location.params.accountId}/commands/${commandId}`,
+      `${location.formPostUrl}/api/v1/accounts/${location.params.accountId}/commands/${commandId}`,
       {
         method: "DELETE",
       }

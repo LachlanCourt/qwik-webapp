@@ -1,5 +1,5 @@
 import { $, Signal } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation } from "~/common/hooks/useLocation";
 import { APIUserReadonlyData } from "~/models/APIUserReadonlyData";
 
 export const useDeleteAPIToken = (
@@ -9,7 +9,7 @@ export const useDeleteAPIToken = (
 
   const deleteToken = $(async (tokenId: number) => {
     const result = await fetch(
-      `${location.url.origin}/api/v1/admin/apitokens/${tokenId}`,
+      `${location.formPostUrl}/api/v1/admin/apitokens/${tokenId}`,
       {
         method: "DELETE",
       }
