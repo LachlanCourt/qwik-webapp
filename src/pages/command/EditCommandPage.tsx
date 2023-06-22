@@ -9,6 +9,7 @@ import { Layout } from "~/components/layout/Layout";
 import { useDeleteCommand } from "./hooks/useDeleteCommand";
 import { useLocation } from "~/common/hooks/useLocation";
 import { useForm } from "~/common/hooks/useForm/useForm";
+import { Textarea } from "~/components/textarea/Textarea";
 
 export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   const location = useLocation();
@@ -38,7 +39,7 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
           <Input />
         </Control>
         <Control name="response" label="Command Response">
-          <Input />
+          <Textarea />
         </Control>
         <div
           style={{ display: "flex", gap: "0.6rem", justifyContent: "center" }}
