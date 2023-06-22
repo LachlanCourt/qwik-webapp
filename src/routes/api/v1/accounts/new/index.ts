@@ -20,7 +20,6 @@ export const onPost: RequestHandler = async (requestEvent) => {
   const token = cryptojs.lib.WordArray.random(32).toString();
   // 24 hours
   const expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
-  console.log(expiry);
 
   await db.token.deleteMany({ where: { email, type: Tokens.ADD_NEW_ACCOUNT } });
   await db.token.create({
@@ -59,7 +58,7 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
   const tokenData = await db.token.findFirst({ where: { token } });
   if (!tokenData) throw error(401, "Invalid Token. Error Code 2");
   const { type, expiry, email } = tokenData;
-  const expired = expiry.getTime() < Math.floor(Date.now() / 1000);
+  const expired = expiry < new Date();
   if (expired) throw error(401, "Invalid Token. Error Code 3");
   if (type !== Tokens.ADD_NEW_ACCOUNT)
     throw error(401, "Invalid Token. Error Code 4");
