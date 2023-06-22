@@ -12,7 +12,7 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const tokenData = await db.token.findFirst({ where: { token } });
   if (!tokenData) throw error(401, "Invalid Token. Error Code 2");
   const { type, expiry } = tokenData;
-  const expired = expiry.getTime() < Math.floor(Date.now() / 1000);
+  const expired = expiry < new Date();
   if (expired) throw error(401, "Invalid Token. Error Code 3");
   if (type !== Tokens.ADD_NEW_USER && type !== Tokens.ADD_NEW_ACCOUNT)
     throw error(401, "Invalid Token. Error Code 4");
