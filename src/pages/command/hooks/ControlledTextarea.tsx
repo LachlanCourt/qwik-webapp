@@ -1,20 +1,8 @@
-import { component$, useContext, useContextProvider, $, useSignal, useId } from "@builder.io/qwik";
+import { component$, useContext, $, useSignal } from "@builder.io/qwik";
 import { FormControlContext } from "~/common/hooks/useForm/useForm";
-import { Button, ButtonVariant } from "~/components/button/Button";
-import { Textarea } from "~/components/textarea/Textarea";
 import { TextareaStyle, ButtonBaseStyle, ButtonStyleVariants } from "~/theme/components.css";
 
-
-interface QwikInternal {
-    _qc_: {
-        $element$: {
-            innerHTML: string
-        }
-    }
-
-}
-
-enum NodeType {
+export enum NodeType {
     ELEMENT = 1,
     TEXT = 3,
 }
@@ -29,13 +17,10 @@ export const ControlledTextarea = component$(() => {
     //     return <Button onClick$={ } />
     // })
 
-    const dataValue = useSignal<string>(formContextData.value)
-    const htmlValue = useSignal<string>()
+
     const handleChange = $((e: Event, target: (HTMLDivElement)/* & QwikInternal*/) => {
         const replaceContent = (text: string) => {
-            const newContent = text.replace(/{{[^}]*}}/g, (text, index) => {
-                console.log(text)
-                console.log(index)
+            const newContent = text.replace(/{{[^}]*}}/g, (text) => {
                 const newId = crypto.randomUUID()
                 internalData.value = { ...internalData.value, [newId]: text }
                 return `<span contenteditable="false" data-id="${newId}">&nbsp;
@@ -46,18 +31,18 @@ export const ControlledTextarea = component$(() => {
             })
             return newContent
         }
-        const getCaretPosition = (element: HTMLDivElement) => {
-            let caretPosition = 0;
-            const selection = window.getSelection();
-            if (selection && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(element);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                caretPosition = preCaretRange.toString().length;
-            }
-            return caretPosition;
-        }
+        // const getCaretPosition = (element: HTMLDivElement) => {
+        //     let caretPosition = 0;
+        //     const selection = window.getSelection();
+        //     if (selection && selection.rangeCount > 0) {
+        //         const range = selection.getRangeAt(0);
+        //         const preCaretRange = range.cloneRange();
+        //         preCaretRange.selectNodeContents(element);
+        //         preCaretRange.setEnd(range.endContainer, range.endOffset);
+        //         caretPosition = preCaretRange.toString().length;
+        //     }
+        //     return caretPosition;
+        // }
 
 
         let newValue = ''
@@ -88,8 +73,8 @@ export const ControlledTextarea = component$(() => {
         // debugger
 
         // {{hi}} hello {{hey}}
-        const originalCaretPosition = getCaretPosition(target)
-        let originalFocussedNode = 1
+        // const originalCaretPosition = getCaretPosition(target)
+        // let originalFocussedNode = 1
         // console.log(e)
         // console.log(target)
         // console.log(newValue)
@@ -98,8 +83,7 @@ export const ControlledTextarea = component$(() => {
     })
 
 
-    const { value, ...rest } = formContextData
+    // const { value, ...rest } = formContextData
 
-    console.log('value', value)
-    return <div class={TextareaStyle} contentEditable={"true"} {...rest} onInput$={handleChange} />
+    return <div class={TextareaStyle} contentEditable={"true"} {...formContextData} onInput$={handleChange} />
 })
