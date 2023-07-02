@@ -43,12 +43,12 @@ interface FormAttributes<ResponseType> {
   Control: Component<ControlProps>;
   Form: Component<FormProps>;
 }
-interface FormControlContextType {
+export interface FormControlContextType {
   disabled: boolean;
   required: boolean;
   invalid: boolean;
   value: any;
-  handleChange: QRL<() => void>;
+  handleChange: QRL<(_: Event | null, target: HTMLInputElement | HTMLTextAreaElement | null, explicitNewValue?: string) => void>;
   name: string;
   id: string;
 }
@@ -65,7 +65,8 @@ export const useForm = <ResponseType,>(
   intialValue: FormType,
   postUrl: string,
   validation?: object,
-  method: "GET" | "POST" | "DELETE" = HTTPMethod.POST
+  method: "GET" | "POST" | "DELETE" = HTTPMethod.POST,
+  submitOnEnter = true
 ): FormAttributes<ResponseType> => {
   const location = useLocation();
   const nav = useNavigate();
@@ -99,7 +100,7 @@ export const useForm = <ResponseType,>(
   });
 
   const handleEnterKeyDown = $((e: QwikKeyboardEvent<HTMLButtonElement>) => {
-    e.key === "Enter" && handleSubmit();
+    e.key === "Enter" && submitOnEnter && handleSubmit();
   });
 
   const Form = component$(({ isDisabled }: FormProps) => {
@@ -123,9 +124,9 @@ export const useForm = <ResponseType,>(
     }: ControlProps) => {
       //TODO Run validation here to additionally calculate disabled/required/invalid according to validation schema
       const value = formValues.value[name];
-      const handleChange = $((e: Event, target: HTMLInputElement) => {
+      const handleChange = $((_: Event | null, target: HTMLInputElement | null, explicitNewValue: string) => {
         submitErrors.value = "";
-        formValues.value = { ...formValues.value, [name]: target.value };
+        formValues.value = { ...formValues.value, [name]: target?.value || explicitNewValue };
       });
       const formContextData = useContext(FormContext);
       const fieldName = `${name}-field`;
@@ -137,6 +138,7 @@ export const useForm = <ResponseType,>(
         handleChange,
         name: fieldName,
         id: fieldName,
+        // signal: formValues
       };
       useContextProvider(FormControlContext, contextData);
       return (

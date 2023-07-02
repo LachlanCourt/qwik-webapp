@@ -9,7 +9,7 @@ import { Layout } from "~/components/layout/Layout";
 import { useDeleteCommand } from "./hooks/useDeleteCommand";
 import { useLocation } from "~/common/hooks/useLocation";
 import { useForm } from "~/common/hooks/useForm/useForm";
-import { Textarea } from "~/components/textarea/Textarea";
+import { ControlledTextarea } from "./hooks/ControlledTextarea";
 
 export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   const location = useLocation();
@@ -22,7 +22,8 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   };
   const { submitHandlers, Control, Form } = useForm(
     initialValues,
-    `/api/v1/accounts/${location.params.accountId}/commands/${postEndpoint}`
+    `/api/v1/accounts/${location.params.accountId}/commands/${postEndpoint}`,
+    {}, "POST", false
   );
 
   const deleteCommand = useDeleteCommand();
@@ -30,6 +31,7 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
     deleteCommand(data?.id || 0);
     nav(`${location.url.origin}/accounts/${data?.accountId}/commands`, true);
   });
+
 
   return (
     <Layout>
@@ -39,7 +41,7 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
           <Input />
         </Control>
         <Control name="response" label="Command Response">
-          <Textarea />
+          <ControlledTextarea />
         </Control>
         <div
           style={{ display: "flex", gap: "0.6rem", justifyContent: "center" }}
