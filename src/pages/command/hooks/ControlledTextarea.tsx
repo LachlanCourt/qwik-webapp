@@ -161,7 +161,9 @@ export const ControlledTextarea = component$(() => {
     const traverseNodes = (node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         const text = node.textContent;
-        const parts = text.split(/{{[^}]*}}/);
+        const regex = /{{[^}]*}}/g;
+        const parts = text.split(regex);
+        const content = [...text.matchAll(regex)];
 
         if (parts.length > 1) {
           const fragment = document.createDocumentFragment();
@@ -176,10 +178,15 @@ export const ControlledTextarea = component$(() => {
 
             if (i < parts.length - 1) {
               const button = document.createElement("button");
+
               button.textContent = "Click Me";
               button.contentEditable = "false";
               const newId = crypto.randomUUID();
-              internalData.value = { ...internalData.value, [newId]: text };
+              internalData.value = {
+                ...internalData.value,
+                [newId]: content[0][0],
+              };
+              content.splice(0, 1);
               button.setAttribute("data-id", newId);
               fragment.appendChild(button);
               buttonNode = button; // Store the reference to the button
@@ -197,7 +204,7 @@ export const ControlledTextarea = component$(() => {
         }
       }
     };
-
+    console.log(internalData.value);
     traverseNodes(target);
 
     // Set caret position after the inserted button
