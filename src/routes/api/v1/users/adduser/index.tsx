@@ -68,7 +68,7 @@ export const onGet: RequestHandler<Response> = async (requestEvent) => {
   const tokenData = await db.token.findFirst({ where: { token } });
   if (!tokenData) throw error(401, "Invalid Token. Error Code 2");
   const { type, expiry, email, accountId } = tokenData;
-  const expired = expiry.getTime() < Math.floor(Date.now() / 1000);
+  const expired = expiry < new Date();
   if (expired) throw error(401, "Invalid Token. Error Code 3");
 
   const user = await db.user.findFirst({ where: { email } });
