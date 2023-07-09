@@ -12,22 +12,22 @@ export const ControlledTextarea = component$(() => {
   const internalData = useSignal<{ [key: string]: string }>({});
 
   const handleChange = $((e: Event, target: HTMLDivElement) => {
-    // let newValue = "";
-    // target.childNodes.forEach((node) => {
-    //   if (node.nodeType === Node.TEXT_NODE) {
-    //     newValue += node.textContent;
-    //   } else if (node.nodeType === Node.ELEMENT_NODE) {
-    //     if (node.nodeName === "SPAN") {
-    //       const dataId: string = (node as Element).attributes["data-id" as any]
-    //         .value;
-    //       newValue += internalData.value[dataId] || "";
-    //     } else {
-    //       newValue += node.textContent || "";
-    //       (node as Element).outerHTML = node.textContent || "";
-    //     }
-    //   }
-    // });
-    // formContextData.handleChange(null, null, newValue);
+    let newValue = "";
+    target.childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        newValue += node.textContent;
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.nodeName === "BUTTON") {
+          const dataId: string = (node as Element).attributes["data-id" as any]
+            .value;
+          newValue += internalData.value[dataId] || "";
+        } else {
+          newValue += node.textContent || "";
+          (node as Element).outerHTML = node.textContent || "";
+        }
+      }
+    });
+    formContextData.handleChange(null, null, newValue);
 
     const selection = window.getSelection();
     if (!selection) return;
@@ -81,7 +81,7 @@ export const ControlledTextarea = component$(() => {
     };
     traverseNodes(target);
 
-    // Set caret position after the inserted button
+    // Set caret position after the inserted content
     if (buttonNode) {
       const newRange = document.createRange();
       newRange.setStartAfter(buttonNode);
