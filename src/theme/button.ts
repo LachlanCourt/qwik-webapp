@@ -1,4 +1,4 @@
-import { StyleRule } from "@vanilla-extract/css"
+import { StyleRule } from "@vanilla-extract/css";
 
 export const buttonBaseStyle: StyleRule = {
   fontSize: "1.2rem",
@@ -11,11 +11,11 @@ export const buttonBaseStyle: StyleRule = {
   fontWeight: "normal",
   fontFamily:
     "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-}
+};
 
 export const buttonPrimaryStyle: StyleRule = {
   ":visited": {
-    color: "darkslategray"
+    color: "darkslategray",
   },
   color: "darkslategray",
   background: "#AAAAFF",
@@ -23,7 +23,7 @@ export const buttonPrimaryStyle: StyleRule = {
   ":hover": {
     background: "#9999EE",
   },
-}
+};
 
 export const buttonSecondaryStyle: StyleRule = {
   ":visited": {
@@ -36,4 +36,9 @@ export const buttonSecondaryStyle: StyleRule = {
     color: "lightgrey",
     background: "slategray",
   },
-}
+};
+
+export const inlineButtonMargin: StyleRule = {
+  marginLeft: "0.3rem",
+  marginRight: "0.3rem",
+};

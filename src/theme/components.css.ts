@@ -3,6 +3,7 @@ import {
   buttonBaseStyle,
   buttonPrimaryStyle,
   buttonSecondaryStyle,
+  inlineButtonMargin,
 } from "./button";
 import { ButtonVariant } from "~/components/button/Button";
 export const ButtonBaseStyle = style(buttonBaseStyle);
@@ -12,6 +13,7 @@ export const ButtonStyleVariants = {
   [ButtonVariant.PRIMARY]: _ButtonPrimaryStyle,
   [ButtonVariant.SECONDARY]: _ButtonSecondaryStyle,
 };
+export const InlineButtonMarginStyle = style(inlineButtonMargin);
 
 import {
   centerContainer,

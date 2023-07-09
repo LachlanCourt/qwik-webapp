@@ -48,7 +48,13 @@ export interface FormControlContextType {
   required: boolean;
   invalid: boolean;
   value: any;
-  handleChange: QRL<(_: Event | null, target: HTMLInputElement | HTMLTextAreaElement | null, explicitNewValue?: string) => void>;
+  handleChange: QRL<
+    (
+      _: Event | null,
+      target: HTMLInputElement | HTMLTextAreaElement | null,
+      explicitNewValue?: string
+    ) => void
+  >;
   name: string;
   id: string;
 }
@@ -124,10 +130,19 @@ export const useForm = <ResponseType,>(
     }: ControlProps) => {
       //TODO Run validation here to additionally calculate disabled/required/invalid according to validation schema
       const value = formValues.value[name];
-      const handleChange = $((_: Event | null, target: HTMLInputElement | null, explicitNewValue: string) => {
-        submitErrors.value = "";
-        formValues.value = { ...formValues.value, [name]: target?.value || explicitNewValue };
-      });
+      const handleChange = $(
+        (
+          _: Event | null,
+          target: HTMLInputElement | null,
+          explicitNewValue: string
+        ) => {
+          submitErrors.value = "";
+          formValues.value = {
+            ...formValues.value,
+            [name]: target?.value || explicitNewValue,
+          };
+        }
+      );
       const formContextData = useContext(FormContext);
       const fieldName = `${name}-field`;
       const contextData = {
