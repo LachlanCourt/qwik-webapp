@@ -153,7 +153,6 @@ export const useForm = <ResponseType,>(
         handleChange,
         name: fieldName,
         id: fieldName,
-        // signal: formValues
       };
       useContextProvider(FormControlContext, contextData);
       return (
