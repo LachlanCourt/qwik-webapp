@@ -23,7 +23,9 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   const { submitHandlers, Control, Form } = useForm(
     initialValues,
     `/api/v1/accounts/${location.params.accountId}/commands/${postEndpoint}`,
-    {}, "POST", false
+    {},
+    "POST",
+    false
   );
 
   const deleteCommand = useDeleteCommand();
@@ -32,6 +34,10 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
     nav(`${location.url.origin}/accounts/${data?.accountId}/commands`, true);
   });
 
+  const interpolationOptions = [
+    { name: "Current Uptime of Stream", value: "{{context:uptime}}" },
+    { name: "Author of Message", value: "{{context:author}}" },
+  ];
 
   return (
     <Layout>
@@ -41,7 +47,7 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
           <Input />
         </Control>
         <Control name="response" label="Command Response">
-          <ControlledTextarea />
+          <ControlledTextarea selectOptions={interpolationOptions} />
         </Control>
         <div
           style={{ display: "flex", gap: "0.6rem", justifyContent: "center" }}
