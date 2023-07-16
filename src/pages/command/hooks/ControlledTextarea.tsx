@@ -165,6 +165,8 @@ export const ControlledTextarea = component$(
           contentEditable={"true"}
           {...formContextData}
           onInput$={handleChange}
+          role={"textbox"}
+          aria-multiline={"true"}
         />
         {selectOptions && (
           <select onChange$={handleSelectionChange}>
