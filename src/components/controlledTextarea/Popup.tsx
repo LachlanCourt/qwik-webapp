@@ -4,13 +4,9 @@ import {
   $,
   type NoSerialize,
   QRL,
-  useTask$,
-  useVisibleTask$,
   useSignal,
   QwikKeyboardEvent,
-  useStore,
 } from "@builder.io/qwik";
-import { StyleRule, style } from "@vanilla-extract/css";
 import { theme } from "~/common/styles/theme.css";
 import { OptionStyle } from "./popupstyle.css";
 

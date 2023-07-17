@@ -1,4 +1,4 @@
-import { StyleRule, style } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 import { theme } from "~/common/styles/theme.css";
 
 export const OptionStyle = style({

@@ -4,9 +4,6 @@ import {
   $,
   useSignal,
   useVisibleTask$,
-  QwikChangeEvent,
-  Component,
-  useTask$,
   noSerialize,
 } from "@builder.io/qwik";
 import { FormControlContext } from "~/common/hooks/useForm/useForm";
@@ -17,7 +14,7 @@ import {
   InlineButtonMarginStyle,
 } from "~/theme/components.css";
 import { Textarea } from "./Textarea";
-import { OptionsType, Popup, PopupProps, PopupState, Position } from "./Popup";
+import { OptionsType, Popup, PopupState, Position } from "./Popup";
 
 interface TextAreaProps {
   selectOptions: Array<OptionsType>;
@@ -33,9 +30,6 @@ export const ControlledTextarea = component$(
       position: { x: 0, y: 0 },
       range: noSerialize<Range | undefined>(undefined),
     });
-    const PopupContainer = useSignal<Component<PopupProps>>(
-      component$(() => <div />)
-    );
 
     const handleChange = $(
       (e: Event, target: HTMLDivElement, isSSR = false) => {
@@ -171,18 +165,6 @@ export const ControlledTextarea = component$(
       await processValue(true);
     });
 
-    useTask$(async ({ track }) => {
-      track(() => popupState.value);
-
-      if (popupState.value.isVisible) {
-        PopupContainer.value = Popup;
-      } else {
-        PopupContainer.value = component$(() => {
-          return null;
-        });
-      }
-    });
-
     return (
       <>
         <Textarea
@@ -192,11 +174,13 @@ export const ControlledTextarea = component$(
           handleChange={handleChange}
           popupState={popupState}
         />
-        <PopupContainer.value
-          state={popupState}
-          options={selectOptions}
-          processChange={processValue}
-        />
+        {popupState.value.isVisible && (
+          <Popup
+            state={popupState}
+            options={selectOptions}
+            processChange={processValue}
+          />
+        )}
       </>
     );
   }
