@@ -38,7 +38,7 @@ export const ControlledTextarea = component$(
     );
 
     const handleChange = $(
-      (e: Event, target: HTMLDivElement, isCalledByTask = false) => {
+      (e: Event, target: HTMLDivElement, isSSR = false) => {
         let newValue = "";
         target.childNodes.forEach((node) => {
           if (node.nodeType === Node.TEXT_NODE) {
@@ -56,10 +56,14 @@ export const ControlledTextarea = component$(
         });
         formContextData.handleChange(null, null, newValue);
 
-        const selection = window.getSelection();
-        if (!selection) return;
+        let selection: Selection | null = null;
+        let range: Range | null = null;
 
-        const range = isCalledByTask ? null : selection.getRangeAt(0);
+        if (!isSSR) {
+          selection = window.getSelection();
+          if (!selection) return;
+          range = isSSR ? null : selection.getRangeAt(0);
+        }
         let buttonNode = null;
         const traverseNodes = (node: ChildNode) => {
           if (node.nodeType === Node.TEXT_NODE) {
@@ -108,7 +112,7 @@ export const ControlledTextarea = component$(
         };
         traverseNodes(target);
 
-        if (range) {
+        if (range && selection) {
           // Set caret position after the inserted content
           if (buttonNode) {
             const newRange = document.createRange();
@@ -144,27 +148,27 @@ export const ControlledTextarea = component$(
               position,
               range: noSerialize<Range | undefined>(range),
             };
-          } else
+          } else {
             popupState.value = {
               ...popupState.value,
               isVisible: false,
               range: undefined,
             };
+          }
         }
       }
     );
 
-    const processValue = $(async () => {
-      const self = document.getElementById(
-        formContextData.id
-      ) as HTMLDivElement | null;
-      if (!self) return;
-      self.textContent = formContextData.value;
-      await handleChange(new Event("", undefined), self, true);
+    const self = useSignal<HTMLDivElement>();
+
+    const processValue = $(async (isInit = false) => {
+      if (!self.value) return;
+      if (isInit) self.value.textContent = formContextData.value;
+      await handleChange(new Event("", undefined), self.value, isInit);
     });
 
     useVisibleTask$(async () => {
-      await processValue();
+      await processValue(true);
     });
 
     useTask$(async ({ track }) => {
@@ -182,6 +186,7 @@ export const ControlledTextarea = component$(
     return (
       <>
         <Textarea
+          textareaRef={self}
           formContextData={formContextData}
           className={TextareaStyle}
           handleChange={handleChange}
@@ -192,20 +197,6 @@ export const ControlledTextarea = component$(
           options={selectOptions}
           processChange={processValue}
         />
-        {/* {selectOptions && showPopup.value && (
-          <select key={"select"} onChange$={handleSelectionChange}>
-            <option key="initial" disabled selected hidden value="default">
-              Select a dynamic value to be inserted
-            </option>
-            {selectOptions.map((selectOption, index) => {
-              return (
-                <option key={index} value={selectOption.value}>
-                  {selectOption.name}
-                </option>
-              );
-            })}
-          </select>
-        )} */}
       </>
     );
   }

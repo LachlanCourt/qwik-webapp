@@ -9,10 +9,17 @@ interface TextareaProps {
     (e: Event, target: HTMLDivElement, isCalledByTask?: boolean) => void
   >;
   popupState: Signal<PopupState>;
+  textareaRef: Signal<HTMLDivElement | undefined>;
 }
 
 export const Textarea = component$(
-  ({ formContextData, className, handleChange, popupState }: TextareaProps) => {
+  ({
+    formContextData,
+    className,
+    handleChange,
+    popupState,
+    textareaRef,
+  }: TextareaProps) => {
     const closePopupOnClick = $(() => {
       popupState.value = { ...popupState.value, isVisible: false };
     });
@@ -20,6 +27,7 @@ export const Textarea = component$(
     return (
       <div
         {...formContextData}
+        ref={textareaRef}
         class={className}
         contentEditable={"true"}
         onInput$={handleChange}

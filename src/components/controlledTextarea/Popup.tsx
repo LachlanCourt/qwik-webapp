@@ -49,17 +49,23 @@ export const Popup = component$(
         state.value.range.collapse(false);
         selection.addRange(state.value.range);
         state.value = { ...state.value, isVisible: false };
+        await processChange();
       }
     });
 
     // const renderCount = useSignal(0);
 
-    useVisibleTask$(async ({ track }) => {
-      track(() => state.value);
-      // renderCount.value++;
-      // if (renderCount.value % 2 === 0)
-      // await processChange();
-    });
+    // useVisibleTask$(async ({ track }) => {
+    //   track(() => state.value);
+    //   console.log("task");
+    //   // renderCount.value++;
+    //   // if (renderCount.value % 2 === 0)
+    //   // if (handle.value === 1) {
+    //   //   handle.value++;
+    //   // }
+
+    //   await processChange();
+    // });
 
     const focussedOption = useSignal<number>(0);
     const optionIdentity = "select-option";
@@ -83,6 +89,8 @@ export const Popup = component$(
           optionElements[focussedOption.value].focus({ preventScroll: true });
         } else if (e.key === "Enter") {
           handleClick(options[focussedOption.value].value);
+        } else if (e.key === "Escape") {
+          state.value = { ...state.value, isVisible: false };
         }
       }
     );
