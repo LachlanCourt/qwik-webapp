@@ -16,6 +16,7 @@ export const textareaStyle: StyleRule = {
   "@media (max-width: 430px)": {
     width: "295px",
   },
+  height: "100px",
   resize: "vertical",
   overflow: "auto",
 };

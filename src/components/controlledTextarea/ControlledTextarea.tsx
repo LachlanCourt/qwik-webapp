@@ -5,6 +5,9 @@ import {
   useSignal,
   useVisibleTask$,
   QwikChangeEvent,
+  Component,
+  useTask$,
+  noSerialize,
 } from "@builder.io/qwik";
 import { FormControlContext } from "~/common/hooks/useForm/useForm";
 import {
@@ -13,14 +16,11 @@ import {
   ButtonStyleVariants,
   InlineButtonMarginStyle,
 } from "~/theme/components.css";
-
-interface OptionsType {
-  name: string;
-  value: string;
-}
+import { Textarea } from "./Textarea";
+import { OptionsType, Popup, PopupProps, PopupState } from "./Popup";
 
 interface TextAreaProps {
-  selectOptions?: Array<OptionsType>;
+  selectOptions: Array<OptionsType>;
 }
 
 export const ControlledTextarea = component$(
@@ -28,6 +28,14 @@ export const ControlledTextarea = component$(
     const formContextData = useContext(FormControlContext);
 
     const internalData = useSignal<{ [key: string]: string }>({});
+    const popupState = useSignal<PopupState>({
+      isVisible: false,
+      position: { x: 0, y: 0 },
+      range: noSerialize<Range | undefined>(undefined),
+    });
+    const PopupContainer = useSignal<Component<PopupProps>>(
+      component$(() => <div />)
+    );
 
     const handleChange = $(
       (e: Event, target: HTMLDivElement, isCalledByTask = false) => {
@@ -37,9 +45,8 @@ export const ControlledTextarea = component$(
             newValue += node.textContent;
           } else if (node.nodeType === Node.ELEMENT_NODE) {
             if (node.nodeName === "BUTTON") {
-              const dataId: string = (node as Element).attributes[
-                "data-id" as any
-              ].value;
+              const dataId: string =
+                (node as Element).getAttribute("data-id") || "";
               newValue += internalData.value[dataId] || "";
             } else {
               newValue += node.textContent || "";
@@ -114,10 +121,31 @@ export const ControlledTextarea = component$(
             selection.removeAllRanges();
             selection.addRange(range);
           }
+
+          if (
+            range.endContainer.nodeValue?.endsWith("{{") &&
+            range.endOffset === range.endContainer.nodeValue?.length
+          ) {
+            const { x, y } = range.getBoundingClientRect();
+
+            const position = { x, y };
+            popupState.value = {
+              ...popupState.value,
+              isVisible: true,
+              position,
+              range: noSerialize<Range | undefined>(range),
+            };
+          } else
+            popupState.value = {
+              ...popupState.value,
+              isVisible: false,
+              range: undefined,
+            };
         }
       }
     );
-    useVisibleTask$(async () => {
+
+    const processValue = $(async () => {
       const self = document.getElementById(
         formContextData.id
       ) as HTMLDivElement | null;
@@ -126,60 +154,84 @@ export const ControlledTextarea = component$(
       await handleChange(new Event("", undefined), self, true);
     });
 
+    useVisibleTask$(async () => {
+      await processValue();
+    });
+
     const handleSelectionChange = $(
       async (
         e: QwikChangeEvent<HTMLSelectElement>,
         target: HTMLSelectElement
       ) => {
-        const selection = window.getSelection();
-        const fragment = document.createDocumentFragment();
-        fragment.textContent = target.value + " ";
-        const self = document.getElementById(
-          formContextData.id
-        ) as HTMLDivElement | null;
-
-        if (!self) return;
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          console.log(selection);
-          console.log(range);
-
-          if (
-            range.commonAncestorContainer.parentElement?.attributes["id" as any]
-              .value === formContextData.id
-          ) {
-            range.insertNode(fragment);
-          }
-        } else {
-          document.getElementById(formContextData.id)?.appendChild(fragment);
-        }
-        await handleChange(new Event("", undefined), self, true);
-        target.value = "default";
+        // debugger;
+        // const selection = window.getSelection();
+        // const fragment = document.createDocumentFragment();
+        // fragment.textContent = target.value + " ";
+        // const self = document.getElementById(
+        //   formContextData.id
+        // ) as HTMLDivElement | null;
+        // if (!self) return;
+        // if (selection && selection.rangeCount > 0) {
+        //   const range = selection.getRangeAt(0);
+        //   console.log(selection);
+        //   console.log(range);
+        //   if (
+        //     range.commonAncestorContainer.parentElement?.attributes["id" as any]
+        //       .value === formContextData.id
+        //   ) {
+        //     range.insertNode(fragment);
+        //   }
+        // } else {
+        //   document.getElementById(formContextData.id)?.appendChild(fragment);
+        // }
+        // await handleChange(new Event("", undefined), self, true);
+        // target.value = "default";
       }
     );
 
+    // const popup = component$(() => {
+    //   return <div>HI</div>;
+    // });
+
+    useTask$(async ({ track }) => {
+      track(() => popupState.value);
+
+      if (popupState.value.isVisible) {
+        PopupContainer.value = Popup;
+      } else {
+        PopupContainer.value = component$(() => {
+          return null;
+        });
+      }
+    });
+
     return (
       <>
-        <div
-          class={TextareaStyle}
-          contentEditable={"true"}
-          {...formContextData}
-          onInput$={handleChange}
-          role={"textbox"}
-          aria-multiline={"true"}
+        <Textarea
+          formContextData={formContextData}
+          className={TextareaStyle}
+          handleChange={handleChange}
+          popupState={popupState}
         />
-        {selectOptions && (
-          <select onChange$={handleSelectionChange}>
-            <option disabled selected hidden value="default">
+        <PopupContainer.value
+          state={popupState}
+          options={selectOptions}
+          processChange={processValue}
+        />
+        {/* {selectOptions && showPopup.value && (
+          <select key={"select"} onChange$={handleSelectionChange}>
+            <option key="initial" disabled selected hidden value="default">
               Select a dynamic value to be inserted
             </option>
-            {selectOptions.map((selectOption) => {
+            {selectOptions.map((selectOption, index) => {
               return (
-                <option value={selectOption.value}>{selectOption.name}</option>
+                <option key={index} value={selectOption.value}>
+                  {selectOption.name}
+                </option>
               );
             })}
           </select>
-        )}
+        )} */}
       </>
     );
   }

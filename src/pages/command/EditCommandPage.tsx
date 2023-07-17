@@ -9,7 +9,7 @@ import { Layout } from "~/components/layout/Layout";
 import { useDeleteCommand } from "./hooks/useDeleteCommand";
 import { useLocation } from "~/common/hooks/useLocation";
 import { useForm } from "~/common/hooks/useForm/useForm";
-import { ControlledTextarea } from "./hooks/ControlledTextarea";
+import { ControlledTextarea } from "../../components/controlledTextarea/ControlledTextarea";
 
 export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   const location = useLocation();
