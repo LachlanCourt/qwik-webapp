@@ -18,9 +18,15 @@ export interface OptionsType {
   name: string;
   value: string;
 }
+
+export interface Position {
+  x: number;
+  y: number;
+  fromBottom?: boolean;
+}
 export interface PopupState {
   isVisible: boolean;
-  position: { x: number; y: number };
+  position: Position;
   range: NoSerialize<Range | undefined>;
 }
 
@@ -86,11 +92,19 @@ export const Popup = component$(
         style={{
           background: "#EEEEFF",
           position: "absolute",
-          top: `${state.value.position.y}px`,
-          left: `${state.value.position.x}px`,
+          top: state.value.position.fromBottom
+            ? ""
+            : `${state.value.position.y}px`,
+          bottom: state.value.position.fromBottom
+            ? `${state.value.position.y}px`
+            : "",
+          left: state.value.position.fromBottom
+            ? ""
+            : `${state.value.position.x}px`,
           boxShadow: theme.boxShadow.md,
           borderRadius: theme.borderRadius.sm,
           padding: "0.6rem",
+          marginBottom: state.value.position.fromBottom ? "1rem" : "",
           maxHeight: "100px",
           overflowY: "auto",
         }}

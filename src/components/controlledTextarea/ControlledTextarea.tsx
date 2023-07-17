@@ -17,7 +17,7 @@ import {
   InlineButtonMarginStyle,
 } from "~/theme/components.css";
 import { Textarea } from "./Textarea";
-import { OptionsType, Popup, PopupProps, PopupState } from "./Popup";
+import { OptionsType, Popup, PopupProps, PopupState, Position } from "./Popup";
 
 interface TextAreaProps {
   selectOptions: Array<OptionsType>;
@@ -126,9 +126,18 @@ export const ControlledTextarea = component$(
             range.endContainer.nodeValue?.endsWith("{{") &&
             range.endOffset === range.endContainer.nodeValue?.length
           ) {
-            const { x, y } = range.getBoundingClientRect();
-
-            const position = { x, y };
+            let position: Position = { x: 0, y: 0 };
+            if (!window.matchMedia("(max-width: 450px)").matches) {
+              // Desktop
+              const { x, y } = range.getBoundingClientRect();
+              position = { x, y };
+            } else {
+              // Mobile
+              position = {
+                ...position,
+                fromBottom: true,
+              };
+            }
             popupState.value = {
               ...popupState.value,
               isVisible: true,
@@ -157,41 +166,6 @@ export const ControlledTextarea = component$(
     useVisibleTask$(async () => {
       await processValue();
     });
-
-    const handleSelectionChange = $(
-      async (
-        e: QwikChangeEvent<HTMLSelectElement>,
-        target: HTMLSelectElement
-      ) => {
-        // debugger;
-        // const selection = window.getSelection();
-        // const fragment = document.createDocumentFragment();
-        // fragment.textContent = target.value + " ";
-        // const self = document.getElementById(
-        //   formContextData.id
-        // ) as HTMLDivElement | null;
-        // if (!self) return;
-        // if (selection && selection.rangeCount > 0) {
-        //   const range = selection.getRangeAt(0);
-        //   console.log(selection);
-        //   console.log(range);
-        //   if (
-        //     range.commonAncestorContainer.parentElement?.attributes["id" as any]
-        //       .value === formContextData.id
-        //   ) {
-        //     range.insertNode(fragment);
-        //   }
-        // } else {
-        //   document.getElementById(formContextData.id)?.appendChild(fragment);
-        // }
-        // await handleChange(new Event("", undefined), self, true);
-        // target.value = "default";
-      }
-    );
-
-    // const popup = component$(() => {
-    //   return <div>HI</div>;
-    // });
 
     useTask$(async ({ track }) => {
       track(() => popupState.value);
