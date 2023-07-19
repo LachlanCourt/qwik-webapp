@@ -10,6 +10,7 @@ import { useDeleteCommand } from "./hooks/useDeleteCommand";
 import { useLocation } from "~/common/hooks/useLocation";
 import { useForm } from "~/common/hooks/useForm/useForm";
 import { ControlledTextarea } from "../../components/controlledTextarea/ControlledTextarea";
+import { OptionsType } from "~/components/controlledTextarea/Popup";
 
 export const EditCommandPage = component$(({ data }: { data?: Command }) => {
   const location = useLocation();
@@ -34,9 +35,17 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
     nav(`${location.url.origin}/accounts/${data?.accountId}/commands`, true);
   });
 
-  const interpolationOptions = [
-    { name: "Current Uptime of Stream", value: "{{context:uptime}}" },
-    { name: "Author of Message", value: "{{context:author}}" },
+  const interpolationOptions: Array<OptionsType> = [
+    {
+      name: "Current Uptime of Stream",
+      value: "{{context:uptime}}",
+      buttonLabel: "Uptime",
+    },
+    {
+      name: "Author of Message",
+      value: "{{context:author}}",
+      buttonLabel: "Author",
+    },
   ];
 
   return (

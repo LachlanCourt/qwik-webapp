@@ -13,6 +13,7 @@ import { OptionStyle } from "./popupstyle.css";
 export interface OptionsType {
   name: string;
   value: string;
+  buttonLabel?: string;
 }
 
 export interface Position {
@@ -48,20 +49,6 @@ export const Popup = component$(
         await processChange();
       }
     });
-
-    // const renderCount = useSignal(0);
-
-    // useVisibleTask$(async ({ track }) => {
-    //   track(() => state.value);
-    //   console.log("task");
-    //   // renderCount.value++;
-    //   // if (renderCount.value % 2 === 0)
-    //   // if (handle.value === 1) {
-    //   //   handle.value++;
-    //   // }
-
-    //   await processChange();
-    // });
 
     const focussedOption = useSignal<number>(0);
     const optionIdentity = "select-option";

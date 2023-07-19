@@ -15,6 +15,8 @@ import {
 } from "~/theme/components.css";
 import { Textarea } from "./Textarea";
 import { OptionsType, Popup, PopupState, Position } from "./Popup";
+import { GlobalContext } from "~/root";
+import { EditModalContent } from "./EditModalContent";
 
 interface TextAreaProps {
   selectOptions: Array<OptionsType>;
@@ -23,6 +25,7 @@ interface TextAreaProps {
 export const ControlledTextarea = component$(
   ({ selectOptions }: TextAreaProps) => {
     const formContextData = useContext(FormControlContext);
+    const globalContext = useContext(GlobalContext);
 
     const internalData = useSignal<{ [key: string]: string }>({});
     const popupState = useSignal<PopupState>({
@@ -76,15 +79,26 @@ export const ControlledTextarea = component$(
                 }
 
                 if (index < parts.length - 1) {
+                  const valueOfReplacementPart = content[0][0];
                   const button = document.createElement("button");
 
-                  button.textContent = "Click Me";
+                  button.textContent =
+                    selectOptions.find(
+                      (option) => option.value === valueOfReplacementPart
+                    )?.buttonLabel || "";
                   button.contentEditable = "false";
                   button.className = `${ButtonBaseStyle} ${ButtonStyleVariants.primary} ${InlineButtonMarginStyle}`;
+                  button.onclick = () => {
+                    globalContext.modalContent = noSerialize(() => (
+                      <EditModalContent />
+                    ));
+                    globalContext.modal.value.show();
+                    console.log("showing");
+                  };
                   const newId = crypto.randomUUID();
                   internalData.value = {
                     ...internalData.value,
-                    [newId]: content[0][0],
+                    [newId]: valueOfReplacementPart,
                   };
                   content.splice(0, 1);
                   button.setAttribute("data-id", newId);
