@@ -54,7 +54,7 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
       pattern: "{{context:mention:A}}",
       buttonLabel: "User",
       hasVariables: true,
-      variableSchema: [{ name: "Username", value: "A" }],
+      variableSchema: [{ name: "Username", value: "A", defaultValue: "" }],
     },
   ];
 
