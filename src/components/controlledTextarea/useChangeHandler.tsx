@@ -5,13 +5,9 @@ import {
   useContext,
   useSignal,
 } from "@builder.io/qwik";
-import {
-  FormControlContext,
-  FormControlContextType,
-} from "~/common/hooks/useForm/useForm";
+import { FormControlContext } from "~/common/hooks/useForm/useForm";
 import { OptionsType, PopupState, Position } from "./Popup";
 import {
-  TextareaStyle,
   ButtonBaseStyle,
   ButtonStyleVariants,
   InlineButtonMarginStyle,

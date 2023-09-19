@@ -20,7 +20,6 @@ import { RouterHead } from "./components/router-head/router-head";
 import globalStyles from "./global.css?inline";
 import "./common/styles/theme.css.ts";
 import { Modal } from "./components/modal/Modal";
-import { JSX } from "@builder.io/qwik/jsx-runtime";
 
 export const GlobalContext = createContextId<{
   modal: Signal<HTMLDialogElement>;

@@ -9,7 +9,7 @@ import {
 import { FormControlContext } from "~/common/hooks/useForm/useForm";
 import { TextareaStyle } from "~/theme/components.css";
 import { Textarea } from "./Textarea";
-import { OptionsType, Popup, PopupState, Position } from "./Popup";
+import { OptionsType, Popup, PopupState } from "./Popup";
 import { useChangeHandler } from "./useChangeHandler";
 
 interface TextAreaProps {
