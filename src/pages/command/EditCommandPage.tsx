@@ -40,11 +40,21 @@ export const EditCommandPage = component$(({ data }: { data?: Command }) => {
       name: "Current Uptime of Stream",
       value: "{{context:uptime}}",
       buttonLabel: "Uptime",
+      hasVariables: true,
     },
     {
       name: "Author of Message",
       value: "{{context:author}}",
       buttonLabel: "Author",
+      hasVariables: false,
+    },
+    {
+      name: "Mention a User",
+      value: "{{context:mention:A}}",
+      pattern: "{{context:mention:A}}",
+      buttonLabel: "User",
+      hasVariables: true,
+      variableSchema: [{ name: "Username", value: "A" }],
     },
   ];
 

@@ -34,24 +34,28 @@ export const ControlledTextarea = component$(
       range: noSerialize<Range | undefined>(undefined),
     });
 
-    const handleChange = $(
-      (e: Event, target: HTMLDivElement, isSSR = false) => {
-        let newValue = "";
-        target.childNodes.forEach((node) => {
-          if (node.nodeType === Node.TEXT_NODE) {
-            newValue += node.textContent;
-          } else if (node.nodeType === Node.ELEMENT_NODE) {
-            if (node.nodeName === "BUTTON") {
-              const dataId: string =
-                (node as Element).getAttribute("data-id") || "";
-              newValue += internalData.value[dataId] || "";
-            } else {
-              newValue += node.textContent || "";
-              (node as Element).outerHTML = node.textContent || "";
-            }
+    const calculateAndPropagateValue = $((target: HTMLDivElement) => {
+      let newValue = "";
+      target.childNodes.forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          newValue += node.textContent;
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          if (node.nodeName === "BUTTON") {
+            const dataId: string =
+              (node as Element).getAttribute("data-id") || "";
+            newValue += internalData.value[dataId] || "";
+          } else {
+            newValue += node.textContent || "";
+            (node as Element).outerHTML = node.textContent || "";
           }
-        });
-        formContextData.handleChange(null, null, newValue);
+        }
+      });
+      formContextData.handleChange(null, null, newValue);
+    });
+
+    const handleChange = $(
+      async (e: Event, target: HTMLDivElement, isSSR = false) => {
+        await calculateAndPropagateValue(target);
 
         let selection: Selection | null = null;
         let range: Range | null = null;
@@ -80,21 +84,51 @@ export const ControlledTextarea = component$(
 
                 if (index < parts.length - 1) {
                   const valueOfReplacementPart = content[0][0];
+                  const option = selectOptions.find(
+                    (option) =>
+                      option.value.split(/:/).slice(0, 2).join(":") ===
+                      valueOfReplacementPart.split(/:/).slice(0, 2).join(":")
+                  );
                   const button = document.createElement("button");
 
-                  button.textContent =
-                    selectOptions.find(
-                      (option) => option.value === valueOfReplacementPart
-                    )?.buttonLabel || "";
+                  button.textContent = option?.buttonLabel || "";
                   button.contentEditable = "false";
                   button.className = `${ButtonBaseStyle} ${ButtonStyleVariants.primary} ${InlineButtonMarginStyle}`;
-                  button.onclick = () => {
+
+                  button.onclick = (e) => {
+                    const dataId: string =
+                      (e.target as Element).getAttribute("data-id") || "";
+                    const internalDataValue = internalData.value[dataId] || "";
+                    const formValue =
+                      internalDataValue === option?.pattern &&
+                      option.variableSchema
+                        ? option.variableSchema.map((vs) => vs.defaultValue)
+                        : internalDataValue
+                            .slice(2, internalDataValue.length - 2)
+                            .split(/:/)
+                            .slice(2);
+
                     globalContext.modalContent = noSerialize(() => (
-                      <EditModalContent />
+                      <EditModalContent
+                        option={option}
+                        onSubmit$={$(async (data: Array<string>) => {
+                          let newValue = option?.pattern || "";
+                          option?.variableSchema?.forEach((variable, index) => {
+                            newValue = newValue.replace(
+                              new RegExp(variable.value),
+                              data[index]
+                            );
+                          });
+                          internalData.value[dataId] = newValue;
+                          globalContext.modal.value.close();
+                          await calculateAndPropagateValue(target);
+                        })}
+                        dataValue={formValue}
+                      />
                     ));
                     globalContext.modal.value.show();
-                    console.log("showing");
                   };
+
                   const newId = crypto.randomUUID();
                   internalData.value = {
                     ...internalData.value,

@@ -60,7 +60,7 @@ export const Commands = component$(
               boxShadow: theme.boxShadow.md,
             }}
           >
-            {renderedData.value.map((command) => {
+            {renderedData.value.map((command, index) => {
               return (
                 <li
                   style={{
@@ -70,6 +70,7 @@ export const Commands = component$(
                     justifyContent: "space-between",
                     alignItems: "center",
                   }}
+                  key={index}
                 >
                   <a
                     class={styles}

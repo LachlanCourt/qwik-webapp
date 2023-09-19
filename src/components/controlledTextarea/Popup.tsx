@@ -9,11 +9,15 @@ import {
 } from "@builder.io/qwik";
 import { theme } from "~/common/styles/theme.css";
 import { OptionStyle } from "./popupstyle.css";
+import { VariableSchema } from "./EditModalContent";
 
 export interface OptionsType {
   name: string;
   value: string;
   buttonLabel?: string;
+  hasVariables: boolean;
+  variableSchema?: VariableSchema;
+  pattern?: string;
 }
 
 export interface Position {

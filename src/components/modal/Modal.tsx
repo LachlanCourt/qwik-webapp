@@ -50,7 +50,9 @@ export const Modal = component$(
               >
                 <Button onClick$={handleModalClose}>X</Button>
               </div>
-              <div style={{ padding: theme.space.xl }}>
+              <div
+                style={{ padding: theme.space.xl, paddingTop: theme.space.sm }}
+              >
                 {globalContext.modalContent && <globalContext.modalContent />}
               </div>
             </div>
