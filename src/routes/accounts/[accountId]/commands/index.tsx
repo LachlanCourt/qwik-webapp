@@ -11,13 +11,19 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   const payload = await verifyToken(requestEvent);
   if (!payload) throw redirect(302, "/login");
 
-  const account = await getAccount(Number(params.accountId), payload.userId, payload.isGlobalAdmin);
+  const account = await getAccount(
+    Number(params.accountId),
+    payload.userId,
+    payload.isGlobalAdmin
+  );
   if (!account) throw error(404, "Account Not Found");
 
   const commands = await getCommands(account.id);
 
-  return commands.map(({ id, name, accountId, response }) => ({
-    id, name, accountId, response
+  return commands.map(({ id, name, accountId }) => ({
+    id,
+    name,
+    accountId,
   })) as Array<CommandPageData>;
 });
 

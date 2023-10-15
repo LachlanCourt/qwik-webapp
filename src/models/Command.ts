@@ -1,6 +1,8 @@
+import { Action } from "@prisma/client";
+
 export interface CommandPageData {
   id: number;
   accountId: number;
   name: string;
-  response: string;
+  actions: Array<Action>;
 }
