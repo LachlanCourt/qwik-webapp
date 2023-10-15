@@ -12,6 +12,10 @@ export const formControlHorizontalStyle: StyleRule = {
     ...formControlBaseStyle,
     flexDirection: 'row',
     alignItems: "center",
+    //@ts-ignore
+    "@media (max-width: 430px)": {
+        flexDirection: 'column',
+    }
 }
 
 export const formControlVerticalStyle: StyleRule = {

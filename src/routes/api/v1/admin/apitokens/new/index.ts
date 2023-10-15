@@ -17,6 +17,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
     discriminator = data.get("discriminator")?.toString() || "";
     webhookUrl = data.get("webhookUrl")?.toString() || "";
   } catch {
+    // eslint-disable-next-line no-console
     console.error("Error decoding json input");
   }
   if (!discriminator) throw error(400, "Discriminator is required");

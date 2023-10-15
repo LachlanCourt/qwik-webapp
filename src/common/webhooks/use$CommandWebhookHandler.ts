@@ -53,7 +53,9 @@ export const use$CommandWebhookHandler = () => {
           headers: { Authorization: apiUser.webhookServerId },
         });
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error(`Fetch failed to URL ${apiUser.webhookUrl}`);
+        // eslint-disable-next-line no-console
         console.error(e);
       }
     });
