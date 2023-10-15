@@ -44,3 +44,10 @@ export const InputStyle = style(inputStyle);
 
 import { textareaStyle } from "./textarea";
 export const TextareaStyle = style(textareaStyle);
+
+import { Dialog, Container, Wrapper, Button, Content } from "./modal";
+export const ModalDialogStyle = style(Dialog);
+export const ModalContainerStyle = style(Container);
+export const ModalWrapperStyle = style(Wrapper);
+export const ModalButtonStyle = style(Button);
+export const ModalContentStyle = style(Content);

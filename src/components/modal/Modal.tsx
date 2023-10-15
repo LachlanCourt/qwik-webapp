@@ -1,7 +1,13 @@
 import { Signal, component$, useContext, $ } from "@builder.io/qwik";
-import { theme } from "~/common/styles/theme.css";
 import { GlobalContext } from "~/root";
 import { Button } from "../button";
+import {
+  ModalContainerStyle,
+  ModalDialogStyle,
+  ModalWrapperStyle,
+  ModalButtonStyle,
+  ModalContentStyle,
+} from "~/theme/components.css";
 
 export const Modal = component$(
   ({ modalRef }: { modalRef: Signal<HTMLDialogElement> }) => {
@@ -16,43 +22,19 @@ export const Modal = component$(
         <dialog
           ref={modalRef}
           onClick$={handleModalClose}
-          style={{
-            width: "92vw",
-            height: "92vh",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          }}
+          class={ModalDialogStyle}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-            }}
-          >
+          <div class={ModalContainerStyle}>
             <div
-              style={{
-                background: "#DDDDFF",
-                boxShadow: theme.boxShadow.md,
-                borderRadius: theme.borderRadius.md,
-              }}
+              class={ModalWrapperStyle}
               onClick$={(e) => {
                 e.stopPropagation();
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  paddingTop: theme.space.sm,
-                  paddingRight: theme.space.sm,
-                }}
-              >
+              <div class={ModalButtonStyle}>
                 <Button onClick$={handleModalClose}>X</Button>
               </div>
-              <div
-                style={{ padding: theme.space.xl, paddingTop: theme.space.sm }}
-              >
+              <div class={ModalContentStyle}>
                 {globalContext.modalContent && <globalContext.modalContent />}
               </div>
             </div>
