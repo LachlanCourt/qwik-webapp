@@ -2,6 +2,7 @@
 CREATE TABLE "Action" (
     "id" SERIAL NOT NULL,
     "commandId" INTEGER NOT NULL,
+    "order" INTEGER NULL,
     "type" TEXT NOT NULL,
     "content" TEXT NOT NULL,
 
@@ -14,7 +15,6 @@ ALTER TABLE "Action" ADD CONSTRAINT "Action_commandId_fkey" FOREIGN KEY ("comman
 -- Copy data from command into action
 INSERT INTO "Action" ("commandId", "type", "content") 
 SELECT id, 'RESPONSE', response FROM "Command";
-
 
 -- AlterTable
 ALTER TABLE "Command" DROP COLUMN "response";

@@ -54,13 +54,14 @@ model Command {
   account   Account  @relation(fields: [accountId], references: [id])
   accountId Int
   name      String
-  Action    Action[]
+  actions   Action[]
 }
 
 model Action {
   id        Int     @id @default(autoincrement())
   command   Command @relation(fields: [commandId], references: [id])
   commandId Int
+  order     Int?
   type      String
   content   String
 }
