@@ -1,6 +1,7 @@
 import { component$, useSignal, $, QRL, useTask$ } from "@builder.io/qwik";
 import { OptionsType } from "./Popup";
 import { Button } from "../button";
+import { ContainerStyle } from "./modalstyle.css";
 import { theme } from "~/common/styles/theme.css";
 
 export type VariableSchema = Array<VariableDefinition>;
@@ -36,10 +37,7 @@ export const EditModalContent = component$(
         {option.name}
         {option.variableSchema.map((variable, index) => {
           return (
-            <div
-              key={index}
-              style={{ display: "flex", flexDirection: "column" }}
-            >
+            <div key={index} class={ContainerStyle}>
               {variable.name}
               <input
                 onChange$={(e, target) => {
