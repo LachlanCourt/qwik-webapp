@@ -36,7 +36,10 @@ export const EditModalContent = component$(
         {option.name}
         {option.variableSchema.map((variable, index) => {
           return (
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div
+              key={index}
+              style={{ display: "flex", flexDirection: "column" }}
+            >
               {variable.name}
               <input
                 onChange$={(e, target) => {
