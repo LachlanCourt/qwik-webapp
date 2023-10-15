@@ -30,7 +30,13 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   if (!account) throw error(404, "Account Not Found");
 
   const command = await db.command.create({
-    data: { name, accountId, response: formResponse },
+    data: {
+      name,
+      accountId,
+      actions: {
+        createMany: { data: [{ type: "RESPONSE", content: formResponse }] },
+      },
+    },
   });
 
   const sendWebhookUpdate = use$CommandWebhookHandler();

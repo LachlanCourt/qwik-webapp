@@ -28,6 +28,12 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   );
   if (!account) throw error(404, "Account Not Found");
 
+  await db.action.deleteMany({
+    where: {
+      commandId: Number(params.commandId),
+    },
+  });
+
   const command = await db.command.delete({
     where: { id: Number(params.commandId) },
   });
@@ -35,7 +41,7 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   const sendWebhookUpdate = use$CommandWebhookHandler();
   await sendWebhookUpdate([command], CommandWebhookTypes.DELETE);
 
-  const commands = await getCommands(account.id);
+  const commands = await getCommands(account.id, true);
 
   json(
     200,
@@ -43,7 +49,7 @@ export const onDelete: RequestHandler = async (requestEvent) => {
       id: command.id,
       name: command.name,
       accountId: command.accountId,
-      response: command.response,
+      actions: command.actions,
     })) as Array<CommandPageData>
   );
 };
