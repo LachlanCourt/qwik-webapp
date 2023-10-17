@@ -1,6 +1,14 @@
-import { $, component$ } from "@builder.io/qwik";
+import {
+  $,
+  Signal,
+  component$,
+  useContext,
+  useContextProvider,
+  useSignal,
+  useTask$,
+} from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
-import { Command } from "@prisma/client";
+import { Action, Command } from "@prisma/client";
 import { Button } from "~/components/button";
 import { ButtonVariant } from "~/components/button/Button";
 import { Heading } from "~/components/heading/Heading";
@@ -8,10 +16,124 @@ import { Input } from "~/components/input/Input";
 import { Layout } from "~/components/layout/Layout";
 import { useDeleteCommand } from "./hooks/useDeleteCommand";
 import { useLocation } from "~/common/hooks/useLocation";
-import { useForm } from "~/common/hooks/useForm/useForm";
+import {
+  FormContext,
+  FormControlContext,
+  FormControlContextType,
+  useForm,
+} from "~/common/hooks/useForm/useForm";
 import { ControlledTextarea } from "../../components/controlledTextarea/ControlledTextarea";
 import { OptionsType } from "~/components/controlledTextarea/Popup";
 import { CommandPageData } from "~/models";
+import { FormControlHorizontalStyle } from "~/theme/components.css";
+
+const interpolationOptions: Array<OptionsType> = [
+  {
+    name: "Current Uptime of Stream",
+    value: "{{context:uptime}}",
+    buttonLabel: "Uptime",
+    hasVariables: false,
+  },
+  {
+    name: "Author of Message",
+    value: "{{context:author}}",
+    buttonLabel: "Author",
+    hasVariables: false,
+  },
+  {
+    name: "Channel Name",
+    value: "{{context:channelName}}",
+    buttonLabel: "Channel Name",
+    hasVariables: false,
+  },
+  {
+    name: "Message Content",
+    value: "{{context:text}}",
+    buttonLabel: "Message",
+    hasVariables: false,
+  },
+  {
+    name: "Time since user followed",
+    value: "{{context:followage}}",
+    buttonLabel: "Followage",
+    hasVariables: false,
+  },
+  {
+    name: "Mention a User",
+    value: "{{context:mention:A}}",
+    pattern: "{{context:mention:A}}",
+    buttonLabel: "User",
+    hasVariables: true,
+    variableSchema: [{ name: "Username", value: "A", defaultValue: "" }],
+  },
+  {
+    name: "Pick a random number",
+    value: "{{util:random:A:B}}",
+    pattern: "{{util:random:A:B}}",
+    buttonLabel: "Random",
+    hasVariables: true,
+    variableSchema: [
+      { name: "Min", value: "A", defaultValue: "0" },
+      { name: "Max", value: "B", defaultValue: "100" },
+    ],
+  },
+];
+
+const ActionComponent = component$(
+  ({
+    formControlContextData,
+    index,
+    actionsData,
+  }: {
+    formControlContextData: FormControlContextType;
+    index: number;
+    actionsData: Array<string>;
+  }) => {
+    const handleChange = $(
+      (
+        _: Event | null,
+        target: HTMLInputElement | HTMLTextAreaElement | null,
+        explicitNewValue?: string
+      ) => {
+        actionsData[index] = explicitNewValue as string;
+      }
+    );
+    useContextProvider(FormControlContext, {
+      ...formControlContextData,
+      handleChange,
+      value: actionsData[index],
+    });
+    return <ControlledTextarea selectOptions={interpolationOptions} />;
+  }
+);
+
+const ActionsComponent = component$(() => {
+  const formControlContextData = useContext(FormControlContext);
+  const formContextData = useContext(FormContext);
+
+  // useTask$(({ track }) => {
+  //   console.log(formContextData.formValues);
+  //   track(formContextData.formValues.value);
+  // });
+
+  return (
+    <>
+      {formContextData.formValues.value.actions.map(
+        (_: Action, index: number) => {
+          // We need to base this map off the form context rather than the control context in order to rerender
+          // as the form context value is not a signal but is instead a subset of the formValues signal
+          return (
+            <ActionComponent
+              formControlContextData={formControlContextData}
+              index={index}
+              actionsData={formControlContextData.value}
+            />
+          );
+        }
+      )}
+    </>
+  );
+});
 
 export const EditCommandPage = component$(
   ({ data }: { data?: CommandPageData }) => {
@@ -21,9 +143,9 @@ export const EditCommandPage = component$(
     const postEndpoint = data?.id ? `${data.id}` : `new`;
     const initialValues = {
       name: data?.name || "",
-      response: data?.actions[0]?.content || "",
+      actions: data?.actions.map((action) => action.content) || [],
     };
-    const { submitHandlers, Control, Form } = useForm(
+    const { submitHandlers, Control, Form, formValues } = useForm(
       initialValues,
       `/api/v1/accounts/${location.params.accountId}/commands/${postEndpoint}`,
       {},
@@ -37,58 +159,6 @@ export const EditCommandPage = component$(
       nav(`${location.url.origin}/accounts/${data?.accountId}/commands`, true);
     });
 
-    const interpolationOptions: Array<OptionsType> = [
-      {
-        name: "Current Uptime of Stream",
-        value: "{{context:uptime}}",
-        buttonLabel: "Uptime",
-        hasVariables: false,
-      },
-      {
-        name: "Author of Message",
-        value: "{{context:author}}",
-        buttonLabel: "Author",
-        hasVariables: false,
-      },
-      {
-        name: "Channel Name",
-        value: "{{context:channelName}}",
-        buttonLabel: "Channel Name",
-        hasVariables: false,
-      },
-      {
-        name: "Message Content",
-        value: "{{context:text}}",
-        buttonLabel: "Message",
-        hasVariables: false,
-      },
-      {
-        name: "Time since user followed",
-        value: "{{context:followage}}",
-        buttonLabel: "Followage",
-        hasVariables: false,
-      },
-      {
-        name: "Mention a User",
-        value: "{{context:mention:A}}",
-        pattern: "{{context:mention:A}}",
-        buttonLabel: "User",
-        hasVariables: true,
-        variableSchema: [{ name: "Username", value: "A", defaultValue: "" }],
-      },
-      {
-        name: "Pick a random number",
-        value: "{{util:random:A:B}}",
-        pattern: "{{util:random:A:B}}",
-        buttonLabel: "Random",
-        hasVariables: true,
-        variableSchema: [
-          { name: "Min", value: "A", defaultValue: "0" },
-          { name: "Max", value: "B", defaultValue: "100" },
-        ],
-      },
-    ];
-
     return (
       <Layout>
         <Heading>{data ? "Edit " : "Create New "}Command</Heading>
@@ -96,9 +166,25 @@ export const EditCommandPage = component$(
           <Control name="name" label="Command Name">
             <Input />
           </Control>
-          <Control name="response" label="Command Response">
-            <ControlledTextarea selectOptions={interpolationOptions} />
+          <label class={FormControlHorizontalStyle}>Command Actions</label>
+
+          <Control name="actions" label="" isVertical>
+            <ActionsComponent />
           </Control>
+          <Button
+            onClick$={() => {
+              formValues.value.actions.splice(
+                formValues.value.actions.length,
+                0,
+                ""
+              );
+              formValues.value = {
+                ...formValues.value,
+              };
+            }}
+          >
+            +
+          </Button>
           <div
             style={{ display: "flex", gap: "0.6rem", justifyContent: "center" }}
           >
