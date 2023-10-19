@@ -87,16 +87,19 @@ export const onPost: RequestHandler = async (requestEvent) => {
   });
 
   // Update actions
-
   const actions = (
     JSON.parse((formData.get("actions") as string) || "[]") as Array<Action>
   ).map((action) => ({ ...action, commandId: command.id }));
+  actions.filter((action) => !action.id).map((action) => action.id);
 
   // Delete any actions now removed
+  const actionsToCheckForDeletion = actions
+    .filter((action) => !!action.id)
+    .map((action) => action.id);
   await db.action.deleteMany({
     where: {
       id: {
-        notIn: actions.map((action) => action.id),
+        notIn: actionsToCheckForDeletion,
       },
       commandId: command.id,
     },
@@ -109,12 +112,16 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
   // Update existing actions
   const actionsToUpdate = actions.filter((action) => !!action.id);
-  if (actionsToUpdate.length)
-    await db.action.updateMany({ data: actionsToUpdate });
+  await Promise.all(
+    actionsToUpdate.map(async (action) => {
+      const { commandId, id, ...rest } = action;
+      await db.action.update({ where: { id }, data: { ...rest } });
+    })
+  );
 
   // Fetch new command after all changes
   const updatedCommand = await getCommand(command.id, true);
-  if (!updatedCommand) throw error(404, "Command not found");
+  if (!updatedCommand) throw new Error("Command update failed, record deleted");
 
   const sendWebhookUpdate = use$CommandWebhookHandler();
   await sendWebhookUpdate(

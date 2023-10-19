@@ -145,13 +145,14 @@ export const ActionsComponent = component$(() => {
 
 export const EditCommandPage = component$(
   ({ data }: { data?: CommandPageData }) => {
+    const emptyCommand = { type: ActionType.RESPONSE, content: "" };
     const location = useLocation();
     const nav = useNavigate();
 
     const postEndpoint = data?.id ? `${data.id}` : `new`;
     const initialValues = {
       name: data?.name || "",
-      actions: data?.actions || [],
+      actions: data?.actions || [structuredClone(emptyCommand)],
     };
     const { submitHandlers, Control, Form, formValues } = useForm(
       initialValues,
@@ -184,7 +185,7 @@ export const EditCommandPage = component$(
               formValues.value.actions.splice(
                 formValues.value.actions.length,
                 0,
-                { type: ActionType.RESPONSE, content: "" }
+                structuredClone(emptyCommand)
               );
               formValues.value = {
                 ...formValues.value,
