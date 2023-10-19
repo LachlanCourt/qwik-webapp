@@ -26,8 +26,9 @@ import { ControlledTextarea } from "../../components/controlledTextarea/Controll
 import { OptionsType } from "~/components/controlledTextarea/Popup";
 import { CommandPageData } from "~/models";
 import { FormControlHorizontalStyle } from "~/theme/components.css";
+import { ActionType } from "~/models/ActionType";
 
-const interpolationOptions: Array<OptionsType> = [
+export const interpolationOptions: Array<OptionsType> = [
   {
     name: "Current Uptime of Stream",
     value: "{{context:uptime}}",
@@ -79,7 +80,7 @@ const interpolationOptions: Array<OptionsType> = [
   },
 ];
 
-const ActionComponent = component$(
+export const ActionComponent = component$(
   ({
     formControlContextData,
     index,
@@ -87,27 +88,33 @@ const ActionComponent = component$(
   }: {
     formControlContextData: FormControlContextType;
     index: number;
-    actionsData: Array<string>;
+    actionsData: Array<Action>;
   }) => {
     const handleChange = $(
       (
         _: Event | null,
-        target: HTMLInputElement | HTMLTextAreaElement | null,
+        __: HTMLInputElement | HTMLTextAreaElement | null,
         explicitNewValue?: string
       ) => {
-        actionsData[index] = explicitNewValue as string;
+        actionsData[index].content = explicitNewValue as string;
       }
     );
+
+    const getValue = () => {
+      if (actionsData[index].type === ActionType.RESPONSE) {
+        return actionsData[index].content;
+      }
+    };
     useContextProvider(FormControlContext, {
       ...formControlContextData,
       handleChange,
-      value: actionsData[index],
+      value: getValue(),
     });
     return <ControlledTextarea selectOptions={interpolationOptions} />;
   }
 );
 
-const ActionsComponent = component$(() => {
+export const ActionsComponent = component$(() => {
   const formControlContextData = useContext(FormControlContext);
   const formContextData = useContext(FormContext);
 
@@ -124,6 +131,7 @@ const ActionsComponent = component$(() => {
           // as the form context value is not a signal but is instead a subset of the formValues signal
           return (
             <ActionComponent
+              key={index}
               formControlContextData={formControlContextData}
               index={index}
               actionsData={formControlContextData.value}
@@ -143,7 +151,7 @@ export const EditCommandPage = component$(
     const postEndpoint = data?.id ? `${data.id}` : `new`;
     const initialValues = {
       name: data?.name || "",
-      actions: data?.actions.map((action) => action.content) || [],
+      actions: data?.actions || [],
     };
     const { submitHandlers, Control, Form, formValues } = useForm(
       initialValues,
@@ -176,7 +184,7 @@ export const EditCommandPage = component$(
               formValues.value.actions.splice(
                 formValues.value.actions.length,
                 0,
-                ""
+                { type: ActionType.RESPONSE, content: "" }
               );
               formValues.value = {
                 ...formValues.value,

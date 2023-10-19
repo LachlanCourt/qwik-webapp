@@ -6,6 +6,8 @@ import {
   CommandWebhookTypes,
   use$CommandWebhookHandler,
 } from "~/common/webhooks/use$CommandWebhookHandler";
+import { ActionType } from "~/models/ActionType";
+import { Action } from "@prisma/client";
 
 interface Response {}
 
@@ -19,8 +21,9 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
   const formData = await request.formData();
 
   const name = formData.get("name")?.toString() || "New Command";
-  const formResponse =
-    formData.get("response")?.toString() || "Command Response";
+  const actions: Array<Action> = JSON.parse(
+    formData.get("actions")?.toString() || "[]"
+  );
   const accountId = Number(params.accountId);
   const account = await getAccount(
     accountId,
@@ -34,7 +37,7 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
       name,
       accountId,
       actions: {
-        createMany: { data: [{ type: "RESPONSE", content: formResponse }] },
+        createMany: { data: actions },
       },
     },
   });

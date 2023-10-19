@@ -9,6 +9,7 @@ import {
 import { getCommands } from "~/common/accessors/getCommands";
 import { CommandPageData } from "~/models";
 import { getCommand } from "~/common/accessors/getCommand";
+import { Action } from "@prisma/client";
 
 export const onDelete: RequestHandler = async (requestEvent) => {
   const { params, redirect, error, json } = requestEvent;
@@ -72,22 +73,52 @@ export const onPost: RequestHandler = async (requestEvent) => {
     payload.isGlobalAdmin
   );
   if (!account) throw error(404, "Account not found");
-  const command = await getCommand(Number(params.commandId));
+  const command = await getCommand(Number(params.commandId), true);
   if (!command) throw error(404, "Command not found");
 
   const previousCommand = structuredClone(command);
-
   const formData = await request.formData();
 
-  formData.forEach((value, key) => {
-    Object(command)[key] = value.toString();
+  // Update command
+  const commandName = (formData.get("name") as string) || command.name;
+  await db.command.update({
+    where: { id: command.id },
+    data: { name: commandName },
   });
 
-  await db.command.update({ where: { id: command.id }, data: command });
+  // Update actions
+
+  const actions = (
+    JSON.parse((formData.get("actions") as string) || "[]") as Array<Action>
+  ).map((action) => ({ ...action, commandId: command.id }));
+
+  // Delete any actions now removed
+  await db.action.deleteMany({
+    where: {
+      id: {
+        notIn: actions.map((action) => action.id),
+      },
+      commandId: command.id,
+    },
+  });
+
+  // Create any new actions
+  const actionsToCreate = actions.filter((action) => !action.id);
+  if (actionsToCreate.length)
+    await db.action.createMany({ data: actionsToCreate });
+
+  // Update existing actions
+  const actionsToUpdate = actions.filter((action) => !!action.id);
+  if (actionsToUpdate.length)
+    await db.action.updateMany({ data: actionsToUpdate });
+
+  // Fetch new command after all changes
+  const updatedCommand = await getCommand(command.id, true);
+  if (!updatedCommand) throw error(404, "Command not found");
 
   const sendWebhookUpdate = use$CommandWebhookHandler();
   await sendWebhookUpdate(
-    [previousCommand, command],
+    [previousCommand, updatedCommand],
     CommandWebhookTypes.UPDATE
   );
 
