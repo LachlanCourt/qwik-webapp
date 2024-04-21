@@ -35,7 +35,7 @@ export const ActionsComponent = component$(
 
     return (
       <>
-        {actionsData.value.map(({ id, content }: Action, index: number) => {
+        {actionsData.value.map((_: Action, index: number) => {
           return (
             <ActionComponent
               key={crypto.randomUUID()}
