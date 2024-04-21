@@ -1,5 +1,5 @@
 fetch-dev-db:
-	docker pull postgres && docker tag postgres dev-db:latest
+	docker pull postgres:15 && docker tag postgres:15 dev-db:latest
 start-dev-db:
 	docker run --name dev-db -e POSTGRES_PASSWORD=password --hostname docker --network qwik-network -d  -v $(shell pwd)/database:/var/lib/postgresql/data dev-db
 remove-dev-db:
