@@ -21,13 +21,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Run yarn audit
         run: |
-          set +e
-          audit_exit_code=$(yarn audit)
-          set -e
+          yarn audit
+          audit_exit_code=$?
+
           if [ $audit_exit_code -le 6 ]; then
-            echo "Yarn audit passed with exit code $audit_exit_code"
-            exit 0
+              # Exit with 0
+              exit 0
           else
-            echo "Yarn audit failed with exit code $audit_exit_code"
-            exit 1
+              # Exit with 1
+              exit 1
           fi
