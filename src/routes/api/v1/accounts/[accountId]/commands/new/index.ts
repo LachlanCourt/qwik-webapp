@@ -39,6 +39,7 @@ export const onPost: RequestHandler<Response> = async (requestEvent) => {
         createMany: { data: actions },
       },
     },
+    include: { actions: true },
   });
 
   const sendWebhookUpdate = use$CommandWebhookHandler();
