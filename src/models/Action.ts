@@ -1,7 +1,5 @@
-import { ActionType } from "./ActionType";
-
 export interface Action {
-  type: ActionType;
+  type: string;
   id?: number;
   commandId?: number;
   order?: number | null;

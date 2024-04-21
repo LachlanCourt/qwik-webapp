@@ -6,7 +6,6 @@ import {
   CommandWebhookTypes,
   use$CommandWebhookHandler,
 } from "~/common/webhooks/use$CommandWebhookHandler";
-import { ActionType } from "~/models/ActionType";
 import { Action } from "@prisma/client";
 
 interface Response {}

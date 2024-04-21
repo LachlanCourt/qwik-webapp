@@ -113,7 +113,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
   const actionsToUpdate = actions.filter((action) => !!action.id);
   await Promise.all(
     actionsToUpdate.map(async (action) => {
-      const { commandId, id, ...rest } = action;
+      const { id, ...rest } = action;
       await db.action.update({ where: { id }, data: { ...rest } });
     })
   );

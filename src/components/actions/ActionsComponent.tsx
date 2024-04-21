@@ -55,6 +55,11 @@ export const ActionsComponent = component$(
               structuredClone(emptyAction)
             );
             actionsData.value = [...actionsData.value];
+            await formControlContextData.handleChange(
+              null,
+              null,
+              actionsData.value
+            );
           }}
         >
           +
