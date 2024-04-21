@@ -35,10 +35,10 @@ export const ActionsComponent = component$(
 
     return (
       <>
-        {actionsData.value.map((_: Action, index: number) => {
+        {actionsData.value.map(({ id }: Action, index: number) => {
           return (
             <ActionComponent
-              key={crypto.randomUUID()}
+              key={id || crypto.randomUUID()}
               index={index}
               actionsData={actionsData.value}
               swapUp={$((index: number) => swap(index, -1))}
