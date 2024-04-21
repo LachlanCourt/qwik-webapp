@@ -14,11 +14,16 @@ import { useChangeHandler } from "./useChangeHandler";
 
 interface TextAreaProps {
   selectOptions: Array<OptionsType>;
+  index: number;
 }
 
 export const ControlledTextarea = component$(
-  ({ selectOptions }: TextAreaProps) => {
+  ({ selectOptions, index }: TextAreaProps) => {
     const formContextData = useContext(FormControlContext);
+    const formValue =
+      typeof formContextData.value === "string"
+        ? formContextData.value
+        : formContextData.value.value;
 
     const popupState = useSignal<PopupState>({
       isVisible: false,
@@ -32,7 +37,7 @@ export const ControlledTextarea = component$(
 
     const processValue = $(async (isSSR = false) => {
       if (!self.value) return;
-      if (isSSR) self.value.textContent = formContextData.value;
+      if (isSSR) self.value.textContent = formValue;
       await handleChange(new Event("", undefined), self.value, isSSR);
     });
 

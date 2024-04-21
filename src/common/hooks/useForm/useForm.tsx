@@ -52,11 +52,12 @@ export interface FormControlContextType {
     (
       _: Event | null,
       target: HTMLInputElement | HTMLTextAreaElement | null,
-      explicitNewValue?: string
+      explicitNewValue?: any
     ) => void
   >;
   name: string;
   id: string;
+  [key: string]: any;
 }
 
 export const FormControlContext =

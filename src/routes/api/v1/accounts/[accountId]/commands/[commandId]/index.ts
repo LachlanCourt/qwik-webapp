@@ -90,7 +90,6 @@ export const onPost: RequestHandler = async (requestEvent) => {
   const actions = (
     JSON.parse((formData.get("actions") as string) || "[]") as Array<Action>
   ).map((action, order) => ({ ...action, commandId: command.id, order }));
-  actions.filter((action) => !action.id).map((action) => action.id);
 
   // Delete any actions now removed
   const actionsToCheckForDeletion = actions
