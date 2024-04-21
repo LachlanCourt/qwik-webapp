@@ -18,11 +18,13 @@ export const ActionComponent = component$(
     actionsData,
     swapUp,
     swapDown,
+    remove,
   }: {
     index: number;
     actionsData: Array<Action>;
     swapUp: QRL<(index: number) => void>;
     swapDown: QRL<(index: number) => void>;
+    remove: QRL<(index: number) => void>;
   }) => {
     const handleChange = $(
       (
@@ -50,18 +52,17 @@ export const ActionComponent = component$(
 
     return (
       <div style={{ display: "flex", gap: "0.3rem" }}>
-        <ControlledTextarea
-          selectOptions={interpolationOptions}
-          index={index}
-        />
+        <ControlledTextarea selectOptions={interpolationOptions} />
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-around",
+            gap: "0.3rem",
           }}
         >
           <Button onClick$={$(() => swapUp(index))}>^</Button>
+          <Button onClick$={$(() => remove(index))}>Del</Button>
           <Button onClick$={$(() => swapDown(index))}>v</Button>
         </div>
       </div>

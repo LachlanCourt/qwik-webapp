@@ -10,26 +10,25 @@ export const ActionsComponent = component$(
 
     const actionsData = useSignal<Array<Action>>(formControlContextData.value);
 
-    const swapUp = $(async (index: number) => {
-      if (index === 0) return;
+    const swap = $(async (index: number, direction: 1 | -1) => {
+      if (
+        (direction === -1 && index === 0) ||
+        (direction === 1 && index === actionsData.value.length - 1)
+      )
+        return;
       const value = structuredClone(actionsData.value);
 
-      const temp = value[index - 1];
-      value[index - 1] = value[index];
+      const temp = value[index + direction];
+      value[index + direction] = value[index];
       value[index] = temp;
 
       actionsData.value = [...value];
       await formControlContextData.handleChange(null, null, actionsData.value);
     });
 
-    const swapDown = $(async (index: number) => {
-      if (index === actionsData.value.length - 1) return;
+    const remove = $(async (index: number) => {
       const value = structuredClone(actionsData.value);
-
-      const temp = value[index + 1];
-      value[index + 1] = value[index];
-      value[index] = temp;
-
+      value.splice(index, 1);
       actionsData.value = [...value];
       await formControlContextData.handleChange(null, null, actionsData.value);
     });
@@ -42,8 +41,9 @@ export const ActionsComponent = component$(
               key={`${id}-${content}`}
               index={index}
               actionsData={actionsData.value}
-              swapUp={swapUp}
-              swapDown={swapDown}
+              swapUp={$((index: number) => swap(index, -1))}
+              swapDown={$((index: number) => swap(index, 1))}
+              remove={remove}
             />
           );
         })}

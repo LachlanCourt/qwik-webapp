@@ -14,11 +14,10 @@ import { useChangeHandler } from "./useChangeHandler";
 
 interface TextAreaProps {
   selectOptions: Array<OptionsType>;
-  index: number;
 }
 
 export const ControlledTextarea = component$(
-  ({ selectOptions, index }: TextAreaProps) => {
+  ({ selectOptions }: TextAreaProps) => {
     const formContextData = useContext(FormControlContext);
     const formValue =
       typeof formContextData.value === "string"
