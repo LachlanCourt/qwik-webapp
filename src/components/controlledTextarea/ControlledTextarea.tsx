@@ -19,6 +19,10 @@ interface TextAreaProps {
 export const ControlledTextarea = component$(
   ({ selectOptions }: TextAreaProps) => {
     const formContextData = useContext(FormControlContext);
+    const formValue =
+      typeof formContextData.value === "string"
+        ? formContextData.value
+        : formContextData.value.value;
 
     const popupState = useSignal<PopupState>({
       isVisible: false,
@@ -32,7 +36,7 @@ export const ControlledTextarea = component$(
 
     const processValue = $(async (isSSR = false) => {
       if (!self.value) return;
-      if (isSSR) self.value.textContent = formContextData.value;
+      if (isSSR) self.value.textContent = formValue;
       await handleChange(new Event("", undefined), self.value, isSSR);
     });
 

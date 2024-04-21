@@ -9,6 +9,7 @@ import {
 import { getCommands } from "~/common/accessors/getCommands";
 import { CommandPageData } from "~/models";
 import { getCommand } from "~/common/accessors/getCommand";
+import { Action } from "@prisma/client";
 
 export const onDelete: RequestHandler = async (requestEvent) => {
   const { params, redirect, error, json } = requestEvent;
@@ -28,6 +29,12 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   );
   if (!account) throw error(404, "Account Not Found");
 
+  await db.action.deleteMany({
+    where: {
+      commandId: Number(params.commandId),
+    },
+  });
+
   const command = await db.command.delete({
     where: { id: Number(params.commandId) },
   });
@@ -35,7 +42,7 @@ export const onDelete: RequestHandler = async (requestEvent) => {
   const sendWebhookUpdate = use$CommandWebhookHandler();
   await sendWebhookUpdate([command], CommandWebhookTypes.DELETE);
 
-  const commands = await getCommands(account.id);
+  const commands = await getCommands(account.id, true);
 
   json(
     200,
@@ -43,7 +50,7 @@ export const onDelete: RequestHandler = async (requestEvent) => {
       id: command.id,
       name: command.name,
       accountId: command.accountId,
-      response: command.response,
+      actions: command.actions,
     })) as Array<CommandPageData>
   );
 };
@@ -66,22 +73,58 @@ export const onPost: RequestHandler = async (requestEvent) => {
     payload.isGlobalAdmin
   );
   if (!account) throw error(404, "Account not found");
-  const command = await getCommand(Number(params.commandId));
+  const command = await getCommand(Number(params.commandId), true);
   if (!command) throw error(404, "Command not found");
 
   const previousCommand = structuredClone(command);
-
   const formData = await request.formData();
 
-  formData.forEach((value, key) => {
-    Object(command)[key] = value.toString();
+  // Update command
+  const commandName = (formData.get("name") as string) || command.name;
+  await db.command.update({
+    where: { id: command.id },
+    data: { name: commandName },
   });
 
-  await db.command.update({ where: { id: command.id }, data: command });
+  // Update actions
+  const actions = (
+    JSON.parse((formData.get("actions") as string) || "[]") as Array<Action>
+  ).map((action, order) => ({ ...action, commandId: command.id, order }));
+
+  // Delete any actions now removed
+  const actionsToCheckForDeletion = actions
+    .filter((action) => !!action.id)
+    .map((action) => action.id);
+  await db.action.deleteMany({
+    where: {
+      id: {
+        notIn: actionsToCheckForDeletion,
+      },
+      commandId: command.id,
+    },
+  });
+
+  // Create any new actions
+  const actionsToCreate = actions.filter((action) => !action.id);
+  if (actionsToCreate.length)
+    await db.action.createMany({ data: actionsToCreate });
+
+  // Update existing actions
+  const actionsToUpdate = actions.filter((action) => !!action.id);
+  await Promise.all(
+    actionsToUpdate.map(async (action) => {
+      const { id, ...rest } = action;
+      await db.action.update({ where: { id }, data: { ...rest } });
+    })
+  );
+
+  // Fetch new command after all changes
+  const updatedCommand = await getCommand(command.id, true);
+  if (!updatedCommand) throw new Error("Command update failed, record deleted");
 
   const sendWebhookUpdate = use$CommandWebhookHandler();
   await sendWebhookUpdate(
-    [previousCommand, command],
+    [previousCommand, updatedCommand],
     CommandWebhookTypes.UPDATE
   );
 

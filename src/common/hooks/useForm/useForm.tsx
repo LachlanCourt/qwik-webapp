@@ -52,11 +52,12 @@ export interface FormControlContextType {
     (
       _: Event | null,
       target: HTMLInputElement | HTMLTextAreaElement | null,
-      explicitNewValue?: string
+      explicitNewValue?: any
     ) => void
   >;
   name: string;
   id: string;
+  [key: string]: any;
 }
 
 export const FormControlContext =
@@ -64,6 +65,7 @@ export const FormControlContext =
 
 interface FormContextType {
   isDisabled?: boolean;
+  formValues: Signal<FormType>;
 }
 export const FormContext = createContextId<FormContextType>("FormContext");
 
@@ -89,7 +91,11 @@ export const useForm = <ResponseType,>(
 
     const body = new FormData();
     Object.entries(formValues.value).forEach(([key, value]) => {
-      body.append(key, value);
+      let formValue = value;
+      if (typeof value === "object") {
+        formValue = JSON.stringify(value);
+      }
+      body.append(key, formValue);
     });
 
     const response = await fetch(`${location.formPostUrl}/${postUrl}`, {
@@ -110,7 +116,7 @@ export const useForm = <ResponseType,>(
   });
 
   const Form = component$(({ isDisabled }: FormProps) => {
-    useContextProvider(FormContext, { isDisabled });
+    useContextProvider(FormContext, { isDisabled, formValues });
     return (
       <StyledForm>
         <Slot />

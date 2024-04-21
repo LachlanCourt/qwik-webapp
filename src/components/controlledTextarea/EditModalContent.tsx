@@ -22,16 +22,14 @@ export const EditModalContent = component$(
     onSubmit$: QRL<(data: Array<string>) => void>;
     dataValue: Array<string>;
   }) => {
-    if (!option) return <div />;
-    if (!option.variableSchema) return <div>{option.name}</div>;
-
     const formValues = useSignal(dataValue);
 
     useTask$(({ track }) => {
       track(() => dataValue);
       formValues.value = dataValue;
     });
-
+    if (!option) return <div />;
+    if (!option.variableSchema) return <div>{option.name}</div>;
     return (
       <>
         {option.name}

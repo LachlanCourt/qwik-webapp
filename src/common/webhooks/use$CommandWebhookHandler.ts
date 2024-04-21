@@ -52,11 +52,16 @@ export const use$CommandWebhookHandler = () => {
           body: JSON.stringify(postData),
           headers: { Authorization: apiUser.webhookServerId },
         });
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(`Fetch failed to URL ${apiUser.webhookUrl}`);
-        // eslint-disable-next-line no-console
-        console.error(e);
+      } catch (e: any) {
+        if (e?.cause?.code === "ECONNREFUSED") {
+          // eslint-disable-next-line no-console
+          console.error("Webhook unavailable");
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(`Fetch failed to URL ${apiUser.webhookUrl}`);
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
       }
     });
   };
