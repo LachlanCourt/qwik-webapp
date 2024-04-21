@@ -14,3 +14,18 @@ jobs:
         uses: actions/checkout@v3
       - name: Build Docker Image
         run: make build
+  yarn-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run yarn audit
+        uses: |
+          audit_exit_code=$(yarn audit)
+          if [ $audit_exit_code -le 6 ]; then
+            echo "Yarn audit passed with exit code $audit_exit_code"
+            exit 0
+          else
+            echo "Yarn audit failed with exit code $audit_exit_code"
+            exit 1
+          fi
