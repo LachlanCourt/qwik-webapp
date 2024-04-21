@@ -1,4 +1,6 @@
-FROM node:18-alpine3.17 as base
+ARG NODE_IMAGE_NAME=20-alpine3.18
+
+FROM node:${NODE_IMAGE_NAME} as base
 
 COPY . ./code
 WORKDIR /code
@@ -10,23 +12,25 @@ RUN yarn build
 # Set up database
 RUN yarn prisma generate
 
-FROM node:18-alpine3.17 as module-installation
+FROM node:${NODE_IMAGE_NAME} as module-installation
 
 COPY package.json ./code/package.json
 COPY yarn.lock ./code/yarn.lock
+COPY .yarnrc.yml ./code/.yarnrc.yml
+COPY .yarn ./code/.yarn
 WORKDIR /code
 
 # Install production dependencies
-RUN apk add --no-cache jq
+RUN apk add --no-cache jq 
 RUN jq 'del(.devDependencies)' package.json > package.json.temp && mv package.json.temp package.json
-RUN yarn install --production --no-optional
+RUN yarn install
 
 # Copy database client data
 COPY --from=base ./code/node_modules/@prisma ./node_modules/@prisma
 COPY --from=base ./code/node_modules/.prisma ./node_modules/.prisma
 COPY --from=base ./code/node_modules/prisma ./node_modules/prisma
 
-FROM node:18-alpine3.17 as final 
+FROM node:${NODE_IMAGE_NAME} as final 
 
 RUN apk add curl
 

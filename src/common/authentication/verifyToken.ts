@@ -29,7 +29,8 @@ export const verifyToken = async (
       }
     ));
   } catch (err) {
-    console.log(err);
+    // eslint-disable-next-line no-console
+    console.error(err);
     if (redirectOnFail) throw redirect(302, "/login");
     else return null;
   }

@@ -1,5 +1,5 @@
 import { Command } from "@prisma/client";
-import { db } from "db";
+import { WebhookNotificationType, use$Webhook } from "./use$Webhook";
 
 export enum CommandWebhookTypes {
   CREATE,
@@ -19,10 +19,6 @@ interface WebhookCommandType extends Command {
 
 export const use$CommandWebhookHandler = () => {
   const send = async (commands: Array<Command>, type: CommandWebhookTypes) => {
-    const registeredWebhooks = (await db.apiUser.findMany()).filter(
-      (apiUser) => !!apiUser.webhookUrl
-    );
-
     const postData: Array<WebhookCommandType> = [];
     if (
       type === CommandWebhookTypes.DELETE ||
@@ -45,18 +41,8 @@ export const use$CommandWebhookHandler = () => {
       });
     }
 
-    registeredWebhooks.forEach(async (apiUser) => {
-      try {
-        await fetch(apiUser.webhookUrl, {
-          method: "POST",
-          body: JSON.stringify(postData),
-          headers: { Authorization: apiUser.webhookServerId },
-        });
-      } catch (e) {
-        console.error(`Fetch failed to URL ${apiUser.webhookUrl}`);
-        console.error(e);
-      }
-    });
+    const sendToWebhooks = use$Webhook();
+    await sendToWebhooks(postData, WebhookNotificationType.COMMAND);
   };
   return send;
 };

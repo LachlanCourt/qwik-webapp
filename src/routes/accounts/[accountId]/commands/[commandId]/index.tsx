@@ -5,7 +5,8 @@ import { getAccount } from "~/common/accessors/getAccount";
 import { getCommand } from "~/common/accessors/getCommand";
 
 import { Resource, component$ } from "@builder.io/qwik";
-import { Command } from "@prisma/client";
+
+import { CommandPageData } from "~/models";
 
 export const useEndpoint = routeLoader$(async (requestEvent) => {
   const { params, redirect, error } = requestEvent;
@@ -25,15 +26,15 @@ export const useEndpoint = routeLoader$(async (requestEvent) => {
   );
   if (!account) throw error(404, "Account Not Found");
 
-  const command = await getCommand(Number(params.commandId));
+  const command = await getCommand(Number(params.commandId), true);
   if (!command) throw error(404, "Command Not Found");
 
   return {
     id: command.id,
     accountId: command.accountId,
     name: command.name,
-    response: command.response,
-  } as Command;
+    actions: command.actions,
+  } as CommandPageData;
 });
 
 export default component$(() => {
