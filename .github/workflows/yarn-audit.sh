@@ -1,5 +1,6 @@
 #!/bin/bash
 
+yarn install
 yarn audit
 audit_exit_code=$?
 
