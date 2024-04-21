@@ -5995,7 +5995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:^0.33.1, sharp@npm:^0.33.3":
+"sharp@npm:^0.33.1":
   version: 0.33.3
   resolution: "sharp@npm:0.33.3"
   dependencies:
@@ -6828,7 +6828,6 @@ __metadata:
     prettier: "npm:2.8.1"
     preview-email: "npm:^3.0.7"
     prisma: "npm:^4.15.0"
-    sharp: "npm:^0.33.3"
     typescript: "npm:5.4.5"
     undici: "npm:5.19.1"
     util: "npm:^0.12.5"
