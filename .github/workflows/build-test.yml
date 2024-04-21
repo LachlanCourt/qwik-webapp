@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run yarn audit
-        uses: |
+        run: |
           audit_exit_code=$(yarn audit)
           if [ $audit_exit_code -le 6 ]; then
             echo "Yarn audit passed with exit code $audit_exit_code"
