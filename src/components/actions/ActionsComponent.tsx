@@ -38,7 +38,7 @@ export const ActionsComponent = component$(
         {actionsData.value.map(({ id, content }: Action, index: number) => {
           return (
             <ActionComponent
-              key={`${id}-${content}`}
+              key={crypto.randomUUID()}
               index={index}
               actionsData={actionsData.value}
               swapUp={$((index: number) => swap(index, -1))}
@@ -49,12 +49,13 @@ export const ActionsComponent = component$(
         })}
         <Button
           onClick$={async () => {
-            actionsData.value.splice(
+            const value = structuredClone(actionsData.value);
+            value.splice(
               actionsData.value.length,
               0,
               structuredClone(emptyAction)
             );
-            actionsData.value = [...actionsData.value];
+            actionsData.value = [...value];
             await formControlContextData.handleChange(
               null,
               null,
